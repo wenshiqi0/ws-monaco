@@ -1,6 +1,6 @@
 {
   "name": "ant-monaco",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "ant monaco with vscode-textmate",
   "main": "lib/index.js",
   "scripts": {
