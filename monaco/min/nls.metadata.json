@@ -19,6 +19,11 @@
 			"_constructor",
 			"call"
 		],
+		"vs/editor/contrib/quickOpen/browser/quickCommand": [
+			"ariaLabelEntry",
+			"quickCommandActionInput",
+			"QuickCommandAction.label"
+		],
 		"vs/editor/contrib/quickOpen/browser/gotoLine": [
 			"gotoLineLabelValidLineAndColumn",
 			"gotoLineLabelValidLine",
@@ -28,13 +33,11 @@
 			"gotoLineActionInput",
 			"GotoLineAction.label"
 		],
-		"vs/editor/contrib/quickOpen/browser/quickCommand": [
-			"ariaLabelEntry",
-			"quickCommandActionInput",
-			"QuickCommandAction.label"
-		],
 		"vs/editor/contrib/inspectTokens/browser/inspectTokens": [
 			"inspectTokens"
+		],
+		"vs/editor/common/modes/modesRegistry": [
+			"plainText.alias"
 		],
 		"vs/editor/contrib/bracketMatching/common/bracketMatching": [
 			"smartSelect.jumpBracket"
@@ -42,12 +45,6 @@
 		"vs/editor/contrib/caretOperations/common/caretOperations": [
 			"caret.moveLeft",
 			"caret.moveRight"
-		],
-		"vs/editor/contrib/comment/common/comment": [
-			"comment.line",
-			"comment.line.add",
-			"comment.line.remove",
-			"comment.block"
 		],
 		"vs/editor/contrib/caretOperations/common/transpose": [
 			"transposeLetters.label"
@@ -57,6 +54,12 @@
 			"actions.clipboard.copyLabel",
 			"actions.clipboard.pasteLabel",
 			"actions.clipboard.copyWithSyntaxHighlightingLabel"
+		],
+		"vs/editor/contrib/comment/common/comment": [
+			"comment.line",
+			"comment.line.add",
+			"comment.line.remove",
+			"comment.block"
 		],
 		"vs/editor/contrib/contextmenu/browser/contextmenu": [
 			"action.showContextMenu.label"
@@ -78,17 +81,6 @@
 			"formatDocument.label",
 			"formatSelection.label"
 		],
-		"vs/editor/contrib/gotoError/browser/gotoError": [
-			"title.wo_source",
-			"markerAction.next.label",
-			"markerAction.previous.label",
-			"editorMarkerNavigationError",
-			"editorMarkerNavigationWarning",
-			"editorMarkerNavigationBackground"
-		],
-		"vs/editor/contrib/hover/browser/hover": [
-			"showHover"
-		],
 		"vs/editor/contrib/goToDeclaration/browser/goToDeclaration": [
 			"noResultWord",
 			"generic.noResults",
@@ -108,9 +100,25 @@
 			"actions.peekTypeDefinition.label",
 			"multipleResults"
 		],
+		"vs/editor/contrib/gotoError/browser/gotoError": [
+			"title.wo_source",
+			"markerAction.next.label",
+			"markerAction.previous.label",
+			"editorMarkerNavigationError",
+			"editorMarkerNavigationWarning",
+			"editorMarkerNavigationBackground"
+		],
+		"vs/editor/contrib/hover/browser/hover": [
+			"showHover"
+		],
 		"vs/editor/contrib/inPlaceReplace/common/inPlaceReplace": [
 			"InPlaceReplaceAction.previous.label",
 			"InPlaceReplaceAction.next.label"
+		],
+		"vs/editor/contrib/multicursor/common/multicursor": [
+			"mutlicursor.insertAbove",
+			"mutlicursor.insertBelow",
+			"mutlicursor.insertAtEndOfEachLineSelected"
 		],
 		"vs/editor/contrib/links/browser/links": [
 			"links.navigate.mac",
@@ -119,10 +127,13 @@
 			"missing.url",
 			"label"
 		],
-		"vs/editor/contrib/multicursor/common/multicursor": [
-			"mutlicursor.insertAbove",
-			"mutlicursor.insertBelow",
-			"mutlicursor.insertAtEndOfEachLineSelected"
+		"vs/editor/contrib/parameterHints/browser/parameterHints": [
+			"parameterHints.trigger.label"
+		],
+		"vs/editor/contrib/quickFix/browser/quickFixCommands": [
+			"quickFixWithKb",
+			"quickFix",
+			"quickfix.trigger.label"
 		],
 		"vs/editor/contrib/linesOperations/common/linesOperations": [
 			"lines.copyUp",
@@ -144,31 +155,13 @@
 			"editor.transformToUppercase",
 			"editor.transformToLowercase"
 		],
-		"vs/editor/contrib/parameterHints/browser/parameterHints": [
-			"parameterHints.trigger.label"
-		],
 		"vs/editor/contrib/referenceSearch/browser/referenceSearch": [
 			"meta.titleReference",
 			"references.action.label"
 		],
-		"vs/editor/contrib/quickFix/browser/quickFixCommands": [
-			"quickFixWithKb",
-			"quickFix",
-			"quickfix.trigger.label"
-		],
-		"vs/editor/contrib/rename/browser/rename": [
-			"no result",
-			"aria",
-			"rename.failed",
-			"rename.label"
-		],
 		"vs/editor/contrib/smartSelect/common/smartSelect": [
 			"smartSelect.grow",
 			"smartSelect.shrink"
-		],
-		"vs/editor/contrib/suggest/browser/suggestController": [
-			"arai.alert.snippet",
-			"suggest.trigger.label"
 		],
 		"vs/editor/contrib/toggleTabFocusMode/common/toggleTabFocusMode": [
 			{
@@ -178,8 +171,15 @@
 				]
 			}
 		],
-		"vs/editor/common/modes/modesRegistry": [
-			"plainText.alias"
+		"vs/editor/contrib/rename/browser/rename": [
+			"no result",
+			"aria",
+			"rename.failed",
+			"rename.label"
+		],
+		"vs/editor/contrib/suggest/browser/suggestController": [
+			"arai.alert.snippet",
+			"suggest.trigger.label"
 		],
 		"vs/editor/contrib/wordHighlighter/common/wordHighlighter": [
 			"wordHighlight",
@@ -352,9 +352,6 @@
 		"vs/base/browser/ui/aria/aria": [
 			"repeated"
 		],
-		"vs/editor/contrib/hover/browser/modesContentHover": [
-			"modesContentHover.loading"
-		],
 		"vs/editor/contrib/referenceSearch/browser/referencesController": [
 			"labelLoading"
 		],
@@ -367,20 +364,14 @@
 			"aria.result.n1",
 			"aria.result.nm"
 		],
-		"vs/editor/contrib/parameterHints/browser/parameterHintsWidget": [
-			"hint"
-		],
 		"vs/editor/contrib/zoneWidget/browser/peekViewWidget": [
 			"label.close"
 		],
-		"vs/editor/contrib/rename/browser/renameInputField": [
-			"renameAriaLabel"
+		"vs/editor/contrib/hover/browser/modesContentHover": [
+			"modesContentHover.loading"
 		],
-		"vs/editor/common/services/bulkEdit": [
-			"conflict",
-			"summary.0",
-			"summary.nm",
-			"summary.n0"
+		"vs/editor/contrib/parameterHints/browser/parameterHintsWidget": [
+			"hint"
 		],
 		"vs/editor/common/config/commonEditorConfig": [
 			"editorConfigurationTitle",
@@ -479,6 +470,15 @@
 			"renderIndicators",
 			"selectionClipboard"
 		],
+		"vs/editor/common/services/bulkEdit": [
+			"conflict",
+			"summary.0",
+			"summary.nm",
+			"summary.n0"
+		],
+		"vs/editor/contrib/rename/browser/renameInputField": [
+			"renameAriaLabel"
+		],
 		"vs/editor/contrib/suggest/browser/suggestWidget": [
 			"editorSuggestWidgetBackground",
 			"editorSuggestWidgetBorder",
@@ -545,13 +545,13 @@
 		"vs/editor/common/controller/cursor": [
 			"corrupt.commands"
 		],
-		"vs/base/browser/ui/findinput/findInput": [
-			"defaultLabel"
-		],
 		"vs/base/browser/ui/findinput/findInputCheckboxes": [
 			"caseDescription",
 			"wordsDescription",
 			"regexDescription"
+		],
+		"vs/base/browser/ui/findinput/findInput": [
+			"defaultLabel"
 		],
 		"vs/base/browser/ui/inputbox/inputBox": [
 			"alertErrorMessage",
@@ -655,6 +655,11 @@
 			"constructors ({0})",
 			"calls ({0})"
 		],
+		"vs/editor/contrib/quickOpen/browser/quickCommand": [
+			"{0}, commands",
+			"Type the name of an action you want to execute",
+			"Command Palette"
+		],
 		"vs/editor/contrib/quickOpen/browser/gotoLine": [
 			"Go to line {0} and character {1}",
 			"Go to line {0}",
@@ -664,13 +669,11 @@
 			"Type a line number, followed by an optional colon and a character number to navigate to",
 			"Go to Line..."
 		],
-		"vs/editor/contrib/quickOpen/browser/quickCommand": [
-			"{0}, commands",
-			"Type the name of an action you want to execute",
-			"Command Palette"
-		],
 		"vs/editor/contrib/inspectTokens/browser/inspectTokens": [
 			"Developer: Inspect Tokens"
+		],
+		"vs/editor/common/modes/modesRegistry": [
+			"Plain Text"
 		],
 		"vs/editor/contrib/bracketMatching/common/bracketMatching": [
 			"Go to Bracket"
@@ -678,12 +681,6 @@
 		"vs/editor/contrib/caretOperations/common/caretOperations": [
 			"Move Caret Left",
 			"Move Caret Right"
-		],
-		"vs/editor/contrib/comment/common/comment": [
-			"Toggle Line Comment",
-			"Add Line Comment",
-			"Remove Line Comment",
-			"Toggle Block Comment"
 		],
 		"vs/editor/contrib/caretOperations/common/transpose": [
 			"Transpose Letters"
@@ -693,6 +690,12 @@
 			"Copy",
 			"Paste",
 			"Copy With Syntax Highlighting"
+		],
+		"vs/editor/contrib/comment/common/comment": [
+			"Toggle Line Comment",
+			"Add Line Comment",
+			"Remove Line Comment",
+			"Toggle Block Comment"
 		],
 		"vs/editor/contrib/contextmenu/browser/contextmenu": [
 			"Show Editor Context Menu"
@@ -714,17 +717,6 @@
 			"Format Document",
 			"Format Selection"
 		],
-		"vs/editor/contrib/gotoError/browser/gotoError": [
-			"({0}/{1})",
-			"Go to Next Error or Warning",
-			"Go to Previous Error or Warning",
-			"Editor marker navigation widget error color.",
-			"Editor marker navigation widget warning color.",
-			"Editor marker navigation widget background."
-		],
-		"vs/editor/contrib/hover/browser/hover": [
-			"Show Hover"
-		],
 		"vs/editor/contrib/goToDeclaration/browser/goToDeclaration": [
 			"No definition found for '{0}'",
 			"No definition found",
@@ -744,9 +736,25 @@
 			"Peek Type Definition",
 			"Click to show {0} definitions."
 		],
+		"vs/editor/contrib/gotoError/browser/gotoError": [
+			"({0}/{1})",
+			"Go to Next Error or Warning",
+			"Go to Previous Error or Warning",
+			"Editor marker navigation widget error color.",
+			"Editor marker navigation widget warning color.",
+			"Editor marker navigation widget background."
+		],
+		"vs/editor/contrib/hover/browser/hover": [
+			"Show Hover"
+		],
 		"vs/editor/contrib/inPlaceReplace/common/inPlaceReplace": [
 			"Replace with Previous Value",
 			"Replace with Next Value"
+		],
+		"vs/editor/contrib/multicursor/common/multicursor": [
+			"Add Cursor Above",
+			"Add Cursor Below",
+			"Add Cursors to Line Ends"
 		],
 		"vs/editor/contrib/links/browser/links": [
 			"Cmd + click to follow link",
@@ -755,10 +763,13 @@
 			"Sorry, failed to open this link because its target is missing.",
 			"Open Link"
 		],
-		"vs/editor/contrib/multicursor/common/multicursor": [
-			"Add Cursor Above",
-			"Add Cursor Below",
-			"Add Cursors to Line Ends"
+		"vs/editor/contrib/parameterHints/browser/parameterHints": [
+			"Trigger Parameter Hints"
+		],
+		"vs/editor/contrib/quickFix/browser/quickFixCommands": [
+			"Show Fixes ({0})",
+			"Show Fixes",
+			"Quick Fix"
 		],
 		"vs/editor/contrib/linesOperations/common/linesOperations": [
 			"Copy Line Up",
@@ -780,17 +791,16 @@
 			"Transform to Uppercase",
 			"Transform to Lowercase"
 		],
-		"vs/editor/contrib/parameterHints/browser/parameterHints": [
-			"Trigger Parameter Hints"
-		],
 		"vs/editor/contrib/referenceSearch/browser/referenceSearch": [
 			" – {0} references",
 			"Find All References"
 		],
-		"vs/editor/contrib/quickFix/browser/quickFixCommands": [
-			"Show Fixes ({0})",
-			"Show Fixes",
-			"Quick Fix"
+		"vs/editor/contrib/smartSelect/common/smartSelect": [
+			"Expand Select",
+			"Shrink Select"
+		],
+		"vs/editor/contrib/toggleTabFocusMode/common/toggleTabFocusMode": [
+			"Toggle Tab Key Moves Focus"
 		],
 		"vs/editor/contrib/rename/browser/rename": [
 			"No result.",
@@ -798,19 +808,9 @@
 			"Sorry, rename failed to execute.",
 			"Rename Symbol"
 		],
-		"vs/editor/contrib/smartSelect/common/smartSelect": [
-			"Expand Select",
-			"Shrink Select"
-		],
 		"vs/editor/contrib/suggest/browser/suggestController": [
 			"Accepting '{0}' did insert the following text: {1}",
 			"Trigger Suggest"
-		],
-		"vs/editor/contrib/toggleTabFocusMode/common/toggleTabFocusMode": [
-			"Toggle Tab Key Moves Focus"
-		],
-		"vs/editor/common/modes/modesRegistry": [
-			"Plain Text"
 		],
 		"vs/editor/contrib/wordHighlighter/common/wordHighlighter": [
 			"Background color of a symbol during read-access, like reading a variable.",
@@ -977,9 +977,6 @@
 		"vs/base/browser/ui/aria/aria": [
 			"{0} (occurred again)"
 		],
-		"vs/editor/contrib/hover/browser/modesContentHover": [
-			"Loading..."
-		],
 		"vs/editor/contrib/referenceSearch/browser/referencesController": [
 			"Loading..."
 		],
@@ -992,20 +989,14 @@
 			"Found {0} symbols in {1}",
 			"Found {0} symbols in {1} files"
 		],
-		"vs/editor/contrib/parameterHints/browser/parameterHintsWidget": [
-			"{0}, hint"
-		],
 		"vs/editor/contrib/zoneWidget/browser/peekViewWidget": [
 			"Close"
 		],
-		"vs/editor/contrib/rename/browser/renameInputField": [
-			"Rename input. Type new name and press Enter to commit."
+		"vs/editor/contrib/hover/browser/modesContentHover": [
+			"Loading..."
 		],
-		"vs/editor/common/services/bulkEdit": [
-			"These files have changed in the meantime: {0}",
-			"Made no edits",
-			"Made {0} text edits in {1} files",
-			"Made {0} text edits in one file"
+		"vs/editor/contrib/parameterHints/browser/parameterHintsWidget": [
+			"{0}, hint"
 		],
 		"vs/editor/common/config/commonEditorConfig": [
 			"Editor",
@@ -1081,6 +1072,15 @@
 			"Controls if the diff editor shows +/- indicators for added/removed changes",
 			"Controls if the Linux primary clipboard should be supported."
 		],
+		"vs/editor/common/services/bulkEdit": [
+			"These files have changed in the meantime: {0}",
+			"Made no edits",
+			"Made {0} text edits in {1} files",
+			"Made {0} text edits in one file"
+		],
+		"vs/editor/contrib/rename/browser/renameInputField": [
+			"Rename input. Type new name and press Enter to commit."
+		],
 		"vs/editor/contrib/suggest/browser/suggestWidget": [
 			"Background color of the suggest widget.",
 			"Border color of the suggest widget.",
@@ -1147,13 +1147,13 @@
 		"vs/editor/common/controller/cursor": [
 			"Unexpected exception while executing command."
 		],
-		"vs/base/browser/ui/findinput/findInput": [
-			"input"
-		],
 		"vs/base/browser/ui/findinput/findInputCheckboxes": [
 			"Match Case",
 			"Match Whole Word",
 			"Use Regular Expression"
+		],
+		"vs/base/browser/ui/findinput/findInput": [
+			"input"
 		],
 		"vs/base/browser/ui/inputbox/inputBox": [
 			"Error: {0}",
