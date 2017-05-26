@@ -1,6 +1,12 @@
+// interface
+import { IGrammarRegistry, Global } from './index.d';
+
 import { Registry, INITIAL } from 'vscode-textmate';
 import { join } from 'path';
 import * as theme from './theme';
+
+// ensure monaco is on the global window
+declare const window: Global;
 
 // language configs
 const jsConfig = require('../extensions/syntaxes/javascript/javascript-language-configuration.json');
@@ -10,7 +16,7 @@ const htmlConfig = require('../extensions/syntaxes/html/language-configuration.j
 
 let mode = 'light';
 
-const generateTokensCSSForColorMap = (colorMap) => {
+const generateTokensCSSForColorMap = (colorMap: any[]) => {
   const rules = [];
   for (let i = 1, len = colorMap.length; i < len; i += 1) {
     const color = colorMap[i];
@@ -22,7 +28,7 @@ const generateTokensCSSForColorMap = (colorMap) => {
   return rules.join('\n');
 }
 
-const rebuildMtkColors = (cssRules) => {
+const rebuildMtkColors = (cssRules: string) => {
   const head = document.head;
   const tokensColor = document.createElement('style');
   tokensColor.innerHTML = `${cssRules}`;
@@ -30,7 +36,7 @@ const rebuildMtkColors = (cssRules) => {
   return true;
 };
 
-const globalLanguageMap = {
+const globalLanguageMap: any = {
   javascript: {
     scope: 'source.js',
     config: jsConfig,
@@ -96,8 +102,13 @@ const jsCompletionItemProvider = [
 ];
 
 // grammar registry
-const GrammarRegistry = class {
-  constructor(scopeRegistry) {
+class GrammarRegistry implements IGrammarRegistry {
+  private scopeRegistry: any;
+  private injections: any;
+  private embeddedLanguages: string[];
+  private registry: Registry;
+
+  constructor(scopeRegistry: any) {
     this.scopeRegistry = scopeRegistry;
     this.injections = {};
     this.embeddedLanguages = [];
@@ -112,35 +123,35 @@ const GrammarRegistry = class {
     });
   }
 
-  getRegistry() {
+  getRegistry(): Registry {
     return this.registry;
   }
 
-  getScopeRegistry() {
+  getScopeRegistry(): any {
     return this.scopeRegistry;
   }
 
-  getEmbeddedLanguages() {
+  getEmbeddedLanguages(): string[] {
     return this.embeddedLanguages;
   }
 
-  pushLanguageEmbedded(languageId) {
+  pushLanguageEmbedded(languageId: string): Number {
     this.embeddedLanguages.push(languageId);
     return this.embeddedLanguages.length;
   }
 
-  updateTheme(name) {
+  updateTheme(name: string) {
     this.registry.setTheme({ name, settings: theme[mode].tokens });
   }
 
-  reloadTheme(themeMode) {
+  reloadTheme(themeMode: string) {
     if (mode) mode = themeMode;
-    const cssRules = generateTokensCSSForColorMap(this.registry.getColorMap());
+    const cssRules: string = generateTokensCSSForColorMap(this.registry.getColorMap());
     rebuildMtkColors(cssRules);
   }
 
-  static loadGrammar({ registry, languageId }) {
-    return new Promise((resolve, reject) => {
+  static loadGrammar({ registry, languageId }): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
       if (registry.getEmbeddedLanguages().indexOf(languageId) > -1) resolve({ languageId: null });
       else {
         // Id index map to language. vscode-textmate does not use index 0.
@@ -163,8 +174,8 @@ const GrammarRegistry = class {
     });
   }
 
-  static registerLanguage({ languageId, grammar }) {
-    return new Promise((resolve) => {
+  static registerLanguage({ languageId, grammar }): Promise<any> {
+    return new Promise<any>((resolve) => {
       if (!languageId) resolve(false);
       const languages = window.monaco.languages;
       languages.register({
@@ -195,13 +206,13 @@ const GrammarRegistry = class {
     });
   }
 
-  static getDefaultColors() {
+  static getDefaultColors(): Promise<any> {
     return theme[mode].defaultColors;
   }
 }
 
-const getDefaultRegistry = (rootDir) => {
-  const nodeDir = 'node_modules/ant-monaco';
+const getDefaultRegistry = (rootDir: string) => {
+  const nodeDir: string = 'node_modules/ant-monaco';
   return new GrammarRegistry({
     'source.js': join(rootDir, nodeDir, 'extensions/syntaxes/javascript/syntaxes/JavaScript.tmLanguage.json'),
     'source.css': join(rootDir, nodeDir, 'extensions/syntaxes/css/syntaxes/css.tmLanguage.json'),
