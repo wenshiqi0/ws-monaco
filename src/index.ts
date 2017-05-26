@@ -216,7 +216,7 @@ const getDefaultRegistry = (rootDir: string) => {
   return new GrammarRegistry({
     'source.js': join(rootDir, nodeDir, 'extensions/syntaxes/javascript/syntaxes/JavaScript.tmLanguage.json'),
     'source.css': join(rootDir, nodeDir, 'extensions/syntaxes/css/syntaxes/css.tmLanguage.json'),
-    'source.json': join(rootDir, nodeDir, 'extensions/syntaxes/json/syntaxes/JSON.tmLanguage.json'),
+    'source.json': join(rootDir, nodeDir, 'extensions/syntaxes/json/syntaxes/JSON.tmLanguage'),
     'text.html.basic': join(rootDir, nodeDir, 'extensions/syntaxes/html/syntaxes/html.tmLanguage.json'),
   });
 }
