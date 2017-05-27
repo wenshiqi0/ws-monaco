@@ -144,10 +144,14 @@ class GrammarRegistry implements IGrammarRegistry {
     this.registry.setTheme({ name, settings: theme[mode].tokens });
   }
 
-  reloadTheme(themeMode: string) {
-    if (mode) mode = themeMode;
+  reloadTheme(name: string) {
+    this.updateTheme(name);
     const cssRules: string = generateTokensCSSForColorMap(this.registry.getColorMap());
     rebuildMtkColors(cssRules);
+  }
+
+  static setMode(themeMode: string) {
+    mode = themeMode;
   }
 
   static loadGrammar({ registry, languageId }): Promise<any> {
@@ -217,7 +221,7 @@ const getDefaultRegistry = (rootDir: string) => {
     'source.js': join(rootDir, nodeDir, 'extensions/syntaxes/javascript/syntaxes/JavaScript.tmLanguage.json'),
     'source.css': join(rootDir, nodeDir, 'extensions/syntaxes/css/syntaxes/css.tmLanguage.json'),
     'source.json': join(rootDir, nodeDir, 'extensions/syntaxes/json/syntaxes/JSON.tmLanguage'),
-    'text.html.basic': join(rootDir, nodeDir, 'extensions/syntaxes/html/syntaxes/html.tmLanguage.json'),
+    'text.html.basic': join(rootDir, nodeDir, 'extensions/syntaxes/html/syntaxes/html.json'),
   });
 }
 

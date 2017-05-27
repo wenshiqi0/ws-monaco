@@ -15,7 +15,7 @@ export interface IGrammarRegistry {
 
   updateTheme(name: string);
 
-  reloadTheme(mode: string);
+  reloadTheme(name: string);
 }
 
 export interface Global extends Window {
