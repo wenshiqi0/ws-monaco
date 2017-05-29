@@ -4,16 +4,16 @@ import { Registry, INITIAL } from 'vscode-textmate';
 import { join } from 'path';
 import * as theme from './theme';
 
-const activate = require(join(__dirname, '/../extensions/syntaxes/eslint/src/index'));
+const activate = require(join(__dirname, '/../plugins/syntaxes/eslint/src/index'));
 
 // ensure monaco is on the global window
 declare const window: Global;
 
 // language configs
-const jsConfig = require('../extensions/syntaxes/javascript/javascript-language-configuration.json');
-const cssConfig = require('../extensions/syntaxes/css/language-configuration.json');
-const jsonConfig = require('../extensions/syntaxes/json/language-configuration.json');
-const htmlConfig = require('../extensions/syntaxes/html/language-configuration.json');
+const jsConfig = require('../plugins/syntaxes/javascript/javascript-language-configuration.json');
+const cssConfig = require('../plugins/syntaxes/css/language-configuration.json');
+const jsonConfig = require('../plugins/syntaxes/json/language-configuration.json');
+const htmlConfig = require('../plugins/syntaxes/html/language-configuration.json');
 
 let mode = 'light';
 
@@ -243,10 +243,10 @@ class GrammarRegistry implements IGrammarRegistry {
 const getDefaultRegistry = (rootDir: string) => {
   const nodeDir: string = 'node_modules/ant-monaco';
   return new GrammarRegistry({
-    'source.js': join(rootDir, nodeDir, 'extensions/syntaxes/javascript/syntaxes/JavaScript.tmLanguage.json'),
-    'source.css': join(rootDir, nodeDir, 'extensions/syntaxes/css/syntaxes/css.tmLanguage.json'),
-    'source.json': join(rootDir, nodeDir, 'extensions/syntaxes/json/syntaxes/JSON.tmLanguage'),
-    'text.html.basic': join(rootDir, nodeDir, 'extensions/syntaxes/html/syntaxes/html.json'),
+    'source.js': join(rootDir, nodeDir, 'plugins/syntaxes/javascript/syntaxes/JavaScript.tmLanguage.json'),
+    'source.css': join(rootDir, nodeDir, 'plugins/syntaxes/css/syntaxes/css.tmLanguage.json'),
+    'source.json': join(rootDir, nodeDir, 'plugins/syntaxes/json/syntaxes/JSON.tmLanguage'),
+    'text.html.basic': join(rootDir, nodeDir, 'plugins/syntaxes/html/syntaxes/html.json'),
   });
 }
 
