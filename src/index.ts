@@ -1,9 +1,10 @@
 // interface
 import { IGrammarRegistry, Global } from './index.d';
-
 import { Registry, INITIAL } from 'vscode-textmate';
 import { join } from 'path';
 import * as theme from './theme';
+
+const activate = require(join(__dirname, '/../extensions/syntaxes/eslint/src/index'));
 
 // ensure monaco is on the global window
 declare const window: Global;
@@ -107,6 +108,8 @@ class GrammarRegistry implements IGrammarRegistry {
   private injections: any;
   private embeddedLanguages: string[];
   private registry: Registry;
+  private editor: any;
+  private currentModel: any;
 
   constructor(scopeRegistry: any) {
     this.scopeRegistry = scopeRegistry;
@@ -148,6 +151,28 @@ class GrammarRegistry implements IGrammarRegistry {
     this.updateTheme(name);
     const cssRules: string = generateTokensCSSForColorMap(this.registry.getColorMap());
     rebuildMtkColors(cssRules);
+  }
+
+  setCurrentEditor(editor: any) {
+    this.editor = editor;
+  }
+
+  getCurrentEditor(): any {
+    return this.editor;
+  }
+
+  getCurrentModel(): any {
+    return this.editor.getModel();
+  }
+
+  setCurrentModelMarkers(owner: string, markers: any) {
+    const model = this.getCurrentModel();
+    window.monaco.editor.setModelMarkers(model, owner, markers);
+  }
+
+  activateExtensions() {
+    // activate eslint
+    activate(this, window.monaco);
   }
 
   static setMode(themeMode: string) {
