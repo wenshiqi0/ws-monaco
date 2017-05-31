@@ -1,1 +1,458 @@
-{"getSystemInfo":{"insertText":{"value":"getSystemInfo({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"获取系统信息。"},"getNetworkType":{"insertText":{"value":"getNetworkType({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"获取当前网络状态。"},"scan":{"insertText":{"value":"scan({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"调用扫一扫功能。"},"watchShake":{"insertText":{"value":"watchShake();"},"documentation":"摇一摇功能。每次调用API，在摇一摇手机后触发回调，如需再次监听需要再次调用这个API。"},"vibrate":{"insertText":{"value":"vibrate();"},"documentation":"调用震动功能。"},"makePhoneCall":{"insertText":{"value":"makePhoneCall({\n  number: '$0', // 电话号码\n  success: function(res){\n    \n  },\n});"},"documentation":"拨打电话。"},"getServerTime":{"insertText":{"value":"getServerTime({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"获取当前服务器时间的毫秒数。"},"onAccelerometerChange":{"insertText":{"value":"onAccelerometerChange({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"监听重力感应变化。"},"offAccelerometerChange":{"insertText":{"value":"offAccelerometerChange();"},"documentation":"停止监听重力感应变化。"},"onCompassChange":{"insertText":{"value":"onCompassChange({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"监听罗盘数据变化。"},"offCompassChange":{"insertText":{"value":"offCompassChange();"},"documentation":"停止监听罗盘数据变化。"},"getLocation":{"insertText":{"value":"getLocation({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"获取用户当前的地理位置信息。"},"openLocation":{"insertText":{"value":"openLocation({\n  longitude: '$0', // 经度\n  latitude: '', // 纬度\n  success: function(res){\n    \n  },\n});"},"documentation":"使用支付宝内置地图查看位置。"},"playBackgroundAudio":{"insertText":{"value":"playBackgroundAudio({\n  url: '$0', // 音乐链接地址\n  success: function(res){\n    \n  },\n});"},"documentation":"使用后台播放器播放音乐。"},"pauseBackgroundAudio":{"insertText":{"value":"pauseBackgroundAudio();"},"documentation":"暂停播放音乐。"},"stopBackgroundAudio":{"insertText":{"value":"stopBackgroundAudio();"},"documentation":"停止播放音乐。"},"seekBackgroundAudio":{"insertText":{"value":"seekBackgroundAudio({\n  position: '$0', // 音乐位置，单位秒\n  success: function(res){\n    \n  },\n});"},"documentation":"控制音乐播放进度。"},"getBackgroundAudioPlayerState":{"insertText":{"value":"getBackgroundAudioPlayerState();"},"documentation":"使用后台播放器播放音乐。"},"onBackgroundAudioPlay":{"insertText":{"value":"onBackgroundAudioPlay();"},"documentation":"开始播放音乐时触发此事件。"},"onBackgroundAudioPause":{"insertText":{"value":"onBackgroundAudioPause();"},"documentation":"暂停播放音乐时触发此事件。"},"onBackgroundAudioStop":{"insertText":{"value":"onBackgroundAudioStop();"},"documentation":"停止播放音乐时触发此事件。"},"offBackgroundAudioPlay":{"insertText":{"value":"offBackgroundAudioPlay();"},"documentation":"停止监听音乐播放事件。"},"offBackgroundAudioPause":{"insertText":{"value":"offBackgroundAudioPause();"},"documentation":"停止监听音乐暂停事件。"},"offBackgroundAudioStop":{"insertText":{"value":"offBackgroundAudioStop();"},"documentation":"停止监听音乐停止事件。"},"createAudioContext(audioId)":{"insertText":{"value":"createAudioContext(audioId)();"},"documentation":"创建并返回 audio 上下文 "},"chooseVideo":{"insertText":{"value":"chooseVideo({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"录制或从手机相册中选择视频。"},"uploadFile":{"insertText":{"value":"uploadFile({\n  url: '$0', // 开发者服务器地址\n  filePath: '', // 要上传文件资源的本地定位符\n  fileName: '', // 文件名，即对应的 key, 开发者在服务器端通过这个 key 可以获取到文件二进制内容\n  fileType: '', // 文件类型，image/video\n  success: function(res){\n    \n  },\n});"},"documentation":"上传本地资源到开发者服务器。"},"downloadFile":{"insertText":{"value":"downloadFile({\n  url: '$0', // 下载文件地址\n  success: function(res){\n    \n  },\n});"},"documentation":"下载文件资源到本地。"},"chooseImage":{"insertText":{"value":"chooseImage({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"拍照或从手机相册中选择图片。"},"previewImage":{"insertText":{"value":"previewImage({\n  urls: '$0', // 要预览的图片链接列表\n  success: function(res){\n    \n  },\n});"},"documentation":"预览图片。"},"saveImage":{"insertText":{"value":"saveImage({\n  url: '$0', // 要保存的图片链接\n  success: function(res){\n    \n  },\n});"},"documentation":"保存在线图片到手机相册。"},"startRecord":{"insertText":{"value":"startRecord({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"开始录音。当主动调用 "},"stopRecord":{"insertText":{"value":"stopRecord();"},"documentation":"结束录音。"},"cancelRecord":{"insertText":{"value":"cancelRecord();"},"documentation":"取消录音。"},"createVideoContext(videoId)":{"insertText":{"value":"createVideoContext(videoId)();"},"documentation":"创建并返回 video 上下文 "},"playVoice":{"insertText":{"value":"playVoice({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"开始播放语音。"},"pauseVoice":{"insertText":{"value":"pauseVoice();"},"documentation":"暂停播放语音。"},"resumeVoice":{"insertText":{"value":"resumeVoice();"},"documentation":"继续播放语音。"},"stopVoice":{"insertText":{"value":"stopVoice();"},"documentation":"停止播放语音。"},"httpRequest":{"insertText":{"value":"httpRequest({\n  url: '$0', // 目标服务器 url\n  success: function(res){\n    \n  },\n});"},"documentation":"向指定服务器发起一个跨域 http 请求。"},"connectSocket":{"insertText":{"value":"connectSocket({\n  url: '$0', // 开发者服务器接口地址，必须是 wss 协议，且域名必须是后台配置的合法域名\n  success: function(res){\n    \n  },\n});"},"documentation":"创建一个 "},"onSocketOpen":{"insertText":{"value":"onSocketOpen();"},"documentation":"监听WebSocket连接打开事件。"},"onSocketError":{"insertText":{"value":"onSocketError();"},"documentation":"监听WebSocket错误。"},"sendSocketMessage":{"insertText":{"value":"sendSocketMessage({\n  data: '$0', // 需要发送的内容\n  success: function(res){\n    \n  },\n});"},"documentation":"通过 WebSocket 连接发送数据，需要先 "},"onSocketMessage":{"insertText":{"value":"onSocketMessage({\n  \n});"},"documentation":"监听WebSocket接受到服务器的消息事件。"},"closeSocket":{"insertText":{"value":"closeSocket();"},"documentation":"关闭WebSocket连接。"},"onSocketClose":{"insertText":{"value":"onSocketClose();"},"documentation":"监听WebSocket关闭。"},"getAuthCode":{"insertText":{"value":"getAuthCode({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"获取授权码。"},"getAuthUserInfo":{"insertText":{"value":"getAuthUserInfo();"},"documentation":"获取授权用户信息。"},"tradePay":{"insertText":{"value":"tradePay({\n  orderStr: '$0', // 完整的支付参数拼接成的字符串，从服务端获取\n  success: function(res){\n    \n  },\n});"},"documentation":"发起支付。"},"setStorage":{"insertText":{"value":"setStorage({\n  key: '$0', // 缓存数据的 key\n  data: '', // 要缓存的数据\n  success: function(res){\n    \n  },\n});"},"documentation":"将数据存储在本地缓存中指定的 key 中，会覆盖掉原来该 key 对应的数据。"},"getStorage":{"insertText":{"value":"getStorage({\n  key: '$0', // 缓存数据的 key\n  success: function(res){\n    \n  },\n});"},"documentation":"获取缓存数据。"},"removeStorage":{"insertText":{"value":"removeStorage({\n  key: '$0', // 缓存数据的 key\n  success: function(res){\n    \n  },\n});"},"documentation":"删除缓存数据。"},"createAnimation":{"insertText":{"value":"createAnimation();"},"documentation":"创建一个动画实例"},"createCanvasContext(canvasId)":{"insertText":{"value":"createCanvasContext(canvasId)();"},"documentation":"创建 canvas 绘图上下文（指定 canvasId）"},"chooseCity":{"insertText":{"value":"chooseCity({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"打开城市选择列表。"},"choosePhoneContact":{"insertText":{"value":"choosePhoneContact({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"选择本地系统通信录中某个联系人的电话。"},"chooseAlipayContact":{"insertText":{"value":"chooseAlipayContact({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"唤起支付宝通讯录，选择一个或者多个支付宝联系人。"},"datePicker":{"insertText":{"value":"datePicker({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"设置导航栏文字及样式。"},"alert":{"insertText":{"value":"alert({\n  title: '$0', // alert 框的标题\n  success: function(res){\n    \n  },\n});"},"documentation":"alert 警告框。"},"confirm":{"insertText":{"value":"confirm({\n  title: '$0', // confirm 框的标题\n  success: function(res){\n    \n  },\n});"},"documentation":"confirm 确认框。"},"showToast":{"insertText":{"value":"showToast({\n  content: '$0', // 文字内容\n  success: function(res){\n    \n  },\n});"},"documentation":"显示一个弱提示，可选择多少秒之后消失。"},"hideToast":{"insertText":{"value":"hideToast();"},"documentation":"隐藏弱提示。"},"showLoading":{"insertText":{"value":"showLoading({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"显示加载提示。"},"hideLoading":{"insertText":{"value":"hideLoading();"},"documentation":"隐藏加载提示。"},"showNavigationBarLoading":{"insertText":{"value":"showNavigationBarLoading();"},"documentation":"显示导航栏 loading。"},"hideNavigationBarLoading":{"insertText":{"value":"hideNavigationBarLoading();"},"documentation":"隐藏导航栏 loading。"},"showActionSheet":{"insertText":{"value":"showActionSheet({\n  \n  items: '', // 菜单按钮的文字数组\n  success: function(res){\n    \n  },\n});"},"documentation":"显示操作菜单。"},"hideKeyboard":{"insertText":{"value":"hideKeyboard();"},"documentation":"隐藏键盘。"},"createMapContext(mapId)":{"insertText":{"value":"createMapContext(mapId)();"},"documentation":"创建并返回 map 上下文 "},"navigateTo":{"insertText":{"value":"navigateTo({\n  url: '$0', // 需要跳转的应用内非 tabBar 的页面的路径 , 路径后可以带参数。参数与路径之间使用\n});"},"documentation":"保留当前页面，跳转到应用内的某个页面，使用 "},"redirectTo":{"insertText":{"value":"redirectTo({\n  url: '$0', // 需要跳转的应用内非 tabBar 的页面的路径，路径后可以带参数。参数与路径之间使用\n});"},"documentation":"关闭当前页面，跳转到应用内的某个页面。"},"navigateBack":{"insertText":{"value":"navigateBack({\n  \n});"},"documentation":"关闭当前页面，返回上一页面或多级页面。可通过 "},"setNavigationBar":{"insertText":{"value":"setNavigationBar({\n  success: function(res){\n    $0\n  },\n});"},"documentation":"设置导航栏文字及样式。"},"stopPullDownRefresh":{"insertText":{"value":"stopPullDownRefresh();"},"documentation":"停止当前页面的下拉刷新。"},"switchTab":{"insertText":{"value":"switchTab({\n  url: '$0', // 需要跳转的 tabBar 页面的路径（需在 app.json 的 tabBar 字段定义的页面），路径后不能带参数\n});"},"documentation":"跳转到 tabBar 页面，并关闭其他所有非 tabBar 页面。"}}
+{
+  "getSystemInfo": {
+    "insertText": {
+      "value": "getSystemInfo({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "获取系统信息。"
+  },
+  "getNetworkType": {
+    "insertText": {
+      "value": "getNetworkType({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "获取当前网络状态。"
+  },
+  "scan": {
+    "insertText": {
+      "value": "scan({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "调用扫一扫功能。"
+  },
+  "watchShake": {
+    "insertText": {
+      "value": "watchShake();"
+    },
+    "documentation": "摇一摇功能。每次调用API，在摇一摇手机后触发回调，如需再次监听需要再次调用这个API。"
+  },
+  "vibrate": {
+    "insertText": {
+      "value": "vibrate();"
+    },
+    "documentation": "调用震动功能。"
+  },
+  "makePhoneCall": {
+    "insertText": {
+      "value": "makePhoneCall({\n  number: '$0', // 电话号码\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "拨打电话。"
+  },
+  "getServerTime": {
+    "insertText": {
+      "value": "getServerTime({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "获取当前服务器时间的毫秒数。"
+  },
+  "onAccelerometerChange": {
+    "insertText": {
+      "value": "onAccelerometerChange({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "监听重力感应变化。"
+  },
+  "offAccelerometerChange": {
+    "insertText": {
+      "value": "offAccelerometerChange();"
+    },
+    "documentation": "停止监听重力感应变化。"
+  },
+  "onCompassChange": {
+    "insertText": {
+      "value": "onCompassChange({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "监听罗盘数据变化。"
+  },
+  "offCompassChange": {
+    "insertText": {
+      "value": "offCompassChange();"
+    },
+    "documentation": "停止监听罗盘数据变化。"
+  },
+  "getLocation": {
+    "insertText": {
+      "value": "getLocation({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "获取用户当前的地理位置信息。"
+  },
+  "openLocation": {
+    "insertText": {
+      "value": "openLocation({\n  longitude: '$0', // 经度\n  latitude: '', // 纬度\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "使用支付宝内置地图查看位置。"
+  },
+  "playBackgroundAudio": {
+    "insertText": {
+      "value": "playBackgroundAudio({\n  url: '$0', // 音乐链接地址\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "使用后台播放器播放音乐。"
+  },
+  "pauseBackgroundAudio": {
+    "insertText": {
+      "value": "pauseBackgroundAudio();"
+    },
+    "documentation": "暂停播放音乐。"
+  },
+  "stopBackgroundAudio": {
+    "insertText": {
+      "value": "stopBackgroundAudio();"
+    },
+    "documentation": "停止播放音乐。"
+  },
+  "seekBackgroundAudio": {
+    "insertText": {
+      "value": "seekBackgroundAudio({\n  position: '$0', // 音乐位置，单位秒\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "控制音乐播放进度。"
+  },
+  "getBackgroundAudioPlayerState": {
+    "insertText": {
+      "value": "getBackgroundAudioPlayerState();"
+    },
+    "documentation": "使用后台播放器播放音乐。"
+  },
+  "onBackgroundAudioPlay": {
+    "insertText": {
+      "value": "onBackgroundAudioPlay();"
+    },
+    "documentation": "开始播放音乐时触发此事件。"
+  },
+  "onBackgroundAudioPause": {
+    "insertText": {
+      "value": "onBackgroundAudioPause();"
+    },
+    "documentation": "暂停播放音乐时触发此事件。"
+  },
+  "onBackgroundAudioStop": {
+    "insertText": {
+      "value": "onBackgroundAudioStop();"
+    },
+    "documentation": "停止播放音乐时触发此事件。"
+  },
+  "offBackgroundAudioPlay": {
+    "insertText": {
+      "value": "offBackgroundAudioPlay();"
+    },
+    "documentation": "停止监听音乐播放事件。"
+  },
+  "offBackgroundAudioPause": {
+    "insertText": {
+      "value": "offBackgroundAudioPause();"
+    },
+    "documentation": "停止监听音乐暂停事件。"
+  },
+  "offBackgroundAudioStop": {
+    "insertText": {
+      "value": "offBackgroundAudioStop();"
+    },
+    "documentation": "停止监听音乐停止事件。"
+  },
+  "createAudioContext(audioId)": {
+    "insertText": {
+      "value": "createAudioContext(audioId)();"
+    },
+    "documentation": "创建并返回 audio 上下文 "
+  },
+  "chooseVideo": {
+    "insertText": {
+      "value": "chooseVideo({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "录制或从手机相册中选择视频。"
+  },
+  "uploadFile": {
+    "insertText": {
+      "value": "uploadFile({\n  url: '$0', // 开发者服务器地址\n  filePath: '', // 要上传文件资源的本地定位符\n  fileName: '', // 文件名，即对应的 key, 开发者在服务器端通过这个 key 可以获取到文件二进制内容\n  fileType: '', // 文件类型，image/video\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "上传本地资源到开发者服务器。"
+  },
+  "downloadFile": {
+    "insertText": {
+      "value": "downloadFile({\n  url: '$0', // 下载文件地址\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "下载文件资源到本地。"
+  },
+  "chooseImage": {
+    "insertText": {
+      "value": "chooseImage({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "拍照或从手机相册中选择图片。"
+  },
+  "previewImage": {
+    "insertText": {
+      "value": "previewImage({\n  urls: '$0', // 要预览的图片链接列表\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "预览图片。"
+  },
+  "saveImage": {
+    "insertText": {
+      "value": "saveImage({\n  url: '$0', // 要保存的图片链接\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "保存在线图片到手机相册。"
+  },
+  "startRecord": {
+    "insertText": {
+      "value": "startRecord({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "开始录音。当主动调用 "
+  },
+  "stopRecord": {
+    "insertText": {
+      "value": "stopRecord();"
+    },
+    "documentation": "结束录音。"
+  },
+  "cancelRecord": {
+    "insertText": {
+      "value": "cancelRecord();"
+    },
+    "documentation": "取消录音。"
+  },
+  "createVideoContext(videoId)": {
+    "insertText": {
+      "value": "createVideoContext(videoId)();"
+    },
+    "documentation": "创建并返回 video 上下文 "
+  },
+  "playVoice": {
+    "insertText": {
+      "value": "playVoice({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "开始播放语音。"
+  },
+  "pauseVoice": {
+    "insertText": {
+      "value": "pauseVoice();"
+    },
+    "documentation": "暂停播放语音。"
+  },
+  "resumeVoice": {
+    "insertText": {
+      "value": "resumeVoice();"
+    },
+    "documentation": "继续播放语音。"
+  },
+  "stopVoice": {
+    "insertText": {
+      "value": "stopVoice();"
+    },
+    "documentation": "停止播放语音。"
+  },
+  "httpRequest": {
+    "insertText": {
+      "value": "httpRequest({\n  url: '$0', // 目标服务器 url\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "向指定服务器发起一个跨域 http 请求。"
+  },
+  "connectSocket": {
+    "insertText": {
+      "value": "connectSocket({\n  url: '$0', // 开发者服务器接口地址，必须是 wss 协议，且域名必须是后台配置的合法域名\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "创建一个 "
+  },
+  "onSocketOpen": {
+    "insertText": {
+      "value": "onSocketOpen();"
+    },
+    "documentation": "监听WebSocket连接打开事件。"
+  },
+  "onSocketError": {
+    "insertText": {
+      "value": "onSocketError();"
+    },
+    "documentation": "监听WebSocket错误。"
+  },
+  "sendSocketMessage": {
+    "insertText": {
+      "value": "sendSocketMessage({\n  data: '$0', // 需要发送的内容\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "通过 WebSocket 连接发送数据，需要先 "
+  },
+  "onSocketMessage": {
+    "insertText": {
+      "value": "onSocketMessage({\n  \n});"
+    },
+    "documentation": "监听WebSocket接受到服务器的消息事件。"
+  },
+  "closeSocket": {
+    "insertText": {
+      "value": "closeSocket();"
+    },
+    "documentation": "关闭WebSocket连接。"
+  },
+  "onSocketClose": {
+    "insertText": {
+      "value": "onSocketClose();"
+    },
+    "documentation": "监听WebSocket关闭。"
+  },
+  "getAuthCode": {
+    "insertText": {
+      "value": "getAuthCode({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "获取授权码。"
+  },
+  "getAuthUserInfo": {
+    "insertText": {
+      "value": "getAuthUserInfo();"
+    },
+    "documentation": "获取授权用户信息。"
+  },
+  "tradePay": {
+    "insertText": {
+      "value": "tradePay({\n  orderStr: '$0', // 完整的支付参数拼接成的字符串，从服务端获取\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "发起支付。"
+  },
+  "setStorage": {
+    "insertText": {
+      "value": "setStorage({\n  key: '$0', // 缓存数据的 key\n  data: '', // 要缓存的数据\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "将数据存储在本地缓存中指定的 key 中，会覆盖掉原来该 key 对应的数据。"
+  },
+  "getStorage": {
+    "insertText": {
+      "value": "getStorage({\n  key: '$0', // 缓存数据的 key\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "获取缓存数据。"
+  },
+  "removeStorage": {
+    "insertText": {
+      "value": "removeStorage({\n  key: '$0', // 缓存数据的 key\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "删除缓存数据。"
+  },
+  "createAnimation": {
+    "insertText": {
+      "value": "createAnimation();"
+    },
+    "documentation": "创建一个动画实例"
+  },
+  "createCanvasContext(canvasId)": {
+    "insertText": {
+      "value": "createCanvasContext(canvasId)();"
+    },
+    "documentation": "创建 canvas 绘图上下文（指定 canvasId）"
+  },
+  "chooseCity": {
+    "insertText": {
+      "value": "chooseCity({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "打开城市选择列表。"
+  },
+  "choosePhoneContact": {
+    "insertText": {
+      "value": "choosePhoneContact({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "选择本地系统通信录中某个联系人的电话。"
+  },
+  "chooseAlipayContact": {
+    "insertText": {
+      "value": "chooseAlipayContact({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "唤起支付宝通讯录，选择一个或者多个支付宝联系人。"
+  },
+  "datePicker": {
+    "insertText": {
+      "value": "datePicker({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "设置导航栏文字及样式。"
+  },
+  "alert": {
+    "insertText": {
+      "value": "alert({\n  title: '$0', // alert 框的标题\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "alert 警告框。"
+  },
+  "confirm": {
+    "insertText": {
+      "value": "confirm({\n  title: '$0', // confirm 框的标题\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "confirm 确认框。"
+  },
+  "showToast": {
+    "insertText": {
+      "value": "showToast({\n  content: '$0', // 文字内容\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "显示一个弱提示，可选择多少秒之后消失。"
+  },
+  "hideToast": {
+    "insertText": {
+      "value": "hideToast();"
+    },
+    "documentation": "隐藏弱提示。"
+  },
+  "showLoading": {
+    "insertText": {
+      "value": "showLoading({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "显示加载提示。"
+  },
+  "hideLoading": {
+    "insertText": {
+      "value": "hideLoading();"
+    },
+    "documentation": "隐藏加载提示。"
+  },
+  "showNavigationBarLoading": {
+    "insertText": {
+      "value": "showNavigationBarLoading();"
+    },
+    "documentation": "显示导航栏 loading。"
+  },
+  "hideNavigationBarLoading": {
+    "insertText": {
+      "value": "hideNavigationBarLoading();"
+    },
+    "documentation": "隐藏导航栏 loading。"
+  },
+  "showActionSheet": {
+    "insertText": {
+      "value": "showActionSheet({\n  \n  items: '', // 菜单按钮的文字数组\n  success: function(res){\n    \n  },\n});"
+    },
+    "documentation": "显示操作菜单。"
+  },
+  "hideKeyboard": {
+    "insertText": {
+      "value": "hideKeyboard();"
+    },
+    "documentation": "隐藏键盘。"
+  },
+  "createMapContext(mapId)": {
+    "insertText": {
+      "value": "createMapContext(mapId)();"
+    },
+    "documentation": "创建并返回 map 上下文 "
+  },
+  "navigateTo": {
+    "insertText": {
+      "value": "navigateTo({\n  url: '$0', // 需要跳转的应用内非 tabBar 的页面的路径 , 路径后可以带参数。参数与路径之间使用\n});"
+    },
+    "documentation": "保留当前页面，跳转到应用内的某个页面，使用 "
+  },
+  "redirectTo": {
+    "insertText": {
+      "value": "redirectTo({\n  url: '$0', // 需要跳转的应用内非 tabBar 的页面的路径，路径后可以带参数。参数与路径之间使用\n});"
+    },
+    "documentation": "关闭当前页面，跳转到应用内的某个页面。"
+  },
+  "navigateBack": {
+    "insertText": {
+      "value": "navigateBack({\n  \n});"
+    },
+    "documentation": "关闭当前页面，返回上一页面或多级页面。可通过 "
+  },
+  "setNavigationBar": {
+    "insertText": {
+      "value": "setNavigationBar({\n  success: function(res){\n    $0\n  },\n});"
+    },
+    "documentation": "设置导航栏文字及样式。"
+  },
+  "stopPullDownRefresh": {
+    "insertText": {
+      "value": "stopPullDownRefresh();"
+    },
+    "documentation": "停止当前页面的下拉刷新。"
+  },
+  "switchTab": {
+    "insertText": {
+      "value": "switchTab({\n  url: '$0', // 需要跳转的 tabBar 页面的路径（需在 app.json 的 tabBar 字段定义的页面），路径后不能带参数\n});"
+    },
+    "documentation": "跳转到 tabBar 页面，并关闭其他所有非 tabBar 页面。"
+  }
+}

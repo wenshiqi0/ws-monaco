@@ -1,13 +1,14 @@
 {
   "name": "ant-monaco",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "description": "Ant monaco with vscode-textmate. This module can only run under node runtime",
-  "main": "lib/index.min.js",
+  "main": "lib/min/index.js",
   "scripts": {
     "build": "webpack",
     "watch": "webpack -w",
     "minify": "uglifyjs lib/index.js -o lib/index.min.js && npm run clean",
     "clean": "node scripts/clean.js",
+    "js": "node scripts/javascript.js",
     "api": "node scripts/completions.js $site"
   },
   "keywords": [
@@ -30,6 +31,7 @@
     "jshint": "^2.9.4",
     "mark-twain": "^1.1.6",
     "node-ipc": "^9.0.1",
+    "request": "^2.81.0",
     "typescript": "^2.3.3",
     "uglify-es": "^3.0.13",
     "vscode": "^1.1.0",

@@ -1,7 +1,22 @@
 const abridge = require('../../../api/javascript/abridge.json');
 const snippets = require('../snippets/javascript.json');
+const objectCompletions = require('../../../api/javascript/Object.json');
+const globalCompletions = require('../../../api/javascript/global.json');
+const envCompletions = require('../../../api/javascript/env.json');
 
 let snippetsCompletions;
+
+const registered = {
+  Object: objectCompletions,
+  abridge,
+};
+
+const registeredEntries = Object.keys(registered).map(key => {
+  return {
+    label: key,
+    kind: monaco.languages.CompletionItemKind.Field,
+  }
+});
 
 class SnippetString {
   constructor(str) {
@@ -35,22 +50,23 @@ const abridgeProvideCompletionItems = (model, { column, lineNumber }) => {
       column: column - 2,
       lineNumber,
     });
-    if (prevWord && (prevWord.word === 'abridge')) {
-      return [abridge]
+    if (prevWord) {
+      let completions = {};
+      if (Object.keys(registered).indexOf(prevWord.word) > -1) {
+        completions = registered[prevWord.word].methods || registered[prevWord.word];
+      }
+      return [Object.assign({}, globalCompletions, completions)]
         .reduce((prev, curr) =>
           Object.keys(curr).map(k => {
             return Object.assign({}, curr[k], {
               label: k,
-              kind: window.monaco.languages.CompletionItemKind.Method,
+              kind: curr[k].kind || window.monaco.languages.CompletionItemKind.Method,
             })
           }).concat(prev)
         , []);
     }
   } else {
     return [{
-      label: 'abridge',
-      kind: window.monaco.languages.CompletionItemKind.Field,
-    }, {
       insertText: new SnippetString(`App({
   onLaunch(options) {
     $1
@@ -93,7 +109,10 @@ const abridgeProvideCompletionItems = (model, { column, lineNumber }) => {
       documentation: '使用 Page 函数来生成一个页面实例',
       kind: monaco.languages.CompletionItemKind.Function,
       label: 'Page',
-    }].concat(snippetsCompletions);
+    }]
+    .concat(snippetsCompletions)
+    .concat(registeredEntries)
+    .concat(envCompletions);
   };
 }
 
