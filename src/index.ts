@@ -4,7 +4,7 @@ import { Registry, INITIAL } from 'vscode-textmate';
 import { join } from 'path';
 import * as theme from './theme';
 
-const activate = require(join(__dirname, '/../plugins/syntaxes/eslint/src/index'));
+const activate = require('../plugins/syntaxes/eslint/src/index');
 
 // ensure monaco is on the global window
 declare const window: Global;
@@ -70,37 +70,6 @@ const globalLanguageMap: any = {
     ],
   },
 };
-
-const buildCompletionItemProvider = (languageId) => {
-  switch (languageId) {
-    case 'javascript':
-      return jsCompletionItemProvider;
-    default:
-      return [];
-  }
-};
-
-const jsCompletionItemProvider = [
-  {
-    triggerCharacters: [/^[a-zA-Z]/],
-    provideCompletionItems: () => {
-      return [{
-        label: 'abridge',
-        kind: window.monaco.languages.CompletionItemKind.Field,
-      }, {
-        insertText: 'App({\n  onLaunch: function () {\n    {{String1}}\n  },\n  onShow: function () {\n    {{String2}}\n  },\n  onHide: function () {\n    {{String3}}\n  },\n  onError: function (msg) {\n    {{String4}}\n  }\n})',
-        documentation: '使用 App 函数来生成一个程序实例',
-        kind: monaco.languages.CompletionItemKind.Function,
-        label: 'App',
-      }, {
-        insertText: 'Page({\n  data:{\n    {{String1}}\n  },\n  onLoad:function(options){\n    // 生命周期函数--监听页面加载\n    {{String2}}\n  },\n  onReady:function(){\n    // 生命周期函数--监听页面初次渲染完成\n    {{String3}}\n  },\n  onShow:function(){\n    // 生命周期函数--监听页面显示\n    {{String4}}\n  },\n  onHide:function(){\n    // 生命周期函数--监听页面隐藏\n    {{String5}}\n  },\n  onUnload:function(){\n    // 生命周期函数--监听页面卸载\n    {{String6}}\n  },\n  onPullDownRefresh: function() {\n    // 页面相关事件处理函数--监听用户下拉动作\n    {{String7}}\n  },\n  onReachBottom: function() {\n    // 页面上拉触底事件的处理函数\n    {{String8}}\n  },\n  onShareAppMessage: function() {\n    // 用户点击右上角分享\n    return {\n      title: \'{{title}}\', // 分享标题\n      desc: \'{{desc}}\', // 分享描述\n      path: \'{{path}}\' // 分享路径\n    }\n  }\n})',
-        documentation: '使用 Page 函数来生成一个页面实例',
-        kind: monaco.languages.CompletionItemKind.Function,
-        label: 'Page',
-      }];
-    },
-  },
-];
 
 // grammar registry
 class GrammarRegistry implements IGrammarRegistry {
@@ -175,6 +144,13 @@ class GrammarRegistry implements IGrammarRegistry {
     activate(this, window.monaco);
   }
 
+  static activateCompletionItems(modeId) {
+    if (['javascript', 'html'].indexOf(modeId) === -1) return;
+    const languages = window.monaco.languages;
+    const completions = require(`../plugins/syntaxes/${modeId}/completions/main`);
+    languages.registerCompletionItemProvider(modeId, completions);
+  }
+
   static setMode(themeMode: string) {
     mode = themeMode;
   }
@@ -212,6 +188,7 @@ class GrammarRegistry implements IGrammarRegistry {
         extensions: globalLanguageMap[languageId].extensions,
       });
       languages.setLanguageConfiguration(languageId, globalLanguageMap[languageId].config);
+      GrammarRegistry.activateCompletionItems(languageId);
       languages.setTokensProvider(languageId, {
         getInitialState: () => {
           return INITIAL;
@@ -225,12 +202,6 @@ class GrammarRegistry implements IGrammarRegistry {
           };
         },
       });
-      const providers = buildCompletionItemProvider(languageId);
-
-      providers.forEach((provider) => {
-        languages.registerCompletionItemProvider(languageId, provider);
-      });
-
       resolve({ languageId, grammar });
     });
   }
@@ -243,10 +214,10 @@ class GrammarRegistry implements IGrammarRegistry {
 const getDefaultRegistry = (rootDir: string) => {
   const nodeDir: string = 'node_modules/ant-monaco';
   return new GrammarRegistry({
-    'source.js': join(rootDir, nodeDir, 'plugins/syntaxes/javascript/syntaxes/JavaScript.tmLanguage.json'),
-    'source.css': join(rootDir, nodeDir, 'plugins/syntaxes/css/syntaxes/css.tmLanguage.json'),
-    'source.json': join(rootDir, nodeDir, 'plugins/syntaxes/json/syntaxes/JSON.tmLanguage'),
-    'text.html.basic': join(rootDir, nodeDir, 'plugins/syntaxes/html/syntaxes/html.json'),
+    'source.js': join(rootDir, nodeDir, 'lib/syntaxes/JavaScript.tmLanguage.json'),
+    'source.css': join(rootDir, nodeDir, 'lib/syntaxes/css.tmLanguage.json'),
+    'source.json': join(rootDir, nodeDir, 'lib/syntaxes/JSON.tmLanguage'),
+    'text.html.basic': join(rootDir, nodeDir, 'lib/syntaxes/html.json'),
   });
 }
 

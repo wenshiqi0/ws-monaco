@@ -1,3 +1,7 @@
 node_modules/
 src/
+scripts/
+plugins/
+webpack.config.js
+tsconfig.json
 .vscode/
