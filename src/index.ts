@@ -217,7 +217,7 @@ const getDefaultRegistry = (rootDir: string) => {
     'source.js': join(rootDir, nodeDir, 'lib/syntaxes/JavaScript.tmLanguage.json'),
     'source.css': join(rootDir, nodeDir, 'lib/syntaxes/css.tmLanguage.json'),
     'source.json': join(rootDir, nodeDir, 'lib/syntaxes/JSON.tmLanguage'),
-    'text.html.basic': join(rootDir, nodeDir, 'lib/syntaxes/html.json'),
+    'text.html.basic': join(rootDir, nodeDir, 'lib/syntaxes/html.tmLanguage.json'),
   });
 }
 
