@@ -13,7 +13,7 @@
     "api": "node scripts/completions.js $site"
   },
   "keywords": [
-    "monao",
+    "monaco",
     "vscode-textmate",
     "ant"
   ],
