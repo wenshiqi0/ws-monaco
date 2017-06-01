@@ -34,6 +34,7 @@
     "mark-twain": "^1.1.6",
     "node-ipc": "^9.0.1",
     "request": "^2.81.0",
+    "ts-loader": "^2.1.0",
     "typescript": "^2.3.3",
     "uglify-es": "^3.0.13",
     "vscode": "^1.1.0",
