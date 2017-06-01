@@ -1,0 +1,11 @@
+{
+  "name": "antide-eslint",
+  "version": "0.0.1",
+  "description": "eslint for antide",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "munong",
+  "license": "MIT"
+}
