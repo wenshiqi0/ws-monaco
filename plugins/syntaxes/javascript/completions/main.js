@@ -3,11 +3,13 @@ const snippets = require('../snippets/javascript.json');
 const objectCompletions = require('../../../api/javascript/Object.json');
 const globalCompletions = require('../../../api/javascript/global.json');
 const envCompletions = require('../../../api/javascript/env.json');
+const consoleCompletions = require('../../../api/javascript/console.json');
 
 let snippetsCompletions;
 
 const registered = {
   Object: objectCompletions,
+  console: consoleCompletions,
   abridge,
 };
 
