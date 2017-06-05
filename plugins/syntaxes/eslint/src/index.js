@@ -164,16 +164,14 @@ const handleJsonLint = (data, callback) => {
 const activate = (callback) => {
   const ipc = new IPC();
   ipc.config.id = 'eslintServer';
-  ipc.config.silent = false;
+  ipc.config.silent = true;
   ipc.serve(() => {
     ipc.server.on(
       'javascript',
       (data, socket) => {
         const { results } = cli.executeOnText(data, 'source.js');
-        ipc.log(results);
         const { messages } = results[0];
         const messagesString = JSON.stringify(messages);
-        ipc.log(messagesString);
         ipc.server.emit(
           socket,
           'message',
@@ -236,9 +234,6 @@ const initClient = (callback) => {
         () => {
           monaco.editor.onDidCreateModel((model) => {
             const modeId = model.getModeId();
-
-            ipc.log(modeId);
-
             if (modeId === 'javascript' || modeId === 'json' || modeId === 'css') {
               const value = model.getValue();
               ipc.of.eslintServer.emit(modeId, value);

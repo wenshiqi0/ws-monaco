@@ -125,7 +125,7 @@
 	"Set Timeout Function": {
 		"prefix": "settimeout",
 		"body": [
-			"setTimeout(function() {",
+			"setTimeout(() => {",
 			"\t$0",
 			"}, ${1:timeout});"
 		],
