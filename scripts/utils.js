@@ -1,13 +1,13 @@
 exports.makeCompletion = (completion, entry) => {
   if (completion.length === 2) {
     if (entry) {
-      return completion[1].split('.')[1];
+      return completion[1].split('.')[1].split('(')[0];
     } else {
-      return completion[1];
+      return completion[1].split('(')[0];
     }
   } else {
     const method = completion[0].split('\t')[0];
-    return `${method}()`;
+    return `${method}`;
   }
 }
 

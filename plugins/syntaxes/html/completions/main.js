@@ -103,10 +103,16 @@ const provideCompletionItems = (model, { column, lineNumber }) => {
     })
 
     completionItems = (components.concat(fixedTags)).map(tag => {
-      const insertText = nextText.match(/<[a-zA-Z]*?>/g) ? tag.insertText.substring(1, tag.insertText.length - 1) : tag.insertText
+      const raw = ((tag.insertText || {}).value || '');
+      console.log(nextText.length);
+      const insertText = nextText.match(/<[a-zA-Z]*>$/g) ? {
+        value: raw.substring(1, raw.length - 1),
+      } : nextText.match(/<[a-zA-Z]*/g) ? {
+        value: raw.substring(1, raw.length),
+      } : tag.insertText;
       return Object.assign({}, tag, {
         kind: window.monaco.languages.CompletionItemKind.Keyword,
-        insertText: { value: insertText },
+        insertText,
       })
     })
   } else {

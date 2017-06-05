@@ -5,6 +5,7 @@ import { join } from 'path';
 import * as theme from './theme';
 
 const activate = require('../plugins/syntaxes/eslint/src/index');
+const activateJs = require('../plugins/syntaxes/javascript/src/index');
 
 // ensure monaco is on the global window
 declare const window: Global;
@@ -14,6 +15,7 @@ const jsConfig = require('../plugins/syntaxes/javascript/javascript-language-con
 const cssConfig = require('../plugins/syntaxes/css/language-configuration.json');
 const jsonConfig = require('../plugins/syntaxes/json/language-configuration.json');
 const htmlConfig = require('../plugins/syntaxes/html/language-configuration.json');
+const completionsHelp = require('../plugins/syntaxes/html/completions/main');
 
 let mode = 'light';
 
@@ -142,13 +144,14 @@ class GrammarRegistry implements IGrammarRegistry {
   activateExtensions() {
     // activate eslint
     activate(this, window.monaco);
+    activateJs(this, window.monaco);
   }
 
   static activateCompletionItems(modeId) {
-    if (['javascript', 'html'].indexOf(modeId) === -1) return;
     const languages = window.monaco.languages;
-    const completions = require(`../plugins/syntaxes/${modeId}/completions/main`);
-    languages.registerCompletionItemProvider(modeId, completions);
+    if (modeId === 'html') {
+      languages.registerCompletionItemProvider(modeId, completionsHelp);
+    }
   }
 
   static setMode(themeMode: string) {
@@ -211,13 +214,12 @@ class GrammarRegistry implements IGrammarRegistry {
   }
 }
 
-const getDefaultRegistry = (rootDir: string) => {
-  const nodeDir: string = 'node_modules/ant-monaco';
+const getDefaultRegistry = () => {
   return new GrammarRegistry({
-    'source.js': join(rootDir, nodeDir, 'lib/syntaxes/JavaScript.tmLanguage.json'),
-    'source.css': join(rootDir, nodeDir, 'lib/syntaxes/css.tmLanguage.json'),
-    'source.json': join(rootDir, nodeDir, 'lib/syntaxes/JSON.tmLanguage'),
-    'text.html.basic': join(rootDir, nodeDir, 'lib/syntaxes/html.tmLanguage.json'),
+    'source.js': join(__dirname, 'syntaxes/JavaScript.tmLanguage.json'),
+    'source.css': join(__dirname, 'syntaxes/css.tmLanguage.json'),
+    'source.json': join(__dirname, 'syntaxes/JSON.tmLanguage'),
+    'text.html.basic': join(__dirname, 'syntaxes/html.tmLanguage.json'),
   });
 }
 
