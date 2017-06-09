@@ -1,14 +1,17 @@
+// electron
+
 // interface
 import { IGrammarRegistry, Global } from './index.d';
 import { Registry, INITIAL } from 'vscode-textmate';
 import { join } from 'path';
+import { activate as activateJs } from '../plugins/syntaxes/javascript/src/index';
 import * as theme from './theme';
 
 const activate = require('../plugins/syntaxes/eslint/src/index');
-const activateJs = require('../plugins/syntaxes/javascript/src/index');
 
 // ensure monaco is on the global window
 declare const window: Global;
+declare const __dirname: string;
 
 // language configs
 const jsConfig = require('../plugins/syntaxes/javascript/javascript-language-configuration.json');

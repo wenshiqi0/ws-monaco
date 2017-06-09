@@ -23,7 +23,7 @@ module.exports = {
   externals(context, request, callback) {
     let isExternals = false;
 
-    if (request === 'vscode-textmate' || request === 'eslint') {
+    if (request === 'vscode-textmate' || request === 'eslint' || request === 'electron' ) {
       isExternals = request;
     }
 
@@ -56,7 +56,7 @@ module.exports = {
       }
     ]),
   ],
-  target: 'node',
+  target: 'electron',
   node: {
     __dirname: false
   }

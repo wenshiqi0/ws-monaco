@@ -9,4 +9,7 @@ if (package.main !== 'lib/index.min.js') {
 console.log(chalk.green('remove lib/index.js'));
 fs.removeSync('./lib/index.js');
 
+console.log(chalk.green('remove lib/main.js'));
+fs.removeSync('./lib/main.js');
+
 console.log(chalk.green('clean success, ready for publish'));
