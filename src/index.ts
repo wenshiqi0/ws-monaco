@@ -3,11 +3,11 @@
 // interface
 import { IGrammarRegistry, Global } from './index.d';
 import { Registry, INITIAL } from 'vscode-textmate';
+import { remote } from 'electron';
 import { join } from 'path';
 import { activate as activateJs } from '../plugins/syntaxes/javascript/src/index';
+import { activate as activateEslint } from '../plugins/syntaxes/eslint/src/index'
 import * as theme from './theme';
-
-const activate = require('../plugins/syntaxes/eslint/src/index');
 
 // ensure monaco is on the global window
 declare const window: Global;
@@ -145,9 +145,8 @@ class GrammarRegistry implements IGrammarRegistry {
   }
 
   activateExtensions() {
-    // activate eslint
-    activate(this, window.monaco);
     activateJs(this, window.monaco);
+    activateEslint(this, window.monaco);
   }
 
   static activateCompletionItems(modeId) {
@@ -226,7 +225,28 @@ const getDefaultRegistry = () => {
   });
 }
 
+const editorOptions = {
+  folding: true,
+  fontSize: 12,
+  tabSize: 4,
+  parameterHints: true,
+  autoClosingBrackets: true,
+  renderWhitespace: 'none',
+  wordWrap: 'off',
+  cursorStyle: 'line',
+  fontFamily: "Menlo, Monaco, 'Courier New', monospace",
+  scrollbar: {
+    verticalScrollbarSize: 6,
+    horizontalScrollbarSize: 6,
+  },
+  renderIndentGuides: true,
+  insertSpaces: true,
+  detectIndentation: true,
+  quickSuggestionsDelay: 10,
+};
+
 module.exports = {
   getDefaultRegistry,
   GrammarRegistry,
+  editorOptions,
 }

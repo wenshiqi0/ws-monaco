@@ -1,33 +1,30 @@
-import { ipcRenderer as ipc } from 'electron';
-
-const remote = require('electron').remote;
+import { ipcRenderer as ipc, remote } from 'electron';
 
 export const activate = (registry, monaco) => {
-  // start main services
-  const test = remote.require('./main');
-  console.log(test);
-
   const languages = monaco.languages;
 
   languages.registerCompletionItemProvider('javascript', {
     triggerCharacters: ['*'],
     provideCompletionItems: (model, position, token) => {
       return new Promise(resolve => {
-        ipc.send('completions', {
+        const handler = (event, args) => {
+          console.log(args);
+          resolve(args);
+        };
+        ipc.send('javascript:completions', {
           value: model.getValue(),
           offset: model.getOffsetAt(position),
           position,
         });
-        ipc.once(
-          'completions',
-          (event, arg) => {
-            resolve(arg);
-          }
-        )
+        ipc.once('javascript:completions', handler);
+        if (token) {
+					token.onCancellationRequested(() => {
+            console.log('just remove');
+            ipc.removeListener('javascript:completions', handler);
+						resolve(undefined);
+					});
+				}
       });
-    },
-    resolveCompletionItem: (item) => {
-      console.log(item);
     },
   });
 
@@ -35,17 +32,21 @@ export const activate = (registry, monaco) => {
     signatureHelpTriggerCharacters: ['(', ','],
     provideSignatureHelp: (model, position, token) => {
       return new Promise(resolve => {
-        ipc.send('signatures', {
+        const handler = (event, args) => {
+          resolve(args);
+        };
+        ipc.send('javascript:signatures', {
           value: model.getValue(),
           offset: model.getOffsetAt(position),
           position,
         });
-        ipc.once(
-          'signatures',
-          (event, arg) => {
-            resolve(arg);
-          }
-        )
+        ipc.once('javascript:signatures', handler);
+        if (token) {
+					token.onCancellationRequested(() => {
+            ipc.removeListener('javascript:signatures', handler);
+						resolve(undefined);
+					});
+				}
       });
     },
   })

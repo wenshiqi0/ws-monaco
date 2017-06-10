@@ -18,7 +18,17 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.js', '.json'],
+    extensions: ['.ts', '.js', '.json'],
+  },
+  externals(context, request, callback) {
+    let isExternals = false;
+    if (request === 'eslint' || request === 'electron') {
+      isExternals = `require('${request}')`;
+    }
+    callback(null, isExternals);
+  },
+  resolve: {
+    extensions: ['.ts', '.js', '.json'],
   },
   target: 'electron',
   node: {

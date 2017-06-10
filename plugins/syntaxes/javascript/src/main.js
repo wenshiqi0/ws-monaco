@@ -124,11 +124,11 @@ const handleCompletionItems = (value, offset, position) => {
 }
 
 ipc.on(
-  'completions',
-  (event, arg) => {
-    const { value, offset, position } = arg;
+  'javascript:completions',
+  (event, args) => {
+    const { value, offset, position } = args;
     const result = handleCompletionItems(value, offset, position);
-    event.sender.send('completions', {
+    event.sender.send('javascript:completions', {
         isIncomplete: false,
         items: result.items,
     });
@@ -172,10 +172,10 @@ const handleSignatureHelp = (value, offset, position) => {
 }
 
 ipc.on(
-  'signatures',
-  (event, arg) => {
-    const { value, offset, position } = arg;
+  'javascript:signatures',
+  (event, args) => {
+    const { value, offset, position } = args;
     const result = handleSignatureHelp(value, offset, position);
-    event.sender.send('signatures', result);
+    event.sender.send('javascript:signatures', result);
   }
 )

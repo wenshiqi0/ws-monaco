@@ -22,11 +22,9 @@ module.exports = {
   },
   externals(context, request, callback) {
     let isExternals = false;
-
-    if (request === 'vscode-textmate' || request === 'eslint' || request === 'electron' ) {
+    if (request === 'vscode-textmate' || request === 'electron' ) {
       isExternals = request;
     }
-
     callback(null, isExternals);
   },
   resolve: {
