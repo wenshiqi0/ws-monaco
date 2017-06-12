@@ -1,12 +1,12 @@
 import { ipcMain as ipc } from 'electron';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import libES6File from 'raw-loader!typescript/lib/lib.es6.d.ts';
 
-const ts = require('Typescript/lib/tsserverlibrary');
-const FILE_NAME = 'ant://javascript:1';
+const ts = require('typescript/lib/tsserverlibrary');
 
 let document;
 let version = 1;
+const FILE_NAME = 'ant://javascript';
+const TEST_NAME = 'test://javascript';
 
 const CompletionItemKind = {
   Text: 0,
@@ -66,27 +66,28 @@ function convertKind(kind) {
 const compilerOptions = {
   allowNonTsExtensions: true,
   allowJs: true,
-  lib: ['lib.es6.d.ts'],
-  target: 'es6',
+  target: 2, // lib.es6.d.ts
   moduleResolution: ts.ModuleResolutionKind.Classic
 };
 
 const host = {
   getCompilationSettings: () => compilerOptions,
-  getScriptFileNames: () => [FILE_NAME],
+  getScriptFileNames: () => [FILE_NAME, TEST_NAME],
   getScriptKind: () => ts.ScriptKind.JS,
   getScriptVersion: (fileName) => {
     if (fileName === FILE_NAME) {
       return String(version++);
     }
-    return '1'; // default lib an jquery.d.ts are static
+    return '1'; // 非工程文件只需要固定文件版本就好了
   },
   getScriptSnapshot: (fileName) => {
     let text = '';
     if (fileName === FILE_NAME) {
-      text = document;
+      text = document || '';
+    } else if (fileName === TEST_NAME) {
+      text = 'var text = ""'; // 目前还没有一个很好的方式来解决这里的性能问题，所以我添加了一个测试文件，在ide初始化的时候将预先生成代码补全的信息
     } else {
-      text = readFileSync(join(__dirname, './lib.es6.d.ts'), 'utf8');
+      text = libES6File;
     }
     return {
       getText: (start, end) => text.substring(start, end),
@@ -95,10 +96,13 @@ const host = {
     };
   },
   getCurrentDirectory: () => '',
-  getDefaultLibFileName: (options) => ts.getDefaultLibFilePath(options)
+  getDefaultLibFileName: () => 'lib.es6.d.ts', // 目前只使用 es6
 }
 
 const jsLanguageService = ts.createLanguageService(host);
+
+// 预先生成所有的代码补全信息，typescript 会把相关信息缓存起来
+jsLanguageService.getCompletionsAtPosition(TEST_NAME, 0);
 
 const handleCompletionItems = (value, offset, position) => {
   document = value;

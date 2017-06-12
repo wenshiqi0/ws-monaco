@@ -7,23 +7,18 @@ export const activate = (registry, monaco) => {
     triggerCharacters: ['*'],
     provideCompletionItems: (model, position, token) => {
       return new Promise(resolve => {
-        const handler = (event, args) => {
-          console.log(args);
-          resolve(args);
-        };
+        ipc.once('javascript:completions', (event, args) => {console.log(args);return resolve(args)});
+        if (token) {
+					token.onCancellationRequested(() => {
+            ipc.removeAllListeners('javascript:completions');
+						resolve(undefined);
+					});
+				}
         ipc.send('javascript:completions', {
           value: model.getValue(),
           offset: model.getOffsetAt(position),
           position,
         });
-        ipc.once('javascript:completions', handler);
-        if (token) {
-					token.onCancellationRequested(() => {
-            console.log('just remove');
-            ipc.removeListener('javascript:completions', handler);
-						resolve(undefined);
-					});
-				}
       });
     },
   });
@@ -32,21 +27,18 @@ export const activate = (registry, monaco) => {
     signatureHelpTriggerCharacters: ['(', ','],
     provideSignatureHelp: (model, position, token) => {
       return new Promise(resolve => {
-        const handler = (event, args) => {
-          resolve(args);
-        };
+        ipc.once('javascript:signatures', (event, args) => resolve(args));
+        if (token) {
+					token.onCancellationRequested(() => {
+            ipc.removeAllListeners('javascript:signatures');
+						resolve(undefined);
+					});
+				}
         ipc.send('javascript:signatures', {
           value: model.getValue(),
           offset: model.getOffsetAt(position),
           position,
         });
-        ipc.once('javascript:signatures', handler);
-        if (token) {
-					token.onCancellationRequested(() => {
-            ipc.removeListener('javascript:signatures', handler);
-						resolve(undefined);
-					});
-				}
       });
     },
   })
