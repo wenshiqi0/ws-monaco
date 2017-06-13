@@ -250,26 +250,97 @@ apis.map((api) => {
   };
 });
 
-function makeParamsDesc (params) {
-  const desc = [];
-  (params || []).forEach(param => {
-    desc.push(`* @param ${param.name} ${param.desc}`);
-  });
-  if (desc.length > 0) {
-    return `/**\n${desc.join('\n')} \n    **/\n    `;
+function handleUpperAndLower(type) {
+  const lowerType = type.trim().toLowerCase();
+  switch (lowerType) {
+    case 'object':
+      return 'Object';
+    case 'array':
+      return 'Array<string>';
+    case 'arraybuffer':
+      return 'ArrayBuffer';
+    default:
+      return lowerType;
+  }
+}
+
+function handleDoubleType(types) {
+  const splited = types.split(/[(\s|\/),]+/);
+  if (splited.length > 1) {
+    const first = handleUpperAndLower(splited[0]);
+    const second = handleUpperAndLower(splited[1]);
+    return `${first} | ${second}`;
   } else {
-    return '';
+    return handleUpperAndLower(types);
+  }
+}
+
+function normalise(number) {
+  let spaces = '';
+  for (let i = 0; i < number; i++) {
+    spaces += ' ';
+  }
+  return spaces;
+}
+
+function makeApiDesc(name, params, callback) {
+  return `  /**
+   * ${apisObejct[name].documentation}
+   * 
+   * ${(params && params.length > 0) ? `@param apiParams abridge api ${name} params object` : ''}
+${(params && params.length > 0) ? '--------------------------\n参数                   描述' : ''}
+${(params || []).map((param) => {
+  return `${param.name + normalise(20 - param.name.length)}${param.desc}`;
+}).join('\n')}
+   */`
+}
+
+function makeParams (name, params, callback) {
+  const paramsDetils = (params || []).map(param => ` /** \n  * ${param.desc}\n  */\n ${param.name}${callback ? '?' : ''}: ${(handleDoubleType(param.type) || '').replace('/', ' | ')};\n`);
+
+  if (paramsDetils.length === 0) return '';
+
+  if (callback) {
+    paramsDetils.push('  /** \n   * 接口调用成功的回调函数\n   * @param res 成功返回参数 \n   */\n  success? (res: Object): void;\n');
+    paramsDetils.push('  /** \n   * 接口调用失败的回调函数\n   * @param error 失败返回错误码 \n   */\n  fail? (error: number): void;\n');
+    paramsDetils.push('  /** \n   * 接口调用结束的回调函数（调用成功、失败都会执行）\n   */\n  complete? (): void;\n');
+  }
+
+  return `interface ${name}Params {
+${paramsDetils.join('\n')}
+}
+`;
+}
+
+function makeFunctionDefine (name, params, callback) {
+  if (name.indexOf('(') > -1) {
+    return `  ${name}: void;`;
+  } else if (!params || params.length === 0) {
+    return `  ${name}(): void;`;
+  } else {
+    return `  ${name}(apiParams: ${name}Params): void;`;
   }
 }
 
 const defineString = `
-  interface Abridge {
-${apis.map((api) => {
-  return `    ${makeParamsDesc(api.params)}${api.name.split('.')[1]} (${(api.params || []).map((param) => `${param.name}${param.required ? '?' : ''}: ${param.type} `.replace('/', ' | '))});\n`;
+${apis.map(api => {
+  return makeParams(api.name.split('.')[1], api.params, api.callback);
 }).join('')}
-  }
 
-  declare const abridge: Abridge;
+interface Abridge {
+${apis.map(api => {
+  return `
+${makeApiDesc(api.name.split('.')[1], api.params, api.callback)}
+${makeFunctionDefine(api.name.split('.')[1], api.params, api.callback)}
+  `
+}).join('')}
+}
+
+declare const abridge: Abridge;
+
+declare module "abridge" {
+    export = abridge;
+}
 `;
 
 // 清理文件夹
@@ -282,5 +353,5 @@ fs.mkdirSync('./plugins/api/html/');
 
 // 写入到文件
 fs.writeFileSync('./plugins/api/javascript/abridge.json', JSON.stringify(apisObejct));
-fs.writeFileSync('./plugins/api/javascript/abridge.d.txt', defineString);
+fs.writeFileSync('./plugins/api/javascript/lib.abridge.spec.ts', defineString);
 fs.writeFileSync('./plugins/api/html/axml.json', JSON.stringify(components));

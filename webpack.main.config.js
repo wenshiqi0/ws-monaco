@@ -16,7 +16,7 @@ module.exports = {
         loader: 'ts-loader',
       },
       {
-        test: /\.d.ts$/,
+        test: /\.spec.ts$/,
         exclude: /node_modules/,
         loader: 'raw-loader',
       },
@@ -33,7 +33,7 @@ module.exports = {
     callback(null, isExternals);
   },
   resolve: {
-    extensions: ['.ts', '.js', '.json'],
+    extensions: ['.js', '.json', '.d.ts', '.ts',],
   },
   target: 'electron',
   node: {

@@ -1,6 +1,7 @@
 import { ipcMain as ipc } from 'electron';
 import libES6File from 'raw-loader!typescript/lib/lib.es6.d.ts';
-import abridgeFile from 'raw-loader!./../../../api/javascript/abridge.d.txt';
+import abridgeFile from './../../../api/javascript/lib.abridge.spec.ts';
+import abridgeInsert from './../../../api/javascript/abridge.json';
 
 const ts = require('typescript/lib/tsserverlibrary');
 const combineFile = `${libES6File}\n\n${abridgeFile}`;
@@ -106,7 +107,7 @@ const jsLanguageService = ts.createLanguageService(host);
 // 预先生成所有的代码补全信息，typescript 会把相关信息缓存起来
 jsLanguageService.getCompletionsAtPosition(TEST_NAME, 0);
 
-const handleCompletionItems = (value, offset, position) => {
+const handleCompletionItems = (value, offset, position, prevWord) => {
   document = value;
   let completions = jsLanguageService.getCompletionsAtPosition(FILE_NAME, offset);
   if (!completions) {
@@ -118,7 +119,7 @@ const handleCompletionItems = (value, offset, position) => {
       return {
         position,
         label: entry.name,
-        insertText: entry.name,
+        insertText: (prevWord === 'abridge' && completions.isMemberCompletion && abridgeInsert[entry.name] )? abridgeInsert[entry.name].insertText : entry.name,
         kind: convertKind(entry.kind),
         data: { // data used for resolving item details (see 'doResolve')
           languageId: 'javascript',
@@ -132,8 +133,8 @@ const handleCompletionItems = (value, offset, position) => {
 ipc.on(
   'javascript:completions',
   (event, args) => {
-    const { value, offset, position } = args;
-    const result = handleCompletionItems(value, offset, position);
+    const { value, offset, position, prevWord } = args;
+    const result = handleCompletionItems(value, offset, position, prevWord);
     event.sender.send('javascript:completions', {
         isIncomplete: false,
         items: result.items,
