@@ -48,10 +48,6 @@ module.exports = {
         from: 'plugins/syntaxes/json/syntaxes/JSON.tmLanguage',
         to: 'syntaxes/JSON.tmLanguage',
       },
-      {
-        from: 'node_modules/typescript/lib/lib.es6.d.ts',
-        to: 'lib.es6.d.ts',
-      }
     ]),
   ],
   target: 'electron',

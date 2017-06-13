@@ -7,7 +7,7 @@ export const activate = (registry, monaco) => {
     triggerCharacters: ['*'],
     provideCompletionItems: (model, position, token) => {
       return new Promise(resolve => {
-        ipc.once('javascript:completions', (event, args) => {console.log(args);return resolve(args)});
+        ipc.once('javascript:completions', (event, args) => resolve(args));
         if (token) {
 					token.onCancellationRequested(() => {
             ipc.removeAllListeners('javascript:completions');

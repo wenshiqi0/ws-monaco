@@ -1,0 +1,244 @@
+
+  interface Abridge {
+    getSystemInfo ();
+    getNetworkType ();
+    /**
+* @param type 扫描目标类型，支持 qr / bar，相应扫码选框会不同，默认 qr 
+    **/
+    scan (type: String );
+    watchShake ();
+    vibrate ();
+    /**
+* @param number 电话号码 
+    **/
+    makePhoneCall (number?: String );
+    getServerTime ();
+    onAccelerometerChange ();
+    offAccelerometerChange ();
+    onCompassChange ();
+    offCompassChange ();
+    /**
+* @param cacheTimeout 钱包经纬度定位缓存过期时间，单位秒。默认 30s。使用缓存会加快定位速度，缓存过期会重新定位
+* @param timeout 定位超时失败回调时间，单位秒。默认10s 
+    **/
+    getLocation (cacheTimeout: Number ,timeout: Number );
+    /**
+* @param longitude 经度
+* @param latitude 纬度
+* @param name 位置名称
+* @param address 地址的详细说明
+* @param scale 缩放比例，范围 3~19，默认为 15 
+    **/
+    openLocation (longitude?: String ,latitude?: String ,name: String ,address: String ,scale: Number );
+    /**
+* @param url 音乐链接地址
+* @param title 音乐标题
+* @param singer 演唱者
+* @param describe 音乐描述
+* @param logo logo URL
+* @param cover 封面 URL 
+    **/
+    playBackgroundAudio (url?: String ,title: String ,singer: String ,describe: String ,logo: String ,cover: String );
+    pauseBackgroundAudio ();
+    stopBackgroundAudio ();
+    /**
+* @param position 音乐位置，单位秒 
+    **/
+    seekBackgroundAudio (position?: Number );
+    getBackgroundAudioPlayerState ();
+    onBackgroundAudioPlay ();
+    onBackgroundAudioPause ();
+    onBackgroundAudioStop ();
+    offBackgroundAudioPlay ();
+    offBackgroundAudioPause ();
+    offBackgroundAudioStop ();
+    createAudioContext(audioId) ();
+    /**
+* @param maxDuration 最大录制时长，单位秒，默认60s
+* @param sourceType 相册选取或者拍照，默认 
+* @param camera 前置或者后置摄像头，默认前后都有，即： 
+    **/
+    chooseVideo (maxDuration: Number ,sourceType: String Array ,camera: String Array );
+    /**
+* @param url 开发者服务器地址
+* @param filePath 要上传文件资源的本地定位符
+* @param fileName 文件名，即对应的 key, 开发者在服务器端通过这个 key 可以获取到文件二进制内容
+* @param fileType 文件类型，image/video
+* @param headers 完整的支付参数拼接成的字符串，从服务端获取
+* @param formData 完整的支付参数拼接成的字符串，从服务端获取 
+    **/
+    uploadFile (url?: String ,filePath?: String ,fileName?: String ,fileType?: String ,headers: Object ,formData: Object );
+    /**
+* @param url 下载文件地址
+* @param headers HTTP 请求 Header 
+    **/
+    downloadFile (url?: String ,headers: Object );
+    /**
+* @param count 最大可选照片数，默认1张，上限9张
+* @param sourceType 相册选取或者拍照，默认  
+    **/
+    chooseImage (count: Number ,sourceType: String Array );
+    /**
+* @param urls 要预览的图片链接列表
+* @param current 当前显示图片索引，默认 0 
+    **/
+    previewImage (urls?: Array ,current: Number );
+    /**
+* @param url 要保存的图片链接
+* @param showActionSheet 是否显示图片操作菜单，默认 true 
+    **/
+    saveImage (url?: String ,showActionSheet: Boolean );
+    /**
+* @param maxDuration 最大录制时长，单位秒，默认60s
+* @param minDuration 最小录制时长，单位秒，默认1s 
+    **/
+    startRecord (maxDuration: Number ,minDuration: Number );
+    stopRecord ();
+    cancelRecord ();
+    createVideoContext(videoId) ();
+    /**
+* @param filePath 音频文件路径 
+    **/
+    playVoice (filePath: String );
+    pauseVoice ();
+    resumeVoice ();
+    stopVoice ();
+    /**
+* @param url 目标服务器 url
+* @param headers 设置请求的 HTTP 头，默认 {'Content-Type': 'application/x-www-form-urlencoded'}。其中不能设置UserAgent
+* @param method 默认 GET，目前支持 GET, POST
+* @param data 请求的参数
+* @param timeout 超时时间，单位为 ms，默认 30000
+* @param dataType 期望返回的数据格式，默认 json，支持 json, text, base64 
+    **/
+    httpRequest (url?: String ,headers: Object ,method: String ,data: String ,timeout: Number ,dataType: String );
+    /**
+* @param url 开发者服务器接口地址，必须是 wss 协议，且域名必须是后台配置的合法域名
+* @param data 请求的数据
+* @param header HTTP Header , header 中不能设置 Referer
+* @param method 默认是GET，有效值为： OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT 
+    **/
+    connectSocket (url?: String ,data: Object ,header: Object ,method: String );
+    onSocketOpen ();
+    onSocketError ();
+    /**
+* @param data 需要发送的内容 
+    **/
+    sendSocketMessage (data?: String | ArrayBuffer );
+    /**
+* @param data  
+    **/
+    onSocketMessage (data: String | ArrayBuffer );
+    closeSocket ();
+    onSocketClose ();
+    /**
+* @param scopes 授权类型，默认 auth_base。支持 auth_base(静默授权)/auth_user(主动授权) 
+    **/
+    getAuthCode (scopes: String | Array );
+    getAuthUserInfo ();
+    /**
+* @param orderStr 完整的支付参数拼接成的字符串，从服务端获取 
+    **/
+    tradePay (orderStr?: String );
+    /**
+* @param key 缓存数据的 key
+* @param data 要缓存的数据 
+    **/
+    setStorage (key?: String ,data?: Object | String );
+    /**
+* @param key 缓存数据的 key 
+    **/
+    getStorage (key?: String );
+    /**
+* @param key 缓存数据的 key 
+    **/
+    removeStorage (key?: String );
+    createAnimation ();
+    createCanvasContext(canvasId) ();
+    /**
+* @param showLocatedCity 是否显示当前定位城市，默认 false
+* @param showHotCities 是否显示热门城市，默认 true
+* @param cities 自定义城市列表，列表内对象字段见下表
+* @param hotCities 自定义热门城市列表，列表内对象字段见下表 
+    **/
+    chooseCity (showLocatedCity: Boolean ,showHotCities: Boolean ,cities: Object Array ,hotCities: Object Array );
+    choosePhoneContact ();
+    /**
+* @param count 单次最多选择联系人个数，默认 1，最大 10 
+    **/
+    chooseAlipayContact (count: Number );
+    /**
+* @param formate 返回的日期格式，默认 yyyy-MM-dd。支持 HH:mm:ss, yyyy-MM-dd, yyyy-MM-dd HH:mm:ss 三种格式
+* @param currentDate 初始选择的日期时间，默认当前时间
+* @param startDate 最小日期时间
+* @param endDate 最大日期时间 
+    **/
+    datePicker (formate: String ,currentDate: String ,startDate: String ,endDate: String );
+    /**
+* @param title alert 框的标题
+* @param content alert 框的内容
+* @param buttonText 按钮文字，默认’确定’ 
+    **/
+    alert (title?: String ,content: String ,buttonText: String );
+    /**
+* @param title confirm 框的标题
+* @param content confirm 框的内容
+* @param confirmButtonText 确定按钮文字，默认’确定’
+* @param cancelButtonText 取消按钮文字，默认’取消’ 
+    **/
+    confirm (title?: String ,content: String ,confirmButtonText: String ,cancelButtonText: String );
+    /**
+* @param content 文字内容
+* @param type toast 类型，展示相应图标，默认 none，支持 success / fail / exception / none’。其中 exception 类型必须传文字信息
+* @param duration 显示时长，单位为 ms，默认 2000 
+    **/
+    showToast (content?: String ,type: String ,duration: Number );
+    hideToast ();
+    /**
+* @param content loading 的文字提示
+* @param delay 延迟显示，单位 ms，默认 0。如果在此时间之前调用了 ap.hideLoading 则不会显示 
+    **/
+    showLoading (content: String ,delay: Number );
+    hideLoading ();
+    showNavigationBarLoading ();
+    hideNavigationBarLoading ();
+    /**
+* @param title 菜单标题
+* @param items 菜单按钮的文字数组
+* @param cancelButtonText 取消按钮文案，默认为「取消」
+* @param destructiveBtnIndex （IOS特殊处理）指定按钮的索引号，从0开始，使用场景：需要删除或清除数据等类似场景，默认红色 
+    **/
+    showActionSheet (title: String ,items?: String Array ,cancelButtonText: String ,destructiveBtnIndex: Number );
+    hideKeyboard ();
+    createMapContext(mapId) ();
+    /**
+* @param url 需要跳转的应用内非 tabBar 的页面的路径 , 路径后可以带参数。参数与路径之间使用 
+    **/
+    navigateTo (url?: String );
+    /**
+* @param url 需要跳转的应用内非 tabBar 的页面的路径，路径后可以带参数。参数与路径之间使用 
+    **/
+    redirectTo (url?: String );
+    /**
+* @param delta 返回的页面数，如果 delta 大于现有页面数，则返回到首页。 
+    **/
+    navigateBack (delta: Number );
+    /**
+* @param title 导航栏标题
+* @param image 图片链接地址，必须 https，请使用一张3x高清图。若设置了 image，则 title 参数失效
+* @param backgroundColor 导航栏背景色，支持 16 进制颜色值
+* @param borderBottomColor 导航栏底部边框颜色，支持16进制颜色值。若设置了 backgroundColor，borderBottomColor 会不生效，默认会和 backgroundColor 颜色一样。
+* @param reset 是否重置导航栏为支付宝默认配色，默认 false 
+    **/
+    setNavigationBar (title: String ,image: String ,backgroundColor: String ,borderBottomColor: String ,reset: Boolean );
+    showNavigationBarLoading ();
+    hideNavigationBarLoading ();
+    stopPullDownRefresh ();
+    /**
+* @param url 需要跳转的 tabBar 页面的路径（需在 app.json 的 tabBar 字段定义的页面），路径后不能带参数 
+    **/
+    switchTab (url?: String );
+
+  }
+
+  declare const abridge: Abridge;

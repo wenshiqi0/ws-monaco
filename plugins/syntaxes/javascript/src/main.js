@@ -1,7 +1,9 @@
 import { ipcMain as ipc } from 'electron';
 import libES6File from 'raw-loader!typescript/lib/lib.es6.d.ts';
+import abridgeFile from 'raw-loader!./../../../api/javascript/abridge.d.txt';
 
 const ts = require('typescript/lib/tsserverlibrary');
+const combineFile = `${libES6File}\n\n${abridgeFile}`;
 
 let document;
 let version = 1;
@@ -87,7 +89,7 @@ const host = {
     } else if (fileName === TEST_NAME) {
       text = 'var text = ""'; // 目前还没有一个很好的方式来解决这里的性能问题，所以我添加了一个测试文件，在ide初始化的时候将预先生成代码补全的信息
     } else {
-      text = libES6File;
+      text = combineFile;
     }
     return {
       getText: (start, end) => text.substring(start, end),

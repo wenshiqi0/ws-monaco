@@ -241,12 +241,36 @@ dest2.forEach((component) => {
   });
 });
 
+// console.log(JSON.stringify(apis));
+
 apis.map((api) => {
   apisObejct[api.name.split('.')[1]] = {
     insertText: { value: api.toString() },
     documentation: api.desc,
   };
 });
+
+function makeParamsDesc (params) {
+  const desc = [];
+  (params || []).forEach(param => {
+    desc.push(`* @param ${param.name} ${param.desc}`);
+  });
+  if (desc.length > 0) {
+    return `/**\n${desc.join('\n')} \n    **/\n    `;
+  } else {
+    return '';
+  }
+}
+
+const defineString = `
+  interface Abridge {
+${apis.map((api) => {
+  return `    ${makeParamsDesc(api.params)}${api.name.split('.')[1]} (${(api.params || []).map((param) => `${param.name}${param.required ? '?' : ''}: ${param.type} `.replace('/', ' | '))});\n`;
+}).join('')}
+  }
+
+  declare const abridge: Abridge;
+`;
 
 // 清理文件夹
 fsExtra.removeSync('./plugins/api');
@@ -258,4 +282,5 @@ fs.mkdirSync('./plugins/api/html/');
 
 // 写入到文件
 fs.writeFileSync('./plugins/api/javascript/abridge.json', JSON.stringify(apisObejct));
+fs.writeFileSync('./plugins/api/javascript/abridge.d.txt', defineString);
 fs.writeFileSync('./plugins/api/html/axml.json', JSON.stringify(components));
