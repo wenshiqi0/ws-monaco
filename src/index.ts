@@ -74,6 +74,7 @@ const globalLanguageMap: any = {
       '.html',
     ],
   },
+  default: 'plaintext'
 };
 
 // grammar registry
@@ -163,6 +164,7 @@ class GrammarRegistry implements IGrammarRegistry {
   static loadGrammar({ registry, languageId }): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       if (registry.getEmbeddedLanguages().indexOf(languageId) > -1) resolve({ languageId: null });
+      else if (!globalLanguageMap[languageId]) resolve({ languageId: globalLanguageMap.default });
       else {
         // Id index map to language. vscode-textmate does not use index 0.
         const id = registry.pushLanguageEmbedded(languageId);
@@ -186,7 +188,8 @@ class GrammarRegistry implements IGrammarRegistry {
 
   static registerLanguage({ languageId, grammar }): Promise<any> {
     return new Promise<any>((resolve) => {
-      if (!languageId) resolve(false);
+      if (!languageId) return resolve(false);
+      if (languageId === 'plaintext') return resolve({ languageId, grammar: null });
       const languages = window.monaco.languages;
       languages.register({
         id: languageId,

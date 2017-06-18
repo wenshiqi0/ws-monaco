@@ -4,7 +4,7 @@ export const activate = (registry, monaco) => {
   const languages = monaco.languages;
 
   languages.registerCompletionItemProvider('javascript', {
-    triggerCharacters: ['*'],
+    triggerCharacters: ['*', '.'],
     provideCompletionItems: (model, position, token) => {
       return new Promise(resolve => {
         const { column, lineNumber } = position;

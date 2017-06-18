@@ -4,12 +4,12 @@ const gloablAttributes = [
   {
     documentation: '',
     label: 'class',
-    insertText: 'class="$0"',
+    insertText: { value: 'class="$1"' },
   },
   {
     documentation: '',
     label: 'onTap',
-    insertText: 'onTap="$0"',
+    insertText: { value: 'onTap="$1"' },
   },
 ];
 
@@ -17,12 +17,12 @@ const fixedTags = [
   {
     documentation: '仅可放置在<swiper/>组件中，宽高自动设置为100%。',
     label: 'swiper-item',
-    insertText: '<swiper-item>$0</swiper-item>',
+    insertText: { value: '<swiper-item>$1</swiper-item>' },
   },
   {
     documentation: '',
     label: 'picker-view-column',
-    insertText: '<picker-view-column>$0</picker-view-column>',
+    insertText: { value: '<picker-view-column>$1</picker-view-column>' },
   },
 ];
 
@@ -104,7 +104,6 @@ const provideCompletionItems = (model, { column, lineNumber }) => {
 
     completionItems = (components.concat(fixedTags)).map(tag => {
       const raw = ((tag.insertText || {}).value || '');
-      console.log(nextText.length);
       const insertText = nextText.match(/<[a-zA-Z]*>$/g) ? {
         value: raw.substring(1, raw.length - 1),
       } : nextText.match(/<[a-zA-Z]*/g) ? {

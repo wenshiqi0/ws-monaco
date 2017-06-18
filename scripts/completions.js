@@ -79,7 +79,7 @@ class Api {
 
     if (!params) {
       return `${this.name.split('.')[1]}({
-  ${this.callback ? 'success: function(res){\n    $0\n  },' : ''}
+  ${this.callback ? 'success: (res) => {\n    $0\n  },' : ''}
 });`;
     }
 
@@ -91,7 +91,7 @@ class Api {
 
     return `${this.name.split('.')[1]}({
   ${params}
-  ${this.callback ? 'success: function(res){\n    \n  },' : ''}
+  ${this.callback ? 'success: (res) => {\n    \n  },' : ''}
 });`;
   }
 }
@@ -136,13 +136,13 @@ class Component {
     }
 
     if (this.close && this.reqAttr) {
-      return `<${this.tag}${this.mode ? ` mode="${this.mode}"` : ' '}${this.reqAttr}="{{${covertBasicType(valueType, defaultValue)}}}" />`;
+      return `<${this.tag}${this.mode ? ` mode="${this.mode}"` : ' '}${this.reqAttr}="$1" />`;
     } else if (!this.close && this.reqAttr) {
-      return `<${this.tag}${this.mode ? ` mode="${this.mode}"` : ' '}${this.reqAttr}="{{${covertBasicType(valueType, defaultValue)}}}"></${this.tag}>`;
+      return `<${this.tag}${this.mode ? ` mode="${this.mode}"` : ' '}${this.reqAttr}="$1"></${this.tag}>`;
     } else if (this.close && !this.reqAttr) {
       return `<${this.tag}${this.mode ? ` mode="${this.mode}"` : ' '}/>`;
     } else if (!this.close && !this.reqAttr) {
-      return `<${this.tag}${this.mode ? ` mode="${this.mode}"` : ''}>$0</${this.tag}>`;
+      return `<${this.tag}${this.mode ? ` mode="${this.mode}"` : ''}>$1</${this.tag}>`;
     }
   }
 

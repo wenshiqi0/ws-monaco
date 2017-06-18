@@ -1,6 +1,6 @@
 {
   "name": "ant-monaco",
-  "version": "0.4.8",
+  "version": "0.5.0",
   "description": "Ant monaco with vscode-textmate. This module can only run under node runtime",
   "main": "lib/index.min.js",
   "scripts": {
@@ -10,8 +10,8 @@
     "watch:render": "webpack --config ./webpack.render.config.js -w",
     "watch:main": "webpack --config ./webpack.main.config.js -w",
     "watch": "npm run watch:main & npm run watch:render",
-    "minify:render": "npm run build:render && uglifyjs lib/index.js -o lib/index.min.js",
-    "minify:main": "npm run build:main && uglifyjs lib/main.js -o lib/main.min.js",
+    "minify:render": "uglifyjs lib/index.js -o lib/index.min.js",
+    "minify:main": "uglifyjs lib/main.js -o lib/main.min.js",
     "minify": "npm run minify:main && npm run minify:render && npm run clean",
     "clean": "node scripts/clean.js",
     "js": "node scripts/javascript.js && npm run js-extra",
