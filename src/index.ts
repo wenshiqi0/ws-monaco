@@ -14,9 +14,9 @@ declare const window: Global;
 declare const __dirname: string;
 
 // language configs
-const jsConfig = require('../plugins/syntaxes/javascript/javascript-language-configuration.json');
+const jsConfig = require('../plugins/syntaxes/javascript/js-configuration');
 const cssConfig = require('../plugins/syntaxes/css/language-configuration.json');
-const jsonConfig = require('../plugins/syntaxes/json/language-configuration.json');
+const jsonConfig = require('../plugins/syntaxes/json/language-configuration');
 const htmlConfig = require('../plugins/syntaxes/html/language-configuration.json');
 const completionsHelp = require('../plugins/syntaxes/html/completions/main');
 
@@ -246,6 +246,9 @@ const editorOptions = {
   insertSpaces: true,
   detectIndentation: true,
   quickSuggestionsDelay: 10,
+  minimap: {
+    enabled: false,
+  }
 };
 
 module.exports = {
