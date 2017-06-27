@@ -18,6 +18,8 @@ const jsConfig = require('../plugins/syntaxes/javascript/js-configuration');
 const cssConfig = require('../plugins/syntaxes/css/language-configuration.json');
 const jsonConfig = require('../plugins/syntaxes/json/language-configuration');
 const htmlConfig = require('../plugins/syntaxes/html/language-configuration.json');
+const nunjucksConfig = require('../plugins/syntaxes/nunjucks/nunjucks.configuration.json');
+
 const completionsHelp = require('../plugins/syntaxes/html/completions/main');
 
 let mode = 'light';
@@ -66,13 +68,22 @@ const globalLanguageMap: any = {
       '.webmanifest',
     ],
   },
-  html: {
+  axml: {
     scope: 'text.html.basic',
     config: htmlConfig,
     extensions: [
       '.axml',
-      '.html',
+      '.html'
     ],
+  },
+  nunjucks: {
+    scope: 'text.html.nunjucks',
+    config: nunjucksConfig,
+    extensions: [
+      '.html',
+      '.njk',
+      '.nunjucks',
+    ]
   },
   default: 'plaintext'
 };
@@ -225,6 +236,7 @@ const getDefaultRegistry = () => {
     'source.css': join(__dirname, 'syntaxes/css.tmLanguage.json'),
     'source.json': join(__dirname, 'syntaxes/JSON.tmLanguage'),
     'text.html.basic': join(__dirname, 'syntaxes/html.tmLanguage.json'),
+    'text.html.nunjucks': join(__dirname, 'syntaxes/nunjucks.tmLanguage'),
   });
 }
 
