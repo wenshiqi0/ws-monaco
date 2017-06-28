@@ -1,6 +1,6 @@
 {
   "name": "ant-monaco",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "description": "Ant monaco with vscode-textmate. This module can only run under node runtime",
   "main": "lib/index.min.js",
   "scripts": {
