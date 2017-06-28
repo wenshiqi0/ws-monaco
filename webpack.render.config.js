@@ -48,6 +48,10 @@ module.exports = {
         from: 'plugins/syntaxes/json/syntaxes/JSON.tmLanguage',
         to: 'syntaxes/JSON.tmLanguage',
       },
+      {
+        from: 'plugins/syntaxes/nunjucks/syntaxes/nunjucks.tmLanguage',
+        to: 'syntaxes/nunjucks.tmLanguage',
+      },
     ]),
   ],
   target: 'electron',
