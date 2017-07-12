@@ -116,16 +116,25 @@ const handleCompletionItems = (value, offset, position, prevWord) => {
   return {
     isIncomplete: false,
     items: completions.entries.map(entry => {
-      return {
+      const completionItem = {
         position,
         label: entry.name,
-        insertText: (prevWord === 'abridge' && completions.isMemberCompletion && abridgeInsert[entry.name] )? abridgeInsert[entry.name].insertText : entry.name,
         kind: convertKind(entry.kind),
         data: { // data used for resolving item details (see 'doResolve')
           languageId: 'javascript',
           offset,
         }
       };
+
+      const isAbridge = (prevWord === 'abridge' && completions.isMemberCompletion && abridgeInsert[entry.name]);
+      if (isAbridge) {
+        completionItem.insertText = abridgeInsert[entry.name].insertText;
+        completionItem.detail = abridgeInsert[entry.name].documentation;
+      } else {
+        completionItem.insertText = entry.name;
+      }
+
+      return completionItem;
     })
   };
 }
