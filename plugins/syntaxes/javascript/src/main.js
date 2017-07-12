@@ -113,29 +113,35 @@ const handleCompletionItems = (value, offset, position, prevWord) => {
   if (!completions) {
     return { isIncomplete: false, items: [] };
   }
-  return {
-    isIncomplete: false,
-    items: completions.entries.map(entry => {
-      const completionItem = {
-        position,
-        label: entry.name,
-        kind: convertKind(entry.kind),
-        data: { // data used for resolving item details (see 'doResolve')
-          languageId: 'javascript',
-          offset,
-        }
-      };
 
-      const isAbridge = (prevWord === 'abridge' && completions.isMemberCompletion && abridgeInsert[entry.name]);
-      if (isAbridge) {
+  const items = [];
+  completions.entries.forEach(entry => {
+    const completionItem = {
+      position,
+      label: entry.name,
+      kind: convertKind(entry.kind),
+      data: { // data used for resolving item details (see 'doResolve')
+        languageId: 'javascript',
+        offset,
+      }
+    };
+
+    if (prevWord === 'abridge') {
+      if (completions.isMemberCompletion && abridgeInsert[entry.name]) {
         completionItem.insertText = abridgeInsert[entry.name].insertText;
         completionItem.detail = abridgeInsert[entry.name].documentation;
-      } else {
-        completionItem.insertText = entry.name;
+        items.push(completionItem);
       }
+      // else do nothing
+    } else {
+      completionItem.insertText = entry.name;
+      items.push(completionItem);
+    }
+  });
 
-      return completionItem;
-    })
+  return {
+    isIncomplete: false,
+    items,
   };
 }
 
