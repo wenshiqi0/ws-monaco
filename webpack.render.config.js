@@ -52,6 +52,10 @@ module.exports = {
         from: 'plugins/syntaxes/nunjucks/syntaxes/nunjucks.tmLanguage',
         to: 'syntaxes/nunjucks.tmLanguage',
       },
+      {
+        from: 'plugins/syntaxes/fengdie/syntaxes/schema.tmLanguage.json',
+        to: 'syntaxes/schema.tmLanguage.json',
+      },
     ]),
   ],
   target: 'electron',

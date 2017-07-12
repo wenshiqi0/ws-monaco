@@ -1,0 +1,57 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "schema",
+	"patterns": [
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#vars"
+		}
+	],
+	"repository": {
+		"comments": {
+			"patterns": [
+				{
+					"begin": "/\\*",
+					"end": "\\*/",
+					"name": "comment.block.schema"
+				},
+				{
+					"match": "//.*$\\n?",
+					"name": "comment.line.double-slash.schema"
+				}
+			]
+		},
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.schema",
+				"match": "\\b(Object|Image|Box|Array|String|Text|RichText|URL|Number|Boolean|Color|Enum|File|Date)\\b"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.schema",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.schema",
+					"match": "\\\\."
+				}
+			]
+		},
+		"vars": {
+			"patterns": [{
+				"name": "variable.name.schema",
+				"match": "\\w+(?=\\s?[\\(:])"
+			}]
+		}
+	},
+	"scopeName": "source.schema"
+}

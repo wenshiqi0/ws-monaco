@@ -3,7 +3,6 @@
 // interface
 import { IGrammarRegistry, Global } from './index.d';
 import { Registry, INITIAL } from 'vscode-textmate';
-import { remote } from 'electron';
 import { join } from 'path';
 import { activate as activateJs } from '../plugins/syntaxes/javascript/src/index';
 import { activate as activateEslint } from '../plugins/syntaxes/eslint/src/index'
@@ -19,6 +18,7 @@ const cssConfig = require('../plugins/syntaxes/css/language-configuration.json')
 const jsonConfig = require('../plugins/syntaxes/json/language-configuration');
 const htmlConfig = require('../plugins/syntaxes/html/language-configuration.json');
 const nunjucksConfig = require('../plugins/syntaxes/nunjucks/nunjucks.configuration.json');
+const schemaConfig = require('../plugins/syntaxes/fengdie/language-configuration.json')
 
 const completionsHelp = require('../plugins/syntaxes/html/completions/main');
 
@@ -83,6 +83,13 @@ const globalLanguageMap: any = {
       '.html',
       '.njk',
       '.nunjucks',
+    ]
+  },
+  fengdie: {
+    scope: 'source.schema',
+    config: schemaConfig,
+    extensions: [
+      '.schema'
     ]
   },
   default: 'plaintext'
@@ -235,8 +242,9 @@ const getDefaultRegistry = () => {
     'source.js': join(__dirname, 'syntaxes/JavaScript.tmLanguage.json'),
     'source.css': join(__dirname, 'syntaxes/css.tmLanguage.json'),
     'source.json': join(__dirname, 'syntaxes/JSON.tmLanguage'),
+    'source.schema': join(__dirname, 'syntaxes/schema.tmLanguage.json'),
     'text.html.basic': join(__dirname, 'syntaxes/html.tmLanguage.json'),
-    'text.html.nunjucks': join(__dirname, 'syntaxes/nunjucks.tmLanguage'),
+    'text.html.nunjucks': join(__dirname, 'syntaxes/nunjucks.tmLanguage')
   });
 }
 

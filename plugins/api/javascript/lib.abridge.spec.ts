@@ -1,4 +1,299 @@
 
+interface startBluetoothDevicesDiscoveryParams {
+ /** 
+  * 蓝牙设备主 service 的 uuid 列表
+  */
+ services?: Array<string>;
+
+  /** 
+   * 接口调用成功的回调函数
+   * @param res 成功返回参数 
+   */
+  success? (res: Object): void;
+
+  /** 
+   * 接口调用失败的回调函数
+   * @param error 失败返回错误码 
+   */
+  fail? (error: number): void;
+
+  /** 
+   * 接口调用结束的回调函数（调用成功、失败都会执行）
+   */
+  complete? (): void;
+
+}
+interface getBluetoothDevicesParams {
+ /** 
+  * 蓝牙设备主 service 的 uuid 列表
+  */
+ services?: Array<string>;
+
+  /** 
+   * 接口调用成功的回调函数
+   * @param res 成功返回参数 
+   */
+  success? (res: Object): void;
+
+  /** 
+   * 接口调用失败的回调函数
+   * @param error 失败返回错误码 
+   */
+  fail? (error: number): void;
+
+  /** 
+   * 接口调用结束的回调函数（调用成功、失败都会执行）
+   */
+  complete? (): void;
+
+}
+interface getConnectedBluetoothDevicesParams {
+ /** 
+  * 蓝牙设备主 service 的 uuid 列表
+  */
+ services?: Array<string>;
+
+  /** 
+   * 接口调用成功的回调函数
+   * @param res 成功返回参数 
+   */
+  success? (res: Object): void;
+
+  /** 
+   * 接口调用失败的回调函数
+   * @param error 失败返回错误码 
+   */
+  fail? (error: number): void;
+
+  /** 
+   * 接口调用结束的回调函数（调用成功、失败都会执行）
+   */
+  complete? (): void;
+
+}
+interface connectBLEDeviceParams {
+ /** 
+  * 蓝牙设备id
+  */
+ deviceId?: string;
+
+  /** 
+   * 接口调用成功的回调函数
+   * @param res 成功返回参数 
+   */
+  success? (res: Object): void;
+
+  /** 
+   * 接口调用失败的回调函数
+   * @param error 失败返回错误码 
+   */
+  fail? (error: number): void;
+
+  /** 
+   * 接口调用结束的回调函数（调用成功、失败都会执行）
+   */
+  complete? (): void;
+
+}
+interface disconnectBLEDeviceParams {
+ /** 
+  * 蓝牙设备id
+  */
+ deviceId?: string;
+
+  /** 
+   * 接口调用成功的回调函数
+   * @param res 成功返回参数 
+   */
+  success? (res: Object): void;
+
+  /** 
+   * 接口调用失败的回调函数
+   * @param error 失败返回错误码 
+   */
+  fail? (error: number): void;
+
+  /** 
+   * 接口调用结束的回调函数（调用成功、失败都会执行）
+   */
+  complete? (): void;
+
+}
+interface writeBLECharacteristicValueParams {
+ /** 
+  * 蓝牙设备 id，参考 device 对象
+  */
+ deviceId?: string;
+
+ /** 
+  * 蓝牙特征值对应 service 的 uuid
+  */
+ serviceId?: string;
+
+ /** 
+  * 蓝牙特征值的 uuid
+  */
+ characteristicId?: string;
+
+ /** 
+  * notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
+  */
+ descriptorId?: string;
+
+ /** 
+  * 蓝牙设备特征值对应的值，16进制字符串
+  */
+ value?: hex | string;
+
+  /** 
+   * 接口调用成功的回调函数
+   * @param res 成功返回参数 
+   */
+  success? (res: Object): void;
+
+  /** 
+   * 接口调用失败的回调函数
+   * @param error 失败返回错误码 
+   */
+  fail? (error: number): void;
+
+  /** 
+   * 接口调用结束的回调函数（调用成功、失败都会执行）
+   */
+  complete? (): void;
+
+}
+interface readBLECharacteristicValueParams {
+ /** 
+  * 蓝牙设备 id，参考 device 对象
+  */
+ deviceId?: string;
+
+ /** 
+  * 蓝牙特征值对应 service 的 uuid
+  */
+ serviceId?: string;
+
+ /** 
+  * 蓝牙特征值的 uuid
+  */
+ characteristicId?: string;
+
+ /** 
+  * notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
+  */
+ descriptorId?: string;
+
+  /** 
+   * 接口调用成功的回调函数
+   * @param res 成功返回参数 
+   */
+  success? (res: Object): void;
+
+  /** 
+   * 接口调用失败的回调函数
+   * @param error 失败返回错误码 
+   */
+  fail? (error: number): void;
+
+  /** 
+   * 接口调用结束的回调函数（调用成功、失败都会执行）
+   */
+  complete? (): void;
+
+}
+interface notifyBLECharacteristicValueChangeParams {
+ /** 
+  * 蓝牙设备 id，参考 device 对象
+  */
+ deviceId?: string;
+
+ /** 
+  * 蓝牙特征值对应 service 的 uuid
+  */
+ serviceId?: string;
+
+ /** 
+  * 蓝牙特征值的 uuid
+  */
+ characteristicId?: string;
+
+ /** 
+  * notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
+  */
+ descriptorId?: string;
+
+  /** 
+   * 接口调用成功的回调函数
+   * @param res 成功返回参数 
+   */
+  success? (res: Object): void;
+
+  /** 
+   * 接口调用失败的回调函数
+   * @param error 失败返回错误码 
+   */
+  fail? (error: number): void;
+
+  /** 
+   * 接口调用结束的回调函数（调用成功、失败都会执行）
+   */
+  complete? (): void;
+
+}
+interface getBLEDeviceServicesParams {
+ /** 
+  * 蓝牙设备 id，参考 device 对象
+  */
+ deviceId?: string;
+
+  /** 
+   * 接口调用成功的回调函数
+   * @param res 成功返回参数 
+   */
+  success? (res: Object): void;
+
+  /** 
+   * 接口调用失败的回调函数
+   * @param error 失败返回错误码 
+   */
+  fail? (error: number): void;
+
+  /** 
+   * 接口调用结束的回调函数（调用成功、失败都会执行）
+   */
+  complete? (): void;
+
+}
+interface getBLEDeviceCharacteristicsParams {
+ /** 
+  * 蓝牙设备 id，参考 device 对象
+  */
+ deviceId?: string;
+
+ /** 
+  * 蓝牙设备服务的 uuid
+  */
+ serviceId?: string;
+
+  /** 
+   * 接口调用成功的回调函数
+   * @param res 成功返回参数 
+   */
+  success? (res: Object): void;
+
+  /** 
+   * 接口调用失败的回调函数
+   * @param error 失败返回错误码 
+   */
+  fail? (error: number): void;
+
+  /** 
+   * 接口调用结束的回调函数（调用成功、失败都会执行）
+   */
+  complete? (): void;
+
+}
 interface scanParams {
  /** 
   * 扫描目标类型，支持 qr / bar，相应扫码选框会不同，默认 qr
@@ -57,6 +352,11 @@ interface getLocationParams {
   * 定位超时失败回调时间，单位秒。默认10s
   */
  timeout?: number;
+
+ /** 
+  * 支持 0：详细逆地理编码，带周边信；1：逆地理编码到城市；2：仅获取经纬度、速度和精度。默认为 2
+  */
+ type?: number;
 
   /** 
    * 接口调用成功的回调函数
@@ -280,29 +580,12 @@ interface downloadFileParams {
  /** 
   * 下载文件地址
   */
- url?: string;
+ url: string;
 
  /** 
   * HTTP 请求 Header
   */
- headers?: Object;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
+ headers: Object;
 
 }
 interface chooseImageParams {
@@ -452,7 +735,7 @@ interface httpRequestParams {
  url?: string;
 
  /** 
-  * 设置请求的 HTTP 头，默认 {'Content-Type': 'application/x-www-form-urlencoded'}。其中不能设置UserAgent
+  * 设置请求的 HTTP 头，默认 {'Content-Type': 'pplication/x-www-form-urlencoded'}。其中不能设置UserAgent
   */
  headers?: Object;
 
@@ -966,13 +1249,6 @@ interface showActionSheetParams {
   complete? (): void;
 
 }
-interface navigateToParams {
- /** 
-  * 需要跳转的应用内非 tabBar 的页面的路径 , 路径后可以带参数。参数与路径之间使用
-  */
- url: string;
-
-}
 interface redirectToParams {
  /** 
   * 需要跳转的应用内非 tabBar 的页面的路径，路径后可以带参数。参数与路径之间使用
@@ -1043,6 +1319,226 @@ interface switchTabParams {
 interface Abridge {
 
   /**
+   * 初始化蓝牙适配器。
+   * 
+   * 
+
+
+   */
+  openBluetoothAdapter(): void;
+  
+  /**
+   * 关闭本机蓝牙模块。
+   * 
+   * 
+
+
+   */
+  closeBluetoothAdapter(): void;
+  
+  /**
+   * 获取本机蓝牙模块状态。
+   * 
+   * 
+
+
+   */
+  getBluetoothAdapterState(): void;
+  
+  /**
+   * 开始搜寻附近的蓝牙外围设备。搜索结果将在 bluetoothDeviceFound 事件中返回。
+   * 
+   * @param apiParams abridge api startBluetoothDevicesDiscovery params object
+--------------------------
+参数                   描述
+services            蓝牙设备主 service 的 uuid 列表
+   */
+  startBluetoothDevicesDiscovery(apiParams: startBluetoothDevicesDiscoveryParams): void;
+  
+  /**
+   * 停止搜寻附近的蓝牙外围设备。
+   * 
+   * 
+
+
+   */
+  stopBluetoothDevicesDiscovery(): void;
+  
+  /**
+   * 获取所有已发现的蓝牙设备，包括已经和本机处于连接状态的设备。
+   * 
+   * @param apiParams abridge api getBluetoothDevices params object
+--------------------------
+参数                   描述
+services            蓝牙设备主 service 的 uuid 列表
+   */
+  getBluetoothDevices(apiParams: getBluetoothDevicesParams): void;
+  
+  /**
+   * 根据service的uuid获取处于已连接状态的设备。
+   * 
+   * @param apiParams abridge api getConnectedBluetoothDevices params object
+--------------------------
+参数                   描述
+services            蓝牙设备主 service 的 uuid 列表
+   */
+  getConnectedBluetoothDevices(apiParams: getConnectedBluetoothDevicesParams): void;
+  
+  /**
+   * 连接低功耗蓝牙设备。
+   * 
+   * @param apiParams abridge api connectBLEDevice params object
+--------------------------
+参数                   描述
+deviceId            蓝牙设备id
+   */
+  connectBLEDevice(apiParams: connectBLEDeviceParams): void;
+  
+  /**
+   * 断开与低功耗蓝牙设备的连接。
+   * 
+   * @param apiParams abridge api disconnectBLEDevice params object
+--------------------------
+参数                   描述
+deviceId            蓝牙设备id
+   */
+  disconnectBLEDevice(apiParams: disconnectBLEDeviceParams): void;
+  
+  /**
+   * 向低功耗蓝牙设备特征值中写入数据。
+   * 
+   * @param apiParams abridge api writeBLECharacteristicValue params object
+--------------------------
+参数                   描述
+deviceId            蓝牙设备 id，参考 device 对象
+serviceId           蓝牙特征值对应 service 的 uuid
+characteristicId    蓝牙特征值的 uuid
+descriptorId        notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
+value               蓝牙设备特征值对应的值，16进制字符串
+   */
+  writeBLECharacteristicValue(apiParams: writeBLECharacteristicValueParams): void;
+  
+  /**
+   * 读取低功耗蓝牙设备特征值中的数据。调用后在
+   * 
+   * @param apiParams abridge api readBLECharacteristicValue params object
+--------------------------
+参数                   描述
+deviceId            蓝牙设备 id，参考 device 对象
+serviceId           蓝牙特征值对应 service 的 uuid
+characteristicId    蓝牙特征值的 uuid
+descriptorId        notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
+   */
+  readBLECharacteristicValue(apiParams: readBLECharacteristicValueParams): void;
+  
+  /**
+   * 启用低功耗蓝牙设备特征值变化时的 notify 功能。注意：必须设备的特征值支持notify才可以成功调用，具体参照 characteristic 的 properties 属性 另外，必须先启用notify才能监听到设备 characteristicValueChange 事件。
+   * 
+   * @param apiParams abridge api notifyBLECharacteristicValueChange params object
+--------------------------
+参数                   描述
+deviceId            蓝牙设备 id，参考 device 对象
+serviceId           蓝牙特征值对应 service 的 uuid
+characteristicId    蓝牙特征值的 uuid
+descriptorId        notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
+   */
+  notifyBLECharacteristicValueChange(apiParams: notifyBLECharacteristicValueChangeParams): void;
+  
+  /**
+   * 获取蓝牙设备所有 service（服务）
+   * 
+   * @param apiParams abridge api getBLEDeviceServices params object
+--------------------------
+参数                   描述
+deviceId            蓝牙设备 id，参考 device 对象
+   */
+  getBLEDeviceServices(apiParams: getBLEDeviceServicesParams): void;
+  
+  /**
+   * 获取蓝牙设备所有 characteristic（特征值）
+   * 
+   * @param apiParams abridge api getBLEDeviceCharacteristics params object
+--------------------------
+参数                   描述
+deviceId            蓝牙设备 id，参考 device 对象
+serviceId           蓝牙设备服务的 uuid
+   */
+  getBLEDeviceCharacteristics(apiParams: getBLEDeviceCharacteristicsParams): void;
+  
+  /**
+   * 寻找到新的蓝牙设备时触发此事件。
+   * 
+   * 
+
+
+   */
+  onBluetoothDeviceFound(): void;
+  
+  /**
+   * 移除寻找到新的蓝牙设备事件的监听。
+   * 
+   * 
+
+
+   */
+  offBluetoothDeviceFound(): void;
+  
+  /**
+   * 监听低功耗蓝牙设备的特征值变化的事件。
+   * 
+   * 
+
+
+   */
+  onBLECharacteristicValueChange(): void;
+  
+  /**
+   * 移除低功耗蓝牙设备的特征值变化事件的监听。
+   * 
+   * 
+
+
+   */
+  offBLECharacteristicValueChange(): void;
+  
+  /**
+   * 监听低功耗蓝牙连接的错误事件，包括设备丢失，连接异常断开等。
+   * 
+   * 
+
+
+   */
+  onBLEConnectionStateChanged(): void;
+  
+  /**
+   * 移除低功耗蓝牙连接的错误事件的监听。
+   * 
+   * 
+
+
+   */
+  offBLEConnectionStateChanged(): void;
+  
+  /**
+   * 监听本机蓝牙状态变化的事件。
+   * 
+   * 
+
+
+   */
+  onBluetoothAdapterStateChange(): void;
+  
+  /**
+   * 移除本机蓝牙状态变化的事件的监听。
+ 
+   * 
+   * 
+
+
+   */
+  offBluetoothAdapterStateChange(): void;
+  
+  /**
    * 获取系统信息。
    * 
    * 
@@ -1050,6 +1546,15 @@ interface Abridge {
 
    */
   getSystemInfo(): void;
+  
+  /**
+   * 返回值同 getSystemInfo success 回调参数
+   * 
+   * 
+
+
+   */
+  getSystemInfoSync(): void;
   
   /**
    * 获取当前网络状态。
@@ -1151,6 +1656,7 @@ number              电话号码
 参数                   描述
 cacheTimeout        钱包经纬度定位缓存过期时间，单位秒。默认 30s。使用缓存会加快定位速度，缓存过期会重新定位
 timeout             定位超时失败回调时间，单位秒。默认10s
+type                支持 0：详细逆地理编码，带周边信；1：逆地理编码到城市；2：仅获取经纬度、速度和精度。默认为 2
    */
   getLocation(apiParams: getLocationParams): void;
   
@@ -1436,7 +1942,7 @@ filePath            音频文件路径
 --------------------------
 参数                   描述
 url                 目标服务器 url
-headers             设置请求的 HTTP 头，默认 {'Content-Type': 'application/x-www-form-urlencoded'}。其中不能设置UserAgent
+headers             设置请求的 HTTP 头，默认 {'Content-Type': 'pplication/x-www-form-urlencoded'}。其中不能设置UserAgent
 method              默认 GET，目前支持 GET, POST
 data                请求的参数
 timeout             超时时间，单位为 ms，默认 30000
@@ -1554,6 +2060,15 @@ data                要缓存的数据
   setStorage(apiParams: setStorageParams): void;
   
   /**
+   * 同步将数据存储在本地缓存中指定的 key 中
+   * 
+   * 
+
+
+   */
+  setStorageSync(): void;
+  
+  /**
    * 获取缓存数据。
    * 
    * @param apiParams abridge api getStorage params object
@@ -1564,6 +2079,15 @@ key                 缓存数据的 key
   getStorage(apiParams: getStorageParams): void;
   
   /**
+   * 同步获取缓存数据。
+   * 
+   * 
+
+
+   */
+  getStorageSync(): void;
+  
+  /**
    * 删除缓存数据。
    * 
    * @param apiParams abridge api removeStorage params object
@@ -1572,6 +2096,15 @@ key                 缓存数据的 key
 key                 缓存数据的 key
    */
   removeStorage(apiParams: removeStorageParams): void;
+  
+  /**
+   * 同步删除缓存数据。
+   * 
+   * 
+
+
+   */
+  removeStorageSync(): void;
   
   /**
    * 创建一个动画实例
@@ -1754,12 +2287,11 @@ destructiveBtnIndex （IOS特殊处理）指定按钮的索引号，从0开始�
   /**
    * 保留当前页面，跳转到应用内的某个页面，使用 
    * 
-   * @param apiParams abridge api navigateTo params object
---------------------------
-参数                   描述
-url                 需要跳转的应用内非 tabBar 的页面的路径 , 路径后可以带参数。参数与路径之间使用
+   * 
+
+
    */
-  navigateTo(apiParams: navigateToParams): void;
+  navigateTo(): void;
   
   /**
    * 关闭当前页面，跳转到应用内的某个页面。

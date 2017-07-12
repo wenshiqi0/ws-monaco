@@ -28,6 +28,8 @@ const componentGroupReg = /-group$/;
 
 const apis = [];
 const components = [];
+// this is for devtools.
+const componentsMap = {};
 const apisObejct = {};
 
 if (!SITE_FOLDER) {
@@ -215,15 +217,16 @@ dest2.forEach((component) => {
       if (realContent[j][0] === 'h3' && realContent[j][1].match(componentAPIReg)) {
         const retArray = componentAPIWithModeReg.exec(realContent[j][1]);
         if (retArray) {
-          newComponent = new Component(meta.close, meta.english.replace(' ', '-').toLowerCase(), meta.require);
+          newComponent = new Component(meta.close, meta.title.replace(' ', '-').toLowerCase(), meta.require);
           newComponent.setDesc(retArray[1]);
           newComponent.setMode(retArray[1].split('=')[1].replace(/^\s*/, '').replace(/\s*$/, ''));
         }
         j += 1;
+
         realContent[j][2].forEach((item, k) => {
           if (k === 0) return;
           if (!newComponent) {
-            newComponent = new Component(meta.close, meta.english.replace(' ', '-').toLowerCase(), meta.require);
+            newComponent = new Component(meta.close, meta.title.replace(' ', '-').toLowerCase(), meta.require);
             newComponent.setDesc(realContent[1][1]);
           }
           newComponent.setAttributions({
@@ -235,6 +238,7 @@ dest2.forEach((component) => {
           });
         });
         components.push(newComponent.fit());
+        componentsMap[newComponent.tag] = newComponent;
         newComponent = null;
       }
     }
@@ -322,6 +326,8 @@ function makeFunctionDefine (name, params, callback) {
   }
 }
 
+// api 处理流程
+
 const defineString = `
 ${apis.map(api => {
   return makeParams(api.name.split('.')[1], api.params, api.callback);
@@ -355,3 +361,11 @@ fs.mkdirSync('./plugins/api/html/');
 fs.writeFileSync('./plugins/api/javascript/abridge.json', JSON.stringify(apisObejct));
 fs.writeFileSync('./plugins/api/javascript/lib.abridge.spec.ts', defineString);
 fs.writeFileSync('./plugins/api/html/axml.json', JSON.stringify(components));
+
+
+// 组件处理流程
+
+fs.mkdirSync('./plugins/api/axml/');
+
+fs.writeFileSync('./plugins/api/axml/components.json', JSON.stringify(components));
+fs.writeFileSync('./plugins/api/axml/componentsMap.json', JSON.stringify(componentsMap));
