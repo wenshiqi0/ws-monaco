@@ -20,7 +20,7 @@ export const activate = (registry, monaco) => {
         const { severity, line, column, fatal, message } = marker;
         return {
           severity: fatal ? 3 : severity,
-          message: `[eslint] ${message}`,
+          message: `[Lint] ${message}`,
           startLineNumber: line,
           startColumn: column,
         }

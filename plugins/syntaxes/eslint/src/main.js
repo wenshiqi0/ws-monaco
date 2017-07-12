@@ -1,5 +1,5 @@
 import { ipcMain as ipc } from 'electron';
-import { CSSLint } from 'csslint';
+import { CSSLint } from 'ant-csslint';
 import { CLIEngine } from 'eslint';
 import jshint from 'jshint';
 
@@ -177,7 +177,9 @@ ipc.on(
 ipc.on(
   'eslint:css',
   (event, arg) => {
-    const { messages } = CSSLint.verify(arg);
+    const { messages } = CSSLint.verify(arg, {
+      "order-alphabetical": false
+    });
     const results = messages.map(message => {
       return {
         severity: message.type === "warning" ? 2 : 3,
