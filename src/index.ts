@@ -16,11 +16,11 @@ declare const __dirname: string;
 const jsConfig = require('../plugins/syntaxes/javascript/js-configuration');
 const cssConfig = require('../plugins/syntaxes/css/language-configuration.json');
 const jsonConfig = require('../plugins/syntaxes/json/language-configuration');
-const htmlConfig = require('../plugins/syntaxes/html/language-configuration.json');
+const axmlConfig = require('../plugins/syntaxes/axml/language-configuration.json');
 const nunjucksConfig = require('../plugins/syntaxes/nunjucks/nunjucks.configuration.json');
 const schemaConfig = require('../plugins/syntaxes/fengdie/language-configuration.json')
 
-const completionsHelp = require('../plugins/syntaxes/html/completions/main');
+const completionsHelp = require('../plugins/syntaxes/axml/completions/main');
 
 let mode = 'light';
 
@@ -69,11 +69,11 @@ const globalLanguageMap: any = {
     ],
   },
   axml: {
-    scope: 'text.html.basic',
-    config: htmlConfig,
+    scope: 'text.axml.basic',
+    config: axmlConfig,
     extensions: [
       '.axml',
-      '.html'
+      '.xml'
     ],
   },
   nunjucks: {
@@ -170,7 +170,7 @@ class GrammarRegistry implements IGrammarRegistry {
 
   static activateCompletionItems(modeId) {
     const languages = window.monaco.languages;
-    if (modeId === 'html') {
+    if (modeId === 'axml') {
       languages.registerCompletionItemProvider(modeId, completionsHelp);
     }
   }
@@ -213,6 +213,9 @@ class GrammarRegistry implements IGrammarRegistry {
         id: languageId,
         extensions: globalLanguageMap[languageId].extensions,
       });
+
+      console.log(languageId, globalLanguageMap[languageId].config);
+
       languages.setLanguageConfiguration(languageId, globalLanguageMap[languageId].config);
       GrammarRegistry.activateCompletionItems(languageId);
       languages.setTokensProvider(languageId, {
@@ -243,7 +246,7 @@ const getDefaultRegistry = () => {
     'source.css': join(__dirname, 'syntaxes/css.tmLanguage.json'),
     'source.json': join(__dirname, 'syntaxes/JSON.tmLanguage'),
     'source.schema': join(__dirname, 'syntaxes/schema.tmLanguage.json'),
-    'text.html.basic': join(__dirname, 'syntaxes/html.tmLanguage.json'),
+    'text.axml.basic': join(__dirname, 'syntaxes/axml.tmLanguage.json'),
     'text.html.nunjucks': join(__dirname, 'syntaxes/nunjucks.tmLanguage')
   });
 }

@@ -41,8 +41,8 @@ module.exports = {
         to: 'syntaxes/javascript.tmLanguage.json',
       },
       {
-        from: 'plugins/syntaxes/html/syntaxes/html.json',
-        to: 'syntaxes/html.tmLanguage.json',
+        from: 'plugins/syntaxes/axml/syntaxes/axml.json',
+        to: 'syntaxes/axml.tmLanguage.json',
       },
       {
         from: 'plugins/syntaxes/json/syntaxes/JSON.tmLanguage',
