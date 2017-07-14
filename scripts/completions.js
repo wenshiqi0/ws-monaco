@@ -290,7 +290,7 @@ function normalise(number) {
 function makeApiDesc(name, params, callback) {
   return `  /**
    * ${apisObejct[name].documentation}
-   * 
+   *
    * ${(params && params.length > 0) ? `@param apiParams abridge api ${name} params object` : ''}
 ${(params && params.length > 0) ? '--------------------------\n参数                   描述' : ''}
 ${(params || []).map((param) => {
@@ -358,14 +358,14 @@ fs.mkdirSync('./plugins/api/javascript/');
 fs.mkdirSync('./plugins/api/html/');
 
 // 写入到文件
-fs.writeFileSync('./plugins/api/javascript/abridge.json', JSON.stringify(apisObejct));
+fs.outputJson('./plugins/api/javascript/abridge.json', JSON.stringify(apisObejct), { spaces: 2 });
 fs.writeFileSync('./plugins/api/javascript/lib.abridge.spec.ts', defineString);
-fs.writeFileSync('./plugins/api/html/axml.json', JSON.stringify(components));
+fs.outputJson('./plugins/api/html/axml.json', JSON.stringify(components), { spaces: 2 });
 
 
 // 组件处理流程
 
 fs.mkdirSync('./plugins/api/axml/');
 
-fs.writeFileSync('./plugins/api/axml/components.json', JSON.stringify(components));
-fs.writeFileSync('./plugins/api/axml/componentsMap.json', JSON.stringify(componentsMap));
+fs.outputJson('./plugins/api/axml/components.json', JSON.stringify(components), { spaces: 2 });
+fs.outputJson('./plugins/api/axml/componentsMap.json', JSON.stringify(componentsMap), { spaces: 2 });
