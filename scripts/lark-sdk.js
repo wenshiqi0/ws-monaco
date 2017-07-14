@@ -27,7 +27,7 @@ const convertTableToMarkdown = (str) => {
 request({ url: apiUrl, json: true }, (err, res) => {
   res.body.data.forEach(doc => {
     request({ url: `${apiUrl}/${doc.slug}?raw=1`, json: true }, (err, res) => {
-      fsExtra.outputFileSync(path.resolve(tmp, `api/${doc.slug}.md`), convertTableToMarkdown(res.body.data.body));
+      fsExtra.outputFileSync(path.resolve(tmp, `api/${doc.slug}.md`), convertTableToMarkdown(`---\ntitle: ${doc.slug}\nfrom: lark\n---\n` + res.body.data.body));
     });
   });
 });
@@ -35,7 +35,7 @@ request({ url: apiUrl, json: true }, (err, res) => {
 request({ url: compUrl, json: true }, (err, res) => {
   res.body.data.forEach(doc => {
     request({ url: `${compUrl}/${doc.slug}?raw=1`, json: true }, (err, res) => {
-      fsExtra.outputFileSync(path.resolve(tmp, `comp/${doc.slug}.md`), convertTableToMarkdown(res.body.data.body));
+      fsExtra.outputFileSync(path.resolve(tmp, `component/${doc.slug}.md`), convertTableToMarkdown(`---\ntitle: ${doc.slug}\nfrom: ${doc.slug}\n---\n` + res.body.data.body));
     });
   });
 });

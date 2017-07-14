@@ -17,6 +17,7 @@
     "js": "node scripts/javascript.js && npm run js-extra",
     "js-extra": "node scripts/js-extra.js",
     "api": "node scripts/completions.js $site",
+    "sync": "node scripts/lark-sdk.js",
     "prepublish": "npm run minify"
   },
   "keywords": [

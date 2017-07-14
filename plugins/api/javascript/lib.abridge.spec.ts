@@ -1,280 +1,9 @@
 
-interface startBluetoothDevicesDiscoveryParams {
+interface setClipboardParams {
  /** 
-  * 蓝牙设备主 service 的 uuid 列表
+  * 剪贴板数据
   */
- services?: Array<string>;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface getBluetoothDevicesParams {
- /** 
-  * 蓝牙设备主 service 的 uuid 列表
-  */
- services?: Array<string>;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface getConnectedBluetoothDevicesParams {
- /** 
-  * 蓝牙设备主 service 的 uuid 列表
-  */
- services?: Array<string>;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface connectBLEDeviceParams {
- /** 
-  * 蓝牙设备id
-  */
- deviceId?: string;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface disconnectBLEDeviceParams {
- /** 
-  * 蓝牙设备id
-  */
- deviceId?: string;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface writeBLECharacteristicValueParams {
- /** 
-  * 蓝牙设备 id，参考 device 对象
-  */
- deviceId?: string;
-
- /** 
-  * 蓝牙特征值对应 service 的 uuid
-  */
- serviceId?: string;
-
- /** 
-  * 蓝牙特征值的 uuid
-  */
- characteristicId?: string;
-
- /** 
-  * notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
-  */
- descriptorId?: string;
-
- /** 
-  * 蓝牙设备特征值对应的值，16进制字符串
-  */
- value?: hex | string;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface readBLECharacteristicValueParams {
- /** 
-  * 蓝牙设备 id，参考 device 对象
-  */
- deviceId?: string;
-
- /** 
-  * 蓝牙特征值对应 service 的 uuid
-  */
- serviceId?: string;
-
- /** 
-  * 蓝牙特征值的 uuid
-  */
- characteristicId?: string;
-
- /** 
-  * notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
-  */
- descriptorId?: string;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface notifyBLECharacteristicValueChangeParams {
- /** 
-  * 蓝牙设备 id，参考 device 对象
-  */
- deviceId?: string;
-
- /** 
-  * 蓝牙特征值对应 service 的 uuid
-  */
- serviceId?: string;
-
- /** 
-  * 蓝牙特征值的 uuid
-  */
- characteristicId?: string;
-
- /** 
-  * notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
-  */
- descriptorId?: string;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface getBLEDeviceServicesParams {
- /** 
-  * 蓝牙设备 id，参考 device 对象
-  */
- deviceId?: string;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface getBLEDeviceCharacteristicsParams {
- /** 
-  * 蓝牙设备 id，参考 device 对象
-  */
- deviceId?: string;
-
- /** 
-  * 蓝牙设备服务的 uuid
-  */
- serviceId?: string;
+ text?: string;
 
   /** 
    * 接口调用成功的回调函数
@@ -549,12 +278,12 @@ interface uploadFileParams {
  fileType?: string;
 
  /** 
-  * 完整的支付参数拼接成的字符串，从服务端获取
+  * HTTP 请求 Header
   */
  headers?: Object;
 
  /** 
-  * 完整的支付参数拼接成的字符串，从服务端获取
+  * HTTP 请求中其他额外的 form 数据
   */
  formData?: Object;
 
@@ -597,7 +326,7 @@ interface chooseImageParams {
  /** 
   * 相册选取或者拍照，默认 
   */
- sourceType?: string | Array<string>;
+ sourceType?: string[];
 
   /** 
    * 接口调用成功的回调函数
@@ -895,6 +624,18 @@ interface tradePayParams {
   complete? (): void;
 
 }
+interface reportAnalyticsParams {
+ /** 
+  * 自定义事件名，需申请内部可 @习祯
+  */
+ eventName: string;
+
+ /** 
+  * 上报的数据
+  */
+ data: Object;
+
+}
 interface setStorageParams {
  /** 
   * 缓存数据的 key
@@ -1039,7 +780,7 @@ interface datePickerParams {
  /** 
   * 返回的日期格式，默认 yyyy-MM-dd。支持 HH:mm:ss, yyyy-MM-dd, yyyy-MM-dd HH:mm:ss 三种格式
   */
- formate?: string;
+ format?: string;
 
  /** 
   * 初始选择的日期时间，默认当前时间
@@ -1270,11 +1011,6 @@ interface setNavigationBarParams {
  title?: string;
 
  /** 
-  * 图片链接地址，必须 https，请使用一张3x高清图。若设置了 image，则 title 参数失效
-  */
- image?: string;
-
- /** 
   * 导航栏背景色，支持 16 进制颜色值
   */
  backgroundColor?: string;
@@ -1319,228 +1055,8 @@ interface switchTabParams {
 interface Abridge {
 
   /**
-   * 初始化蓝牙适配器。
-   * 
-   * 
-
-
-   */
-  openBluetoothAdapter(): void;
-  
-  /**
-   * 关闭本机蓝牙模块。
-   * 
-   * 
-
-
-   */
-  closeBluetoothAdapter(): void;
-  
-  /**
-   * 获取本机蓝牙模块状态。
-   * 
-   * 
-
-
-   */
-  getBluetoothAdapterState(): void;
-  
-  /**
-   * 开始搜寻附近的蓝牙外围设备。搜索结果将在 bluetoothDeviceFound 事件中返回。
-   * 
-   * @param apiParams abridge api startBluetoothDevicesDiscovery params object
---------------------------
-参数                   描述
-services            蓝牙设备主 service 的 uuid 列表
-   */
-  startBluetoothDevicesDiscovery(apiParams: startBluetoothDevicesDiscoveryParams): void;
-  
-  /**
-   * 停止搜寻附近的蓝牙外围设备。
-   * 
-   * 
-
-
-   */
-  stopBluetoothDevicesDiscovery(): void;
-  
-  /**
-   * 获取所有已发现的蓝牙设备，包括已经和本机处于连接状态的设备。
-   * 
-   * @param apiParams abridge api getBluetoothDevices params object
---------------------------
-参数                   描述
-services            蓝牙设备主 service 的 uuid 列表
-   */
-  getBluetoothDevices(apiParams: getBluetoothDevicesParams): void;
-  
-  /**
-   * 根据service的uuid获取处于已连接状态的设备。
-   * 
-   * @param apiParams abridge api getConnectedBluetoothDevices params object
---------------------------
-参数                   描述
-services            蓝牙设备主 service 的 uuid 列表
-   */
-  getConnectedBluetoothDevices(apiParams: getConnectedBluetoothDevicesParams): void;
-  
-  /**
-   * 连接低功耗蓝牙设备。
-   * 
-   * @param apiParams abridge api connectBLEDevice params object
---------------------------
-参数                   描述
-deviceId            蓝牙设备id
-   */
-  connectBLEDevice(apiParams: connectBLEDeviceParams): void;
-  
-  /**
-   * 断开与低功耗蓝牙设备的连接。
-   * 
-   * @param apiParams abridge api disconnectBLEDevice params object
---------------------------
-参数                   描述
-deviceId            蓝牙设备id
-   */
-  disconnectBLEDevice(apiParams: disconnectBLEDeviceParams): void;
-  
-  /**
-   * 向低功耗蓝牙设备特征值中写入数据。
-   * 
-   * @param apiParams abridge api writeBLECharacteristicValue params object
---------------------------
-参数                   描述
-deviceId            蓝牙设备 id，参考 device 对象
-serviceId           蓝牙特征值对应 service 的 uuid
-characteristicId    蓝牙特征值的 uuid
-descriptorId        notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
-value               蓝牙设备特征值对应的值，16进制字符串
-   */
-  writeBLECharacteristicValue(apiParams: writeBLECharacteristicValueParams): void;
-  
-  /**
-   * 读取低功耗蓝牙设备特征值中的数据。调用后在
-   * 
-   * @param apiParams abridge api readBLECharacteristicValue params object
---------------------------
-参数                   描述
-deviceId            蓝牙设备 id，参考 device 对象
-serviceId           蓝牙特征值对应 service 的 uuid
-characteristicId    蓝牙特征值的 uuid
-descriptorId        notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
-   */
-  readBLECharacteristicValue(apiParams: readBLECharacteristicValueParams): void;
-  
-  /**
-   * 启用低功耗蓝牙设备特征值变化时的 notify 功能。注意：必须设备的特征值支持notify才可以成功调用，具体参照 characteristic 的 properties 属性 另外，必须先启用notify才能监听到设备 characteristicValueChange 事件。
-   * 
-   * @param apiParams abridge api notifyBLECharacteristicValueChange params object
---------------------------
-参数                   描述
-deviceId            蓝牙设备 id，参考 device 对象
-serviceId           蓝牙特征值对应 service 的 uuid
-characteristicId    蓝牙特征值的 uuid
-descriptorId        notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
-   */
-  notifyBLECharacteristicValueChange(apiParams: notifyBLECharacteristicValueChangeParams): void;
-  
-  /**
-   * 获取蓝牙设备所有 service（服务）
-   * 
-   * @param apiParams abridge api getBLEDeviceServices params object
---------------------------
-参数                   描述
-deviceId            蓝牙设备 id，参考 device 对象
-   */
-  getBLEDeviceServices(apiParams: getBLEDeviceServicesParams): void;
-  
-  /**
-   * 获取蓝牙设备所有 characteristic（特征值）
-   * 
-   * @param apiParams abridge api getBLEDeviceCharacteristics params object
---------------------------
-参数                   描述
-deviceId            蓝牙设备 id，参考 device 对象
-serviceId           蓝牙设备服务的 uuid
-   */
-  getBLEDeviceCharacteristics(apiParams: getBLEDeviceCharacteristicsParams): void;
-  
-  /**
-   * 寻找到新的蓝牙设备时触发此事件。
-   * 
-   * 
-
-
-   */
-  onBluetoothDeviceFound(): void;
-  
-  /**
-   * 移除寻找到新的蓝牙设备事件的监听。
-   * 
-   * 
-
-
-   */
-  offBluetoothDeviceFound(): void;
-  
-  /**
-   * 监听低功耗蓝牙设备的特征值变化的事件。
-   * 
-   * 
-
-
-   */
-  onBLECharacteristicValueChange(): void;
-  
-  /**
-   * 移除低功耗蓝牙设备的特征值变化事件的监听。
-   * 
-   * 
-
-
-   */
-  offBLECharacteristicValueChange(): void;
-  
-  /**
-   * 监听低功耗蓝牙连接的错误事件，包括设备丢失，连接异常断开等。
-   * 
-   * 
-
-
-   */
-  onBLEConnectionStateChanged(): void;
-  
-  /**
-   * 移除低功耗蓝牙连接的错误事件的监听。
-   * 
-   * 
-
-
-   */
-  offBLEConnectionStateChanged(): void;
-  
-  /**
-   * 监听本机蓝牙状态变化的事件。
-   * 
-   * 
-
-
-   */
-  onBluetoothAdapterStateChange(): void;
-  
-  /**
-   * 移除本机蓝牙状态变化的事件的监听。
- 
-   * 
-   * 
-
-
-   */
-  offBluetoothAdapterStateChange(): void;
-  
-  /**
    * 获取系统信息。
-   * 
+   *
    * 
 
 
@@ -1549,7 +1065,7 @@ serviceId           蓝牙设备服务的 uuid
   
   /**
    * 返回值同 getSystemInfo success 回调参数
-   * 
+   *
    * 
 
 
@@ -1558,7 +1074,7 @@ serviceId           蓝牙设备服务的 uuid
   
   /**
    * 获取当前网络状态。
-   * 
+   *
    * 
 
 
@@ -1566,8 +1082,27 @@ serviceId           蓝牙设备服务的 uuid
   getNetworkType(): void;
   
   /**
-   * 调用扫一扫功能。
+   * 获取剪贴板数据。
+   *
    * 
+
+
+   */
+  getClipboard(): void;
+  
+  /**
+   * 设置剪贴板数据。
+   *
+   * @param apiParams abridge api setClipboard params object
+--------------------------
+参数                   描述
+text                剪贴板数据
+   */
+  setClipboard(apiParams: setClipboardParams): void;
+  
+  /**
+   * 调用扫一扫功能。
+   *
    * @param apiParams abridge api scan params object
 --------------------------
 参数                   描述
@@ -1577,7 +1112,7 @@ type                扫描目标类型，支持 qr / bar，相应扫码选框会
   
   /**
    * 摇一摇功能。每次调用API，在摇一摇手机后触发回调，如需再次监听需要再次调用这个API。
-   * 
+   *
    * 
 
 
@@ -1586,7 +1121,7 @@ type                扫描目标类型，支持 qr / bar，相应扫码选框会
   
   /**
    * 调用震动功能。
-   * 
+   *
    * 
 
 
@@ -1595,7 +1130,7 @@ type                扫描目标类型，支持 qr / bar，相应扫码选框会
   
   /**
    * 拨打电话。
-   * 
+   *
    * @param apiParams abridge api makePhoneCall params object
 --------------------------
 参数                   描述
@@ -1605,7 +1140,7 @@ number              电话号码
   
   /**
    * 获取当前服务器时间的毫秒数。
-   * 
+   *
    * 
 
 
@@ -1614,7 +1149,7 @@ number              电话号码
   
   /**
    * 监听重力感应变化。
-   * 
+   *
    * 
 
 
@@ -1623,7 +1158,7 @@ number              电话号码
   
   /**
    * 停止监听重力感应变化。
-   * 
+   *
    * 
 
 
@@ -1632,7 +1167,7 @@ number              电话号码
   
   /**
    * 监听罗盘数据变化。
-   * 
+   *
    * 
 
 
@@ -1641,7 +1176,7 @@ number              电话号码
   
   /**
    * 停止监听罗盘数据变化。
-   * 
+   *
    * 
 
 
@@ -1650,7 +1185,7 @@ number              电话号码
   
   /**
    * 获取用户当前的地理位置信息。
-   * 
+   *
    * @param apiParams abridge api getLocation params object
 --------------------------
 参数                   描述
@@ -1662,7 +1197,7 @@ type                支持 0：详细逆地理编码，带周边信；1：逆地
   
   /**
    * 使用支付宝内置地图查看位置。
-   * 
+   *
    * @param apiParams abridge api openLocation params object
 --------------------------
 参数                   描述
@@ -1676,7 +1211,7 @@ scale               缩放比例，范围 3~19，默认为 15
   
   /**
    * 使用后台播放器播放音乐。
-   * 
+   *
    * @param apiParams abridge api playBackgroundAudio params object
 --------------------------
 参数                   描述
@@ -1691,7 +1226,7 @@ cover               封面 URL
   
   /**
    * 暂停播放音乐。
-   * 
+   *
    * 
 
 
@@ -1700,7 +1235,7 @@ cover               封面 URL
   
   /**
    * 停止播放音乐。
-   * 
+   *
    * 
 
 
@@ -1709,7 +1244,7 @@ cover               封面 URL
   
   /**
    * 控制音乐播放进度。
-   * 
+   *
    * @param apiParams abridge api seekBackgroundAudio params object
 --------------------------
 参数                   描述
@@ -1718,8 +1253,8 @@ position            音乐位置，单位秒
   seekBackgroundAudio(apiParams: seekBackgroundAudioParams): void;
   
   /**
-   * 使用后台播放器播放音乐。
-   * 
+   * 获取后台音乐播放状态。
+   *
    * 
 
 
@@ -1728,7 +1263,7 @@ position            音乐位置，单位秒
   
   /**
    * 开始播放音乐时触发此事件。
-   * 
+   *
    * 
 
 
@@ -1737,7 +1272,7 @@ position            音乐位置，单位秒
   
   /**
    * 暂停播放音乐时触发此事件。
-   * 
+   *
    * 
 
 
@@ -1746,7 +1281,7 @@ position            音乐位置，单位秒
   
   /**
    * 停止播放音乐时触发此事件。
-   * 
+   *
    * 
 
 
@@ -1755,7 +1290,7 @@ position            音乐位置，单位秒
   
   /**
    * 停止监听音乐播放事件。
-   * 
+   *
    * 
 
 
@@ -1764,7 +1299,7 @@ position            音乐位置，单位秒
   
   /**
    * 停止监听音乐暂停事件。
-   * 
+   *
    * 
 
 
@@ -1773,7 +1308,7 @@ position            音乐位置，单位秒
   
   /**
    * 停止监听音乐停止事件。
-   * 
+   *
    * 
 
 
@@ -1782,7 +1317,7 @@ position            音乐位置，单位秒
   
   /**
    * 创建并返回 audio 上下文 
-   * 
+   *
    * 
 
 
@@ -1791,7 +1326,7 @@ position            音乐位置，单位秒
   
   /**
    * 录制或从手机相册中选择视频。
-   * 
+   *
    * @param apiParams abridge api chooseVideo params object
 --------------------------
 参数                   描述
@@ -1803,7 +1338,7 @@ camera              前置或者后置摄像头，默认前后都有，即：
   
   /**
    * 上传本地资源到开发者服务器。
-   * 
+   *
    * @param apiParams abridge api uploadFile params object
 --------------------------
 参数                   描述
@@ -1811,14 +1346,14 @@ url                 开发者服务器地址
 filePath            要上传文件资源的本地定位符
 fileName            文件名，即对应的 key, 开发者在服务器端通过这个 key 可以获取到文件二进制内容
 fileType            文件类型，image/video
-headers             完整的支付参数拼接成的字符串，从服务端获取
-formData            完整的支付参数拼接成的字符串，从服务端获取
+headers             HTTP 请求 Header
+formData            HTTP 请求中其他额外的 form 数据
    */
   uploadFile(apiParams: uploadFileParams): void;
   
   /**
    * 下载文件资源到本地。
-   * 
+   *
    * @param apiParams abridge api downloadFile params object
 --------------------------
 参数                   描述
@@ -1829,7 +1364,7 @@ headers             HTTP 请求 Header
   
   /**
    * 拍照或从手机相册中选择图片。
-   * 
+   *
    * @param apiParams abridge api chooseImage params object
 --------------------------
 参数                   描述
@@ -1840,7 +1375,7 @@ sourceType          相册选取或者拍照，默认
   
   /**
    * 预览图片。
-   * 
+   *
    * @param apiParams abridge api previewImage params object
 --------------------------
 参数                   描述
@@ -1851,7 +1386,7 @@ current             当前显示图片索引，默认 0
   
   /**
    * 保存在线图片到手机相册。
-   * 
+   *
    * @param apiParams abridge api saveImage params object
 --------------------------
 参数                   描述
@@ -1862,7 +1397,7 @@ showActionSheet     是否显示图片操作菜单，默认 true
   
   /**
    * 开始录音。当主动调用 
-   * 
+   *
    * @param apiParams abridge api startRecord params object
 --------------------------
 参数                   描述
@@ -1873,7 +1408,7 @@ minDuration         最小录制时长，单位秒，默认1s
   
   /**
    * 结束录音。
-   * 
+   *
    * 
 
 
@@ -1882,7 +1417,7 @@ minDuration         最小录制时长，单位秒，默认1s
   
   /**
    * 取消录音。
-   * 
+   *
    * 
 
 
@@ -1891,7 +1426,7 @@ minDuration         最小录制时长，单位秒，默认1s
   
   /**
    * 创建并返回 video 上下文 
-   * 
+   *
    * 
 
 
@@ -1900,7 +1435,7 @@ minDuration         最小录制时长，单位秒，默认1s
   
   /**
    * 开始播放语音。
-   * 
+   *
    * @param apiParams abridge api playVoice params object
 --------------------------
 参数                   描述
@@ -1910,7 +1445,7 @@ filePath            音频文件路径
   
   /**
    * 暂停播放语音。
-   * 
+   *
    * 
 
 
@@ -1919,7 +1454,7 @@ filePath            音频文件路径
   
   /**
    * 继续播放语音。
-   * 
+   *
    * 
 
 
@@ -1928,7 +1463,7 @@ filePath            音频文件路径
   
   /**
    * 停止播放语音。
-   * 
+   *
    * 
 
 
@@ -1937,7 +1472,7 @@ filePath            音频文件路径
   
   /**
    * 向指定服务器发起一个跨域 http 请求。
-   * 
+   *
    * @param apiParams abridge api httpRequest params object
 --------------------------
 参数                   描述
@@ -1952,7 +1487,7 @@ dataType            期望返回的数据格式，默认 json，支持 json, tex
   
   /**
    * 创建一个 
-   * 
+   *
    * @param apiParams abridge api connectSocket params object
 --------------------------
 参数                   描述
@@ -1965,7 +1500,7 @@ method              默认是GET，有效值为： OPTIONS, GET, HEAD, POST, PUT
   
   /**
    * 监听WebSocket连接打开事件。
-   * 
+   *
    * 
 
 
@@ -1974,7 +1509,7 @@ method              默认是GET，有效值为： OPTIONS, GET, HEAD, POST, PUT
   
   /**
    * 监听WebSocket错误。
-   * 
+   *
    * 
 
 
@@ -1983,7 +1518,7 @@ method              默认是GET，有效值为： OPTIONS, GET, HEAD, POST, PUT
   
   /**
    * 通过 WebSocket 连接发送数据，需要先 
-   * 
+   *
    * @param apiParams abridge api sendSocketMessage params object
 --------------------------
 参数                   描述
@@ -1993,7 +1528,7 @@ data                需要发送的内容
   
   /**
    * 监听WebSocket接受到服务器的消息事件。
-   * 
+   *
    * @param apiParams abridge api onSocketMessage params object
 --------------------------
 参数                   描述
@@ -2003,7 +1538,7 @@ data
   
   /**
    * 关闭WebSocket连接。
-   * 
+   *
    * 
 
 
@@ -2012,7 +1547,7 @@ data
   
   /**
    * 监听WebSocket关闭。
-   * 
+   *
    * 
 
 
@@ -2021,7 +1556,7 @@ data
   
   /**
    * 获取授权码。
-   * 
+   *
    * @param apiParams abridge api getAuthCode params object
 --------------------------
 参数                   描述
@@ -2031,7 +1566,7 @@ scopes              授权类型，默认 auth_base。支持 auth_base(静默授
   
   /**
    * 获取授权用户信息。
-   * 
+   *
    * 
 
 
@@ -2040,7 +1575,7 @@ scopes              授权类型，默认 auth_base。支持 auth_base(静默授
   
   /**
    * 发起支付。
-   * 
+   *
    * @param apiParams abridge api tradePay params object
 --------------------------
 参数                   描述
@@ -2049,8 +1584,19 @@ orderStr            完整的支付参数拼接成的字符串，从服务端获
   tradePay(apiParams: tradePayParams): void;
   
   /**
+   * 自定义分析数据上报接口。
+   *
+   * @param apiParams abridge api reportAnalytics params object
+--------------------------
+参数                   描述
+eventName           自定义事件名，需申请内部可 @习祯
+data                上报的数据
+   */
+  reportAnalytics(apiParams: reportAnalyticsParams): void;
+  
+  /**
    * 将数据存储在本地缓存中指定的 key 中，会覆盖掉原来该 key 对应的数据。
-   * 
+   *
    * @param apiParams abridge api setStorage params object
 --------------------------
 参数                   描述
@@ -2061,7 +1607,7 @@ data                要缓存的数据
   
   /**
    * 同步将数据存储在本地缓存中指定的 key 中
-   * 
+   *
    * 
 
 
@@ -2070,7 +1616,7 @@ data                要缓存的数据
   
   /**
    * 获取缓存数据。
-   * 
+   *
    * @param apiParams abridge api getStorage params object
 --------------------------
 参数                   描述
@@ -2080,7 +1626,7 @@ key                 缓存数据的 key
   
   /**
    * 同步获取缓存数据。
-   * 
+   *
    * 
 
 
@@ -2089,7 +1635,7 @@ key                 缓存数据的 key
   
   /**
    * 删除缓存数据。
-   * 
+   *
    * @param apiParams abridge api removeStorage params object
 --------------------------
 参数                   描述
@@ -2099,7 +1645,7 @@ key                 缓存数据的 key
   
   /**
    * 同步删除缓存数据。
-   * 
+   *
    * 
 
 
@@ -2108,7 +1654,7 @@ key                 缓存数据的 key
   
   /**
    * 创建一个动画实例
-   * 
+   *
    * 
 
 
@@ -2117,7 +1663,7 @@ key                 缓存数据的 key
   
   /**
    * 创建 canvas 绘图上下文（指定 canvasId）
-   * 
+   *
    * 
 
 
@@ -2126,7 +1672,7 @@ key                 缓存数据的 key
   
   /**
    * 打开城市选择列表。
-   * 
+   *
    * @param apiParams abridge api chooseCity params object
 --------------------------
 参数                   描述
@@ -2139,7 +1685,7 @@ hotCities           自定义热门城市列表，列表内对象字段见下表
   
   /**
    * 选择本地系统通信录中某个联系人的电话。
-   * 
+   *
    * 
 
 
@@ -2148,7 +1694,7 @@ hotCities           自定义热门城市列表，列表内对象字段见下表
   
   /**
    * 唤起支付宝通讯录，选择一个或者多个支付宝联系人。
-   * 
+   *
    * @param apiParams abridge api chooseAlipayContact params object
 --------------------------
 参数                   描述
@@ -2157,12 +1703,12 @@ count               单次最多选择联系人个数，默认 1，最大 10
   chooseAlipayContact(apiParams: chooseAlipayContactParams): void;
   
   /**
-   * 设置导航栏文字及样式。
-   * 
+   * 打开日期选择列表。
+   *
    * @param apiParams abridge api datePicker params object
 --------------------------
 参数                   描述
-formate             返回的日期格式，默认 yyyy-MM-dd。支持 HH:mm:ss, yyyy-MM-dd, yyyy-MM-dd HH:mm:ss 三种格式
+format              返回的日期格式，默认 yyyy-MM-dd。支持 HH:mm:ss, yyyy-MM-dd, yyyy-MM-dd HH:mm:ss 三种格式
 currentDate         初始选择的日期时间，默认当前时间
 startDate           最小日期时间
 endDate             最大日期时间
@@ -2171,7 +1717,7 @@ endDate             最大日期时间
   
   /**
    * alert 警告框。
-   * 
+   *
    * @param apiParams abridge api alert params object
 --------------------------
 参数                   描述
@@ -2183,7 +1729,7 @@ buttonText          按钮文字，默认’确定’
   
   /**
    * confirm 确认框。
-   * 
+   *
    * @param apiParams abridge api confirm params object
 --------------------------
 参数                   描述
@@ -2196,7 +1742,7 @@ cancelButtonText    取消按钮文字，默认’取消’
   
   /**
    * 显示一个弱提示，可选择多少秒之后消失。
-   * 
+   *
    * @param apiParams abridge api showToast params object
 --------------------------
 参数                   描述
@@ -2208,7 +1754,7 @@ duration            显示时长，单位为 ms，默认 2000
   
   /**
    * 隐藏弱提示。
-   * 
+   *
    * 
 
 
@@ -2217,7 +1763,7 @@ duration            显示时长，单位为 ms，默认 2000
   
   /**
    * 显示加载提示。
-   * 
+   *
    * @param apiParams abridge api showLoading params object
 --------------------------
 参数                   描述
@@ -2228,7 +1774,7 @@ delay               延迟显示，单位 ms，默认 0。如果在此时间之�
   
   /**
    * 隐藏加载提示。
-   * 
+   *
    * 
 
 
@@ -2237,7 +1783,7 @@ delay               延迟显示，单位 ms，默认 0。如果在此时间之�
   
   /**
    * 显示导航栏 loading。
-   * 
+   *
    * 
 
 
@@ -2246,7 +1792,7 @@ delay               延迟显示，单位 ms，默认 0。如果在此时间之�
   
   /**
    * 隐藏导航栏 loading。
-   * 
+   *
    * 
 
 
@@ -2255,7 +1801,7 @@ delay               延迟显示，单位 ms，默认 0。如果在此时间之�
   
   /**
    * 显示操作菜单。
-   * 
+   *
    * @param apiParams abridge api showActionSheet params object
 --------------------------
 参数                   描述
@@ -2268,7 +1814,7 @@ destructiveBtnIndex （IOS特殊处理）指定按钮的索引号，从0开始�
   
   /**
    * 隐藏键盘。
-   * 
+   *
    * 
 
 
@@ -2277,7 +1823,7 @@ destructiveBtnIndex （IOS特殊处理）指定按钮的索引号，从0开始�
   
   /**
    * 创建并返回 map 上下文 
-   * 
+   *
    * 
 
 
@@ -2286,7 +1832,7 @@ destructiveBtnIndex （IOS特殊处理）指定按钮的索引号，从0开始�
   
   /**
    * 保留当前页面，跳转到应用内的某个页面，使用 
-   * 
+   *
    * 
 
 
@@ -2295,7 +1841,7 @@ destructiveBtnIndex （IOS特殊处理）指定按钮的索引号，从0开始�
   
   /**
    * 关闭当前页面，跳转到应用内的某个页面。
-   * 
+   *
    * @param apiParams abridge api redirectTo params object
 --------------------------
 参数                   描述
@@ -2305,7 +1851,7 @@ url                 需要跳转的应用内非 tabBar 的页面的路径，路�
   
   /**
    * 关闭当前页面，返回上一页面或多级页面。可通过 
-   * 
+   *
    * @param apiParams abridge api navigateBack params object
 --------------------------
 参数                   描述
@@ -2315,12 +1861,11 @@ delta               返回的页面数，如果 delta 大于现有页面数，�
   
   /**
    * 设置导航栏文字及样式。
-   * 
+   *
    * @param apiParams abridge api setNavigationBar params object
 --------------------------
 参数                   描述
 title               导航栏标题
-image               图片链接地址，必须 https，请使用一张3x高清图。若设置了 image，则 title 参数失效
 backgroundColor     导航栏背景色，支持 16 进制颜色值
 borderBottomColor   导航栏底部边框颜色，支持16进制颜色值。若设置了 backgroundColor，borderBottomColor 会不生效，默认会和 backgroundColor 颜色一样。
 reset               是否重置导航栏为支付宝默认配色，默认 false
@@ -2329,7 +1874,7 @@ reset               是否重置导航栏为支付宝默认配色，默认 false
   
   /**
    * 显示导航栏 loading。
-   * 
+   *
    * 
 
 
@@ -2338,7 +1883,7 @@ reset               是否重置导航栏为支付宝默认配色，默认 false
   
   /**
    * 隐藏导航栏 loading。
-   * 
+   *
    * 
 
 
@@ -2347,7 +1892,7 @@ reset               是否重置导航栏为支付宝默认配色，默认 false
   
   /**
    * 停止当前页面的下拉刷新。
-   * 
+   *
    * 
 
 
@@ -2356,7 +1901,7 @@ reset               是否重置导航栏为支付宝默认配色，默认 false
   
   /**
    * 跳转到 tabBar 页面，并关闭其他所有非 tabBar 页面。
-   * 
+   *
    * @param apiParams abridge api switchTab params object
 --------------------------
 参数                   描述

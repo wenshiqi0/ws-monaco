@@ -170,7 +170,7 @@ dest.forEach((api) => {
       if (ml[0] === 'h2' && ml[1].match(bridgeReg)) {
         j += 1;
         const newApi = new Api(api, ml[1], realContent[j][1]);
-        if (!realContent[j + 1] || !realContent[j + 1][1].match || !realContent[j + 1][1].match(paramsReg)) {
+        if (!realContent[j + 1] || !realContent[j + 1][1] || !realContent[j + 1][1].match || !realContent[j + 1][1].match(paramsReg)) {
           newApi.setParams(null);
         } else {
           while (++j) if (realContent[j][0] === 'table') break;
@@ -358,14 +358,14 @@ fs.mkdirSync('./plugins/api/javascript/');
 fs.mkdirSync('./plugins/api/html/');
 
 // 写入到文件
-fs.outputJson('./plugins/api/javascript/abridge.json', JSON.stringify(apisObejct), { spaces: 2 });
+fsExtra.outputJson('./plugins/api/javascript/abridge.json', apisObejct, { spaces: 2 });
 fs.writeFileSync('./plugins/api/javascript/lib.abridge.spec.ts', defineString);
-fs.outputJson('./plugins/api/html/axml.json', JSON.stringify(components), { spaces: 2 });
+fsExtra.outputJson('./plugins/api/html/axml.json', components, { spaces: 2 });
 
 
 // 组件处理流程
 
 fs.mkdirSync('./plugins/api/axml/');
 
-fs.outputJson('./plugins/api/axml/components.json', JSON.stringify(components), { spaces: 2 });
-fs.outputJson('./plugins/api/axml/componentsMap.json', JSON.stringify(componentsMap), { spaces: 2 });
+fsExtra.outputJson('./plugins/api/axml/components.json', components, { spaces: 2 });
+fsExtra.outputJson('./plugins/api/axml/componentsMap.json', componentsMap, { spaces: 2 });

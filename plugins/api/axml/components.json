@@ -223,6 +223,42 @@
         "documentation": "canvas  组件的唯一标识符"
       },
       {
+        "label": "style",
+        "type": "String",
+        "default": "",
+        "insertText": {
+          "value": "style=\"$0\""
+        },
+        "documentation": null
+      },
+      {
+        "label": "class",
+        "type": "String",
+        "default": "",
+        "insertText": {
+          "value": "class=\"$0\""
+        },
+        "documentation": null
+      },
+      {
+        "label": "width",
+        "type": "String",
+        "default": "canvas width attribute",
+        "insertText": {
+          "value": "width=\"$0\""
+        },
+        "documentation": null
+      },
+      {
+        "label": "height",
+        "type": "String",
+        "default": "canvas height attribute",
+        "insertText": {
+          "value": "height=\"$0\""
+        },
+        "documentation": null
+      },
+      {
         "label": "disable-scroll",
         "type": "Boolean",
         "default": "false",
@@ -684,6 +720,15 @@
         "documentation": "点击标记点时触发"
       },
       {
+        "label": "onCalloutTap",
+        "type": "EventHandle",
+        "default": "",
+        "insertText": {
+          "value": "onCalloutTap=\"$0\""
+        },
+        "documentation": "点击标记点对应的气泡时触发"
+      },
+      {
         "label": "onControlTap",
         "type": "EventHandle",
         "default": "",
@@ -699,7 +744,7 @@
         "insertText": {
           "value": "onRegionChange=\"$0\""
         },
-        "documentation": "视野发生变化时触发"
+        "documentation": "视野发生变化时触发，{type: \"begin\"/ \"end\", latitude，longitude， scale}"
       },
       {
         "label": "onTap",
@@ -1442,6 +1487,15 @@
         "documentation": "是否禁用"
       },
       {
+        "label": "color",
+        "type": "String",
+        "default": "",
+        "insertText": {
+          "value": "color=\"$0\""
+        },
+        "documentation": "switch 的颜色，同 css 的 color"
+      },
+      {
         "label": "onChange",
         "type": "EventHandle",
         "default": "",
@@ -1512,15 +1566,6 @@
           "value": "maxlength=\"$0\""
         },
         "documentation": "最大输入长度"
-      },
-      {
-        "label": "auto-focus",
-        "type": "Boolean",
-        "default": "false",
-        "insertText": {
-          "value": "auto-focus=\"$0\""
-        },
-        "documentation": "自动聚焦"
       },
       {
         "label": "focus",

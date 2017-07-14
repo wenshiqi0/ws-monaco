@@ -1,136 +1,4 @@
 {
-  "openBluetoothAdapter": {
-    "insertText": {
-      "value": "openBluetoothAdapter({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "初始化蓝牙适配器。"
-  },
-  "closeBluetoothAdapter": {
-    "insertText": {
-      "value": "closeBluetoothAdapter({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "关闭本机蓝牙模块。"
-  },
-  "getBluetoothAdapterState": {
-    "insertText": {
-      "value": "getBluetoothAdapterState({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "获取本机蓝牙模块状态。"
-  },
-  "startBluetoothDevicesDiscovery": {
-    "insertText": {
-      "value": "startBluetoothDevicesDiscovery({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "开始搜寻附近的蓝牙外围设备。搜索结果将在 bluetoothDeviceFound 事件中返回。"
-  },
-  "stopBluetoothDevicesDiscovery": {
-    "insertText": {
-      "value": "stopBluetoothDevicesDiscovery({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "停止搜寻附近的蓝牙外围设备。"
-  },
-  "getBluetoothDevices": {
-    "insertText": {
-      "value": "getBluetoothDevices({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "获取所有已发现的蓝牙设备，包括已经和本机处于连接状态的设备。"
-  },
-  "getConnectedBluetoothDevices": {
-    "insertText": {
-      "value": "getConnectedBluetoothDevices({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "根据service的uuid获取处于已连接状态的设备。"
-  },
-  "connectBLEDevice": {
-    "insertText": {
-      "value": "connectBLEDevice({\n  deviceId: '$0', // 蓝牙设备id\n  success: (res) => {\n    \n  },\n});"
-    },
-    "documentation": "连接低功耗蓝牙设备。"
-  },
-  "disconnectBLEDevice": {
-    "insertText": {
-      "value": "disconnectBLEDevice({\n  deviceId: '$0', // 蓝牙设备id\n  success: (res) => {\n    \n  },\n});"
-    },
-    "documentation": "断开与低功耗蓝牙设备的连接。"
-  },
-  "writeBLECharacteristicValue": {
-    "insertText": {
-      "value": "writeBLECharacteristicValue({\n  deviceId: '$0', // 蓝牙设备 id，参考 device 对象\n  serviceId: '', // 蓝牙特征值对应 service 的 uuid\n  characteristicId: '', // 蓝牙特征值的 uuid\n  value: '', // 蓝牙设备特征值对应的值，16进制字符串\n  success: (res) => {\n    \n  },\n});"
-    },
-    "documentation": "向低功耗蓝牙设备特征值中写入数据。"
-  },
-  "readBLECharacteristicValue": {
-    "insertText": {
-      "value": "readBLECharacteristicValue({\n  deviceId: '$0', // 蓝牙设备 id，参考 device 对象\n  serviceId: '', // 蓝牙特征值对应 service 的 uuid\n  characteristicId: '', // 蓝牙特征值的 uuid\n  success: (res) => {\n    \n  },\n});"
-    },
-    "documentation": "读取低功耗蓝牙设备特征值中的数据。调用后在"
-  },
-  "notifyBLECharacteristicValueChange": {
-    "insertText": {
-      "value": "notifyBLECharacteristicValueChange({\n  deviceId: '$0', // 蓝牙设备 id，参考 device 对象\n  serviceId: '', // 蓝牙特征值对应 service 的 uuid\n  characteristicId: '', // 蓝牙特征值的 uuid\n  success: (res) => {\n    \n  },\n});"
-    },
-    "documentation": "启用低功耗蓝牙设备特征值变化时的 notify 功能。注意：必须设备的特征值支持notify才可以成功调用，具体参照 characteristic 的 properties 属性 另外，必须先启用notify才能监听到设备 characteristicValueChange 事件。"
-  },
-  "getBLEDeviceServices": {
-    "insertText": {
-      "value": "getBLEDeviceServices({\n  deviceId: '$0', // 蓝牙设备 id，参考 device 对象\n  success: (res) => {\n    \n  },\n});"
-    },
-    "documentation": "获取蓝牙设备所有 service（服务）"
-  },
-  "getBLEDeviceCharacteristics": {
-    "insertText": {
-      "value": "getBLEDeviceCharacteristics({\n  deviceId: '$0', // 蓝牙设备 id，参考 device 对象\n  serviceId: '', // 蓝牙设备服务的 uuid\n  success: (res) => {\n    \n  },\n});"
-    },
-    "documentation": "获取蓝牙设备所有 characteristic（特征值）"
-  },
-  "onBluetoothDeviceFound": {
-    "insertText": {
-      "value": "onBluetoothDeviceFound({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "寻找到新的蓝牙设备时触发此事件。"
-  },
-  "offBluetoothDeviceFound": {
-    "insertText": {
-      "value": "offBluetoothDeviceFound();"
-    },
-    "documentation": "移除寻找到新的蓝牙设备事件的监听。"
-  },
-  "onBLECharacteristicValueChange": {
-    "insertText": {
-      "value": "onBLECharacteristicValueChange({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "监听低功耗蓝牙设备的特征值变化的事件。"
-  },
-  "offBLECharacteristicValueChange": {
-    "insertText": {
-      "value": "offBLECharacteristicValueChange();"
-    },
-    "documentation": "移除低功耗蓝牙设备的特征值变化事件的监听。"
-  },
-  "onBLEConnectionStateChanged": {
-    "insertText": {
-      "value": "onBLEConnectionStateChanged({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "监听低功耗蓝牙连接的错误事件，包括设备丢失，连接异常断开等。"
-  },
-  "offBLEConnectionStateChanged": {
-    "insertText": {
-      "value": "offBLEConnectionStateChanged();"
-    },
-    "documentation": "移除低功耗蓝牙连接的错误事件的监听。"
-  },
-  "onBluetoothAdapterStateChange": {
-    "insertText": {
-      "value": "onBluetoothAdapterStateChange({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "监听本机蓝牙状态变化的事件。"
-  },
-  "offBluetoothAdapterStateChange": {
-    "insertText": {
-      "value": "offBluetoothAdapterStateChange();"
-    },
-    "documentation": "移除本机蓝牙状态变化的事件的监听。\n "
-  },
   "getSystemInfo": {
     "insertText": {
       "value": "getSystemInfo({\n  success: (res) => {\n    $0\n  },\n});"
@@ -148,6 +16,18 @@
       "value": "getNetworkType({\n  success: (res) => {\n    $0\n  },\n});"
     },
     "documentation": "获取当前网络状态。"
+  },
+  "getClipboard": {
+    "insertText": {
+      "value": "getClipboard({\n  success: (res) => {\n    $0\n  },\n});"
+    },
+    "documentation": "获取剪贴板数据。"
+  },
+  "setClipboard": {
+    "insertText": {
+      "value": "setClipboard({\n  text: '$0', // 剪贴板数据\n  success: (res) => {\n    \n  },\n});"
+    },
+    "documentation": "设置剪贴板数据。"
   },
   "scan": {
     "insertText": {
@@ -243,7 +123,7 @@
     "insertText": {
       "value": "getBackgroundAudioPlayerState();"
     },
-    "documentation": "使用后台播放器播放音乐。"
+    "documentation": "获取后台音乐播放状态。"
   },
   "onBackgroundAudioPlay": {
     "insertText": {
@@ -437,6 +317,12 @@
     },
     "documentation": "发起支付。"
   },
+  "reportAnalytics": {
+    "insertText": {
+      "value": "reportAnalytics({\n  eventName: '$0', // 自定义事件名，需申请内部可 @习祯\n  data: '', // 上报的数据\n});"
+    },
+    "documentation": "自定义分析数据上报接口。"
+  },
   "setStorage": {
     "insertText": {
       "value": "setStorage({\n  key: '$0', // 缓存数据的 key\n  data: '', // 要缓存的数据\n  success: (res) => {\n    \n  },\n});"
@@ -507,7 +393,7 @@
     "insertText": {
       "value": "datePicker({\n  success: (res) => {\n    $0\n  },\n});"
     },
-    "documentation": "设置导航栏文字及样式。"
+    "documentation": "打开日期选择列表。"
   },
   "alert": {
     "insertText": {
