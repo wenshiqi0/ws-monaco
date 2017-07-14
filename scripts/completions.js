@@ -233,7 +233,7 @@ dest2.forEach((component) => {
             label: item[1][1],
             type: item[2][1],
             default: (item[3] && item[3][1]) || '',
-            insertText: { value: `${item[1][1]}="{{${covertBasicType(item[2][1], ((item[3] && item[3][1]) || ''))}}}"` },
+            insertText: { value: `${item[1][1]}="$0"` },
             documentation: (item[5] && item[5][1]) || (item[4] && item[4][1]) || null,
           });
         });
