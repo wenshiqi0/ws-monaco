@@ -82,11 +82,6 @@ interface getLocationParams {
   */
  timeout?: number;
 
- /** 
-  * 支持 0：详细逆地理编码，带周边信；1：逆地理编码到城市；2：仅获取经纬度、速度和精度。默认为 2
-  */
- type?: number;
-
   /** 
    * 接口调用成功的回调函数
    * @param res 成功返回参数 
@@ -1191,7 +1186,6 @@ number              电话号码
 参数                   描述
 cacheTimeout        钱包经纬度定位缓存过期时间，单位秒。默认 30s。使用缓存会加快定位速度，缓存过期会重新定位
 timeout             定位超时失败回调时间，单位秒。默认10s
-type                支持 0：详细逆地理编码，带周边信；1：逆地理编码到城市；2：仅获取经纬度、速度和精度。默认为 2
    */
   getLocation(apiParams: getLocationParams): void;
   
@@ -1593,6 +1587,15 @@ eventName           自定义事件名，需申请内部可 @习祯
 data                上报的数据
    */
   reportAnalytics(apiParams: reportAnalyticsParams): void;
+  
+  /**
+   * 将页面滚动到目标位置。
+   *
+   * 
+
+
+   */
+  pageScrollTo(): void;
   
   /**
    * 将数据存储在本地缓存中指定的 key 中，会覆盖掉原来该 key 对应的数据。

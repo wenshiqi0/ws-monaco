@@ -323,6 +323,12 @@
     },
     "documentation": "自定义分析数据上报接口。"
   },
+  "pageScrollTo": {
+    "insertText": {
+      "value": "pageScrollTo();"
+    },
+    "documentation": "将页面滚动到目标位置。"
+  },
   "setStorage": {
     "insertText": {
       "value": "setStorage({\n  key: '$0', // 缓存数据的 key\n  data: '', // 要缓存的数据\n  success: (res) => {\n    \n  },\n});"
