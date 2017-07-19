@@ -285,7 +285,7 @@ const getDefaultRegistry = () => {
 const editorOptions = {
   folding: true,
   fontSize: 12,
-  tabSize: 4,
+  tabSize: 2,
   parameterHints: true,
   autoClosingBrackets: true,
   renderWhitespace: 'none',
