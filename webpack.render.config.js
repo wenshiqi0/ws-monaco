@@ -37,6 +37,10 @@ module.exports = {
         to: 'syntaxes/css.tmLanguage.json',
       },
       {
+        from: 'plugins/syntaxes/css/syntaxes/less.tmLanguage.json',
+        to: 'syntaxes/less.tmLanguage.json',
+      },
+      {
         from: 'plugins/syntaxes/javascript/syntaxes/JavaScript.tmLanguage.json',
         to: 'syntaxes/javascript.tmLanguage.json',
       },

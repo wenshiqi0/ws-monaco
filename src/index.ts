@@ -1,11 +1,13 @@
 // electron
+import { ipcRenderer as ipc } from 'electron';
 
 // interface
 import { IGrammarRegistry, Global } from './index.d';
 import { Registry, INITIAL } from 'vscode-textmate';
 import { join } from 'path';
 import { activate as activateJs } from '../plugins/syntaxes/javascript/src/index';
-import { activate as activateEslint } from '../plugins/syntaxes/eslint/src/index'
+import { activate as activateEslint } from '../plugins/syntaxes/eslint/src/index';
+import { activate as activateCss } from '../plugins/syntaxes/css/src/index';
 import * as theme from './theme';
 
 // ensure monaco is on the global window
@@ -14,7 +16,8 @@ declare const __dirname: string;
 
 // language configs
 const jsConfig = require('../plugins/syntaxes/javascript/js-configuration');
-const cssConfig = require('../plugins/syntaxes/css/language-configuration.json');
+const cssConfig = require('../plugins/syntaxes/css/language-configuration.css.json');
+const lessConfig = require('../plugins/syntaxes/css/language-configuration.less.json');
 const jsonConfig = require('../plugins/syntaxes/json/language-configuration');
 const axmlConfig = require('../plugins/syntaxes/axml/language-configuration.json');
 const nunjucksConfig = require('../plugins/syntaxes/nunjucks/nunjucks.configuration.json');
@@ -54,6 +57,11 @@ const globalLanguageMap: any = {
     scope: 'source.css',
     config: cssConfig,
     extensions: ['.acss', '.css'],
+  },
+  less: {
+    scope: 'source.css.less',
+    config: lessConfig,
+    extensions: ['.less'],
   },
   json: {
     scope: 'source.json',
@@ -130,7 +138,7 @@ class GrammarRegistry implements IGrammarRegistry {
   getEmbeddedLanguages(): string[] {
     return this.embeddedLanguages;
   }
-
+ 
   pushLanguageEmbedded(languageId: string): Number {
     this.embeddedLanguages.push(languageId);
     return this.embeddedLanguages.length;
@@ -164,8 +172,33 @@ class GrammarRegistry implements IGrammarRegistry {
   }
 
   activateExtensions() {
+    // hook the createMoldel and setValue function
+    const originalCreateModel = window.monaco.editor.createModel;
+    window.monaco.editor.createModel = (value, language, uri) => {
+      const model = originalCreateModel(value, language, uri);
+      if (language && uri) {
+        ipc.send('ant-monaco:createOrUpdateModel', { value, language, uri, version: model._versionId.toString() });
+      }
+      const originalSetValue = model.setValue;
+      model.setValue = (value) => {
+        if (!value && value !== '') return;
+        ipc.send('ant-monaco:createOrUpdateModel', { value, uri, language, version: model._versionId.toString() });
+        return originalSetValue(value);
+      }
+      model.onDidChangeContent(() => {
+        ipc.send('ant-monaco:createOrUpdateModel', {
+          value: model.getValue(),
+          uri: model.uri, language,
+          version: model._versionId.toString() 
+        });
+      })
+      return model;
+    }
+
+    // activate language features
     activateJs(this, window.monaco);
     activateEslint(this, window.monaco);
+    activateCss(this, window.monaco);
   }
 
   static activateCompletionItems(modeId) {
@@ -213,9 +246,6 @@ class GrammarRegistry implements IGrammarRegistry {
         id: languageId,
         extensions: globalLanguageMap[languageId].extensions,
       });
-
-      console.log(languageId, globalLanguageMap[languageId].config);
-
       languages.setLanguageConfiguration(languageId, globalLanguageMap[languageId].config);
       GrammarRegistry.activateCompletionItems(languageId);
       languages.setTokensProvider(languageId, {
@@ -244,6 +274,7 @@ const getDefaultRegistry = () => {
   return new GrammarRegistry({
     'source.js': join(__dirname, 'syntaxes/JavaScript.tmLanguage.json'),
     'source.css': join(__dirname, 'syntaxes/css.tmLanguage.json'),
+    'source.css.less': join(__dirname, 'syntaxes/less.tmLanguage.json'),
     'source.json': join(__dirname, 'syntaxes/JSON.tmLanguage'),
     'source.schema': join(__dirname, 'syntaxes/schema.tmLanguage.json'),
     'text.axml.basic': join(__dirname, 'syntaxes/axml.tmLanguage.json'),

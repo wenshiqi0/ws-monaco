@@ -1,203 +1,238 @@
 import { ipcMain as ipc } from 'electron';
+import { join } from 'path';
+
+import { convertKind } from '../../utils';
+
+const ts = require('typescript/lib/typescriptServices');
+
 import libES6File from 'raw-loader!typescript/lib/lib.es6.d.ts';
 import abridgeFile from './../../../api/javascript/lib.abridge.spec.ts';
-import abridgeInsert from './../../../api/javascript/abridge.json';
 
-const ts = require('typescript/lib/tsserverlibrary');
-const combineFile = `${libES6File}\n\n${abridgeFile}`;
+const combineFile = `${abridgeFile}\n\n${libES6File}`;
 
-let document;
-let version = 1;
-const FILE_NAME = 'ant://javascript';
-const TEST_NAME = 'test://javascript';
-
-const CompletionItemKind = {
-  Text: 0,
-  Method: 1,
-  Function: 2,
-  Constructor: 3,
-  Field: 4,
-  Variable: 5,
-  Class: 6,
-  Interface: 7,
-  Module: 8,
-  Property: 9,
-  Unit: 10,
-  Value: 11,
-  Enum: 12,
-  Keyword: 13,
-  Snippet: 14,
-  Color: 15,
-  File: 16,
-  Reference: 17,
-  Folder: 18,
-}
-
-function convertKind(kind) {
-  switch (kind) {
-    case 'primitive type':
-    case 'keyword':
-      return CompletionItemKind.Keyword;
-    case 'var':
-    case 'local var':
-      return CompletionItemKind.Variable;
-    case 'property':
-    case 'getter':
-    case 'setter':
-      return CompletionItemKind.Field;
-    case 'function':
-    case 'method':
-    case 'construct':
-    case 'call':
-    case 'index':
-      return CompletionItemKind.Function;
-    case 'enum':
-      return CompletionItemKind.Enum;
-    case 'module':
-      return CompletionItemKind.Module;
-    case 'class':
-      return CompletionItemKind.Class;
-    case 'interface':
-      return CompletionItemKind.Interface;
-    case 'warning':
-      return CompletionItemKind.File;
+class AntMonacoMainHost {
+  constructor(compilerOptions) {
+    this._languageService = ts.createLanguageService(this);
+    this._compilerOptions = compilerOptions;
+    this._extraLibs = [];
   }
 
-  return CompletionItemKind.Property;
-}
+  getCompilationSettings() {
+		return this._compilerOptions;
+	}
 
-const compilerOptions = {
-  allowNonTsExtensions: true,
-  allowJs: true,
-  target: 2, // lib.es6.d.ts
-  moduleResolution: ts.ModuleResolutionKind.Classic
-};
+  getScriptFileNames() {
+    const filenames = Array.from(Ant.modelsMap.keys());
+    return filenames;
+  }
 
-const host = {
-  getCompilationSettings: () => compilerOptions,
-  getScriptFileNames: () => [FILE_NAME, TEST_NAME],
-  getScriptKind: () => ts.ScriptKind.JS,
-  getScriptVersion: (fileName) => {
-    if (fileName === FILE_NAME) {
-      return String(version++);
-    }
-    return '1'; // 非工程文件只需要固定文件版本就好了
-  },
-  getScriptSnapshot: (fileName) => {
-    let text = '';
-    if (fileName === FILE_NAME) {
-      text = document || '';
-    } else if (fileName === TEST_NAME) {
-      text = 'var text = ""'; // 目前还没有一个很好的方式来解决这里的性能问题，所以我添加了一个测试文件，在ide初始化的时候将预先生成代码补全的信息
-    } else {
+  getScriptVersion(uri) {
+    const model = Ant.modelsMap.get(uri);
+    if (model)
+      return model.getVersion();
+    return '1';
+  }
+
+  getScriptSnapshot(uri) {
+    let text;
+    const model = Ant.modelsMap.get(uri);
+
+    if (model) {
+      // a true editor model
+      text = model.getValue() || '';
+    } else if (uri in this._extraLibs) {
+      // static extra lib
+      text = this._extraLibs[uri];
+    } else if (uri === 'lib.es6.d.ts') {
       text = combineFile;
+    } else {
+      return;
     }
+
     return {
       getText: (start, end) => text.substring(start, end),
       getLength: () => text.length,
-      getChangeRange: () => void 0,
+      getChangeRange: () => undefined
     };
-  },
-  getCurrentDirectory: () => '',
-  getDefaultLibFileName: () => 'lib.es6.d.ts', // 目前只使用 es6
-}
-
-const jsLanguageService = ts.createLanguageService(host);
-
-// 预先生成所有的代码补全信息，typescript 会把相关信息缓存起来
-jsLanguageService.getCompletionsAtPosition(TEST_NAME, 0);
-
-const handleCompletionItems = (value, offset, position, prevWord) => {
-  document = value;
-  let completions = jsLanguageService.getCompletionsAtPosition(FILE_NAME, offset);
-  if (!completions) {
-    return { isIncomplete: false, items: [] };
   }
 
-  const items = [];
-  completions.entries.forEach(entry => {
-    const completionItem = {
-      position,
-      label: entry.name,
-      kind: convertKind(entry.kind),
-      data: { // data used for resolving item details (see 'doResolve')
-        languageId: 'javascript',
-        offset,
-      }
-    };
-
-    if (prevWord === 'abridge') {
-      if (completions.isMemberCompletion && abridgeInsert[entry.name]) {
-        completionItem.insertText = abridgeInsert[entry.name].insertText;
-        completionItem.detail = abridgeInsert[entry.name].documentation;
-        items.push(completionItem);
-      }
-      // else do nothing
-    } else {
-      completionItem.insertText = entry.name;
-      items.push(completionItem);
-    }
-  });
-
-  return {
-    isIncomplete: false,
-    items,
-  };
-}
-
-ipc.on(
-  'javascript:completions',
-  (event, args) => {
-    const { value, offset, position, prevWord } = args;
-    const result = handleCompletionItems(value, offset, position, prevWord);
-    event.sender.send('javascript:completions', {
-        isIncomplete: false,
-        items: result.items,
-    });
+  getCurrentDirectory() {
+		return '';
   }
-)
+  
+  getDefaultLibFileName() {
+    return 'lib.es6.d.ts';
+  }
 
-const handleSignatureHelp = (value, offset, position) => {
-  document = value;
-  const signHelp = jsLanguageService.getSignatureHelpItems(FILE_NAME, offset);
-  if (signHelp) {
-    let ret = {
-      activeSignature: signHelp.selectedItemIndex,
-      activeParameter: signHelp.argumentIndex,
-      signatures: []
-    };
-    signHelp.items.forEach(item => {
-      let signature = {
-        label: '',
-        documentation: null,
-        parameters: []
-      };
-      signature.label += ts.displayPartsToString(item.prefixDisplayParts);
-      item.parameters.forEach((p, i, a) => {
-        let label = ts.displayPartsToString(p.displayParts);
-        let parameter = {
-          label: label,
-          documentation: ts.displayPartsToString(p.documentation)
+  // --- language features
+
+  getCompletionsAtPosition(uri, position, offset) {
+    let completionsItems;
+    const info = this._languageService.getCompletionsAtPosition(uri, offset);
+    try {
+      completionsItems = info.entries.map(entry => {
+        return {
+				  uri,
+				  position,
+          label: entry.name,
+          sortText: entry.sortText,
+				  kind: convertKind(entry.kind),
         };
-        signature.label += label;
-        signature.parameters.push(parameter);
-        if (i < a.length - 1) {
-          signature.label += ts.displayPartsToString(item.separatorDisplayParts);
-        }
-      });
+		  });
+    } catch(e) {
+      completionsItems = null;
+    }
+    return {
+      isIncomplete: false,
+      items: completionsItems,
+    }
+  }
+
+  resolveCompletionItem(uri, position, offset, entry) {
+    let result;
+    const details = this._languageService.getCompletionEntryDetails(uri, offset, entry);
+    if (!details) {
+      result = null;
+    } else {
+      const detail = ts.displayPartsToString(details.displayParts);
+      const documentation = ts.displayPartsToString(details.documentation);
+      result = {
+				uri,
+				position,
+				label: details.name,
+        kind: convertKind(details.kind),
+				detail: detail.match(/\(method\) Abridge/g) ? documentation : detail,
+				documentation,
+      }
+    }
+    return result;
+  }
+
+  provideSignatureHelp(uri, position, offset) {
+    let resource = uri;
+    
+    const info = this._languageService.getSignatureHelpItems(uri, offset);
+
+		if (!info) {
+			return;
+		}
+
+		let ret = {
+			activeSignature: info.selectedItemIndex,
+			activeParameter: info.argumentIndex,
+			signatures: []
+		};
+
+		info.items.forEach(item => {
+			let signature = {
+				label: '',
+				documentation: null,
+				parameters: []
+			};
+
+			signature.label += ts.displayPartsToString(item.prefixDisplayParts);
+			item.parameters.forEach((p, i, a) => {
+				let label = ts.displayPartsToString(p.displayParts);
+				let parameter = {
+					label: label,
+					documentation: ts.displayPartsToString(p.documentation)
+				};
+				signature.label += label;
+				signature.parameters.push(parameter);
+				if (i < a.length - 1) {
+					signature.label += ts.displayPartsToString(item.separatorDisplayParts);
+				}
+			});
       signature.label += ts.displayPartsToString(item.suffixDisplayParts);
-      ret.signatures.push(signature);
-    });
-    return (ret);
-  };
-  return (null);
+			ret.signatures.push(signature);
+		});
+
+		return ret;
+  }
+  
+  provideHover(uri, position, offset) {
+    let resource = uri;
+    const info = this._languageService.getQuickInfoAtPosition(uri, offset);
+		if (!info) {
+			return;
+		}
+		let contents = ts.displayPartsToString(info.displayParts);
+		return {
+      contents: [contents],
+      textSpan: info.textSpan,
+		};
+  }
+
+  provideDocumentFormattingEdits(uri, options) {
+    const info = this._languageService.getFormattingEditsForDocument(uri, this._convertOptions(options));
+    console.log(info);
+    return info;
+  }
+
+  provideDocumentRangeFormattingEdits(uri, offsetStart, offsetEnd, options) {
+    return this._languageService.getFormattingEditsForRange(uri, offsetStart, offsetEnd, this._convertOptions(options));
+  }
+
+   _convertOptions(options) {
+		return {
+			ConvertTabsToSpaces: options.insertSpaces,
+			TabSize: options.tabSize,
+			IndentSize: options.tabSize,
+			IndentStyle: ts.IndentStyle.Smart,
+			NewLineCharacter: '\n',
+			InsertSpaceAfterCommaDelimiter: true,
+			InsertSpaceAfterSemicolonInForStatements: true,
+			InsertSpaceBeforeAndAfterBinaryOperators: true,
+			InsertSpaceAfterKeywordsInControlFlowStatements: true,
+			InsertSpaceAfterFunctionKeywordForAnonymousFunctions: true,
+			InsertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis: false,
+			InsertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets: false,
+			InsertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces: false,
+			PlaceOpenBraceOnNewLineForControlBlocks: false,
+			PlaceOpenBraceOnNewLineForFunctions: false
+		};
+	}
 }
 
-ipc.on(
-  'javascript:signatures',
-  (event, args) => {
-    const { value, offset, position } = args;
-    const result = handleSignatureHelp(value, offset, position);
-    event.sender.send('javascript:signatures', result);
-  }
-)
+const host = new AntMonacoMainHost({
+  allowNonTsExtensions: true,
+  target: 5, // lib.es6.d.ts
+  noSemanticValidation: true,
+  noSyntaxValidation: false
+});
+
+ipc.on('javascript:getCompletionsAtPosition', (event, args) => {
+  const { uri, position, offset, entry } = args;
+  const res = host.getCompletionsAtPosition(uri, position, offset);
+  event.sender.send('javascript:getCompletionsAtPosition', res);
+})
+
+ipc.on('javascript:resolveCompletionItem', (event, args) => {
+  const { uri, position, offset, entry } = args;
+  const res = host.resolveCompletionItem(uri, position, offset, entry);
+  event.sender.send('javascript:resolveCompletionItem', res);
+})
+
+ipc.on('javascript:provideSignatureHelp', (event, args) => {
+  const { uri, position, offset } = args;
+  const res = host.provideSignatureHelp(uri, position, offset);
+  event.sender.send('javascript:provideSignatureHelp', res);
+})
+
+ipc.on('javascript:provideHover', (event, args) => {
+  const { uri, position, offset } = args;
+  const res = host.provideHover(uri, position, offset);
+  event.sender.send('javascript:provideHover', res);
+})
+
+ipc.on('javascript:provideDocumentFormattingEdits', (event, args) => {
+  const { uri, options } = args;
+  const res = host.provideDocumentFormattingEdits(uri, options);
+  event.sender.send('javascript:provideDocumentFormattingEdits', res);
+})
+
+ipc.on('javascript:provideDocumentRangeFormattingEdits', (event, args) => {
+  const { uri, options, offsetStart, offsetEnd } = args;
+  const res = host.provideDocumentRangeFormattingEdits(uri, offsetStart, offsetEnd, options);
+  event.sender.send('javascript:provideDocumentRangeFormattingEdits', res);
+})
