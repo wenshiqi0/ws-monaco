@@ -191,30 +191,6 @@
     },
     "documentation": "获取当前服务器时间的毫秒数。"
   },
-  "onAccelerometerChange": {
-    "insertText": {
-      "value": "onAccelerometerChange({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "监听重力感应变化。"
-  },
-  "offAccelerometerChange": {
-    "insertText": {
-      "value": "offAccelerometerChange();"
-    },
-    "documentation": "停止监听重力感应变化。"
-  },
-  "onCompassChange": {
-    "insertText": {
-      "value": "onCompassChange({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "监听罗盘数据变化。"
-  },
-  "offCompassChange": {
-    "insertText": {
-      "value": "offCompassChange();"
-    },
-    "documentation": "停止监听罗盘数据变化。"
-  },
   "getLocation": {
     "insertText": {
       "value": "getLocation({\n  success: (res) => {\n    $0\n  },\n});"
@@ -415,7 +391,7 @@
   },
   "onSocketMessage": {
     "insertText": {
-      "value": "onSocketMessage({\n  \n});"
+      "value": "onSocketMessage();"
     },
     "documentation": "监听WebSocket接受到服务器的消息事件。"
   },
@@ -496,6 +472,30 @@
       "value": "removeStorageSync();"
     },
     "documentation": "同步删除缓存数据。"
+  },
+  "clearStorage": {
+    "insertText": {
+      "value": "clearStorage();"
+    },
+    "documentation": "清除本地数据缓存。"
+  },
+  "clearStorageSync": {
+    "insertText": {
+      "value": "clearStorageSync();"
+    },
+    "documentation": "同步清除本地数据缓存。"
+  },
+  "getStorageInfo": {
+    "insertText": {
+      "value": "getStorageInfo({\n  success: (res) => {\n    $0\n  },\n});"
+    },
+    "documentation": "异步获取当前storage的相关信息。"
+  },
+  "getStorageInfoSync": {
+    "insertText": {
+      "value": "getStorageInfoSync();"
+    },
+    "documentation": "同步获取当前storage的相关信息。"
   },
   "createAnimation": {
     "insertText": {

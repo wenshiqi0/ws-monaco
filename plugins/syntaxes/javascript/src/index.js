@@ -1,4 +1,4 @@
-import { ipcRenderer as ipc, remote } from 'electron';
+import { ipcRenderer as ipc } from 'electron';
 import { join } from 'path';
 import { wireCancellationToken } from '../../utils';
 import abridgeInsert from './../../../api/javascript/abridge.json';
@@ -16,7 +16,6 @@ export const activate = (registry, monaco) => {
       return new Promise((resolve, reject) => {
         wireCancellationToken(handler, token, reject);
         ipc.once(handler, (event, args) => {
-          console.log(args);
           resolve(args);
         });
         ipc.send(handler, { position, uri: model.uri, offset: model.getOffsetAt(position) });

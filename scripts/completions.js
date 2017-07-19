@@ -35,7 +35,7 @@ const apisObejct = {};
 if (!SITE_FOLDER) {
   console.error('[tiny-apiCreator] Set the key siteFolder into npm config');
   console.error('[tiny-apiCreator] Should know the site file path first');
-  process.exit(1);``
+  process.exit(1);
 }
 
 // Api class to define a api with a toString function
@@ -317,7 +317,6 @@ ${paramsDetils.join('\n')}
 }
 
 function makeFunctionDefine (name, params, callback) {
-  return `  ${name}(): void;`;
   if (name.indexOf('(') > -1) {
     return `  ${name}: void;`;
   } else if (!params || params.length === 0) {
@@ -330,9 +329,14 @@ function makeFunctionDefine (name, params, callback) {
 // api 处理流程
 
 const defineString = `
+${apis.map(api => {
+  return makeParams(api.name.split('.')[1], api.params, api.callback);
+}).join('')}
+
 interface Abridge {
 ${apis.map(api => {
   return `
+${makeApiDesc(api.name.split('.')[1], api.params, api.callback)}
 ${makeFunctionDefine(api.name.split('.')[1], api.params, api.callback)}
   `
 }).join('')}
