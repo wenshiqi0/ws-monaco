@@ -175,7 +175,7 @@ class GrammarRegistry implements IGrammarRegistry {
     // hook the createMoldel and setValue function
     const originalCreateModel = window.monaco.editor.createModel;
     window.monaco.editor.createModel = (value, language, uri) => {
-      const model = originalCreateModel(value, language, uri);
+      const model = (originalCreateModel.bind(window.monaco.editor))(value, language, uri);
       if (language && uri) {
         ipc.send('ant-monaco:createOrUpdateModel', { value, language, uri, version: model._versionId.toString() });
       }
@@ -183,7 +183,7 @@ class GrammarRegistry implements IGrammarRegistry {
       model.setValue = (value) => {
         if (!value && value !== '') return;
         ipc.send('ant-monaco:createOrUpdateModel', { value, uri, language, version: model._versionId.toString() });
-        return originalSetValue(value);
+        return (originalSetValue.bind(model))(value);
       }
       model.onDidChangeContent(() => {
         ipc.send('ant-monaco:createOrUpdateModel', {
