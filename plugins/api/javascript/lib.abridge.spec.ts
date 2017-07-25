@@ -2427,3 +2427,4 @@ declare var Abridge: {
 };
 
 declare var abridge: Abridge;
+declare var my: Abridge;
