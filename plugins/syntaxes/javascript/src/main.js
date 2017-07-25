@@ -106,12 +106,12 @@ class AntMonacoMainHost {
     if (completionsItems && Array.isArray(completionsItems)) {
       return {
         isIncomplete: false,
-        items: completionsItems.concat(info.isMemberCompletion ? [] : snippetsItems),
+        items: completionsItems.concat((info || {}).isMemberCompletion ? [] : snippetsItems),
       }
     } else {
       return {
         isIncomplete: false,
-        items: info.isMemberCompletion ? null : snippetsItems,
+        items: (info || {}).isMemberCompletion ? null : snippetsItems,
       }
     }
   }
