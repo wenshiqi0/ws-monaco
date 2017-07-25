@@ -23,30 +23,6 @@ interface startBluetoothDevicesDiscoveryParams {
   complete? (): void;
 
 }
-interface getBluetoothDevicesParams {
- /** 
-  * 蓝牙设备主 service 的 uuid 列表
-  */
- services?: Array<string>;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
 interface getConnectedBluetoothDevicesParams {
  /** 
   * 蓝牙设备主 service 的 uuid 列表
@@ -136,11 +112,6 @@ interface writeBLECharacteristicValueParams {
  characteristicId?: string;
 
  /** 
-  * notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
-  */
- descriptorId?: string;
-
- /** 
   * 蓝牙设备特征值对应的值，16进制字符串
   */
  value?: hex | string;
@@ -178,11 +149,6 @@ interface readBLECharacteristicValueParams {
   * 蓝牙特征值的 uuid
   */
  characteristicId?: string;
-
- /** 
-  * notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
-  */
- descriptorId?: string;
 
   /** 
    * 接口调用成功的回调函数
@@ -1059,273 +1025,6 @@ interface chooseAlipayContactParams {
   complete? (): void;
 
 }
-interface datePickerParams {
- /** 
-  * 返回的日期格式，默认 yyyy-MM-dd。支持 HH:mm:ss, yyyy-MM-dd, yyyy-MM-dd HH:mm:ss 三种格式
-  */
- format?: string;
-
- /** 
-  * 初始选择的日期时间，默认当前时间
-  */
- currentDate?: string;
-
- /** 
-  * 最小日期时间
-  */
- startDate?: string;
-
- /** 
-  * 最大日期时间
-  */
- endDate?: string;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface alertParams {
- /** 
-  * alert 框的标题
-  */
- title?: string;
-
- /** 
-  * alert 框的内容
-  */
- content?: string;
-
- /** 
-  * 按钮文字，默认’确定’
-  */
- buttonText?: string;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface confirmParams {
- /** 
-  * confirm 框的标题
-  */
- title?: string;
-
- /** 
-  * confirm 框的内容
-  */
- content?: string;
-
- /** 
-  * 确定按钮文字，默认’确定’
-  */
- confirmButtonText?: string;
-
- /** 
-  * 取消按钮文字，默认’取消’
-  */
- cancelButtonText?: string;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface showToastParams {
- /** 
-  * 文字内容
-  */
- content?: string;
-
- /** 
-  * toast 类型，展示相应图标，默认 none，支持 success / fail / exception / none’。其中 exception 类型必须传文字信息
-  */
- type?: string;
-
- /** 
-  * 显示时长，单位为 ms，默认 2000
-  */
- duration?: number;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface showLoadingParams {
- /** 
-  * loading 的文字提示
-  */
- content?: string;
-
- /** 
-  * 延迟显示，单位 ms，默认 0。如果在此时间之前调用了 ap.hideLoading 则不会显示
-  */
- delay?: number;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface showActionSheetParams {
- /** 
-  * 菜单标题
-  */
- title?: string;
-
- /** 
-  * 菜单按钮的文字数组
-  */
- items?: string | Array<string>;
-
- /** 
-  * 取消按钮文案，默认为「取消」
-  */
- cancelButtonText?: string;
-
- /** 
-  * （IOS特殊处理）指定按钮的索引号，从0开始，使用场景：需要删除或清除数据等类似场景，默认红色
-  */
- destructiveBtnIndex?: number;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
-interface redirectToParams {
- /** 
-  * 需要跳转的应用内非 tabBar 的页面的路径，路径后可以带参数。参数与路径之间使用
-  */
- url: string;
-
-}
-interface navigateBackParams {
- /** 
-  * 返回的页面数，如果 delta 大于现有页面数，则返回到首页。
-  */
- delta: number;
-
-}
-interface setNavigationBarParams {
- /** 
-  * 导航栏标题
-  */
- title?: string;
-
- /** 
-  * 导航栏背景色，支持 16 进制颜色值
-  */
- backgroundColor?: string;
-
- /** 
-  * 导航栏底部边框颜色，支持16进制颜色值。若设置了 backgroundColor，borderBottomColor 会不生效，默认会和 backgroundColor 颜色一样。
-  */
- borderBottomColor?: string;
-
- /** 
-  * 是否重置导航栏为支付宝默认配色，默认 false
-  */
- reset?: boolean;
-
-  /** 
-   * 接口调用成功的回调函数
-   * @param res 成功返回参数 
-   */
-  success? (res: Object): void;
-
-  /** 
-   * 接口调用失败的回调函数
-   * @param error 失败返回错误码 
-   */
-  fail? (error: number): void;
-
-  /** 
-   * 接口调用结束的回调函数（调用成功、失败都会执行）
-   */
-  complete? (): void;
-
-}
 interface switchTabParams {
  /** 
   * 需要跳转的 tabBar 页面的路径（需在 app.json 的 tabBar 字段定义的页面），路径后不能带参数
@@ -1386,15 +1085,14 @@ services            蓝牙设备主 service 的 uuid 列表
   /**
    * 获取所有已发现的蓝牙设备，包括已经和本机处于连接状态的设备。
    *
-   * @param apiParams abridge api getBluetoothDevices params object
---------------------------
-参数                   描述
-services            蓝牙设备主 service 的 uuid 列表
+   * 
+
+
    */
-  getBluetoothDevices(apiParams: getBluetoothDevicesParams): void;
+  getBluetoothDevices(): void;
   
   /**
-   * 根据service的uuid获取处于已连接状态的设备。
+   * 获取处于已连接状态的设备。
    *
    * @param apiParams abridge api getConnectedBluetoothDevices params object
 --------------------------
@@ -1432,7 +1130,6 @@ deviceId            蓝牙设备id
 deviceId            蓝牙设备 id，参考 device 对象
 serviceId           蓝牙特征值对应 service 的 uuid
 characteristicId    蓝牙特征值的 uuid
-descriptorId        notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
 value               蓝牙设备特征值对应的值，16进制字符串
    */
   writeBLECharacteristicValue(apiParams: writeBLECharacteristicValueParams): void;
@@ -1446,7 +1143,6 @@ value               蓝牙设备特征值对应的值，16进制字符串
 deviceId            蓝牙设备 id，参考 device 对象
 serviceId           蓝牙特征值对应 service 的 uuid
 characteristicId    蓝牙特征值的 uuid
-descriptorId        notify 的 descriptor 的 uuid （只有android 会用到，非必填，默认值00002902-0000-1000-8000-00805f9b34fb）
    */
   readBLECharacteristicValue(apiParams: readBLECharacteristicValueParams): void;
   
@@ -1549,7 +1245,6 @@ serviceId           蓝牙设备服务的 uuid
   
   /**
    * 移除本机蓝牙状态变化的事件的监听。
- 
    *
    * 
 
@@ -2213,116 +1908,6 @@ count               单次最多选择联系人个数，默认 1，最大 10
   chooseAlipayContact(apiParams: chooseAlipayContactParams): void;
   
   /**
-   * 打开日期选择列表。
-   *
-   * @param apiParams abridge api datePicker params object
---------------------------
-参数                   描述
-format              返回的日期格式，默认 yyyy-MM-dd。支持 HH:mm:ss, yyyy-MM-dd, yyyy-MM-dd HH:mm:ss 三种格式
-currentDate         初始选择的日期时间，默认当前时间
-startDate           最小日期时间
-endDate             最大日期时间
-   */
-  datePicker(apiParams: datePickerParams): void;
-  
-  /**
-   * alert 警告框。
-   *
-   * @param apiParams abridge api alert params object
---------------------------
-参数                   描述
-title               alert 框的标题
-content             alert 框的内容
-buttonText          按钮文字，默认’确定’
-   */
-  alert(apiParams: alertParams): void;
-  
-  /**
-   * confirm 确认框。
-   *
-   * @param apiParams abridge api confirm params object
---------------------------
-参数                   描述
-title               confirm 框的标题
-content             confirm 框的内容
-confirmButtonText   确定按钮文字，默认’确定’
-cancelButtonText    取消按钮文字，默认’取消’
-   */
-  confirm(apiParams: confirmParams): void;
-  
-  /**
-   * 显示一个弱提示，可选择多少秒之后消失。
-   *
-   * @param apiParams abridge api showToast params object
---------------------------
-参数                   描述
-content             文字内容
-type                toast 类型，展示相应图标，默认 none，支持 success / fail / exception / none’。其中 exception 类型必须传文字信息
-duration            显示时长，单位为 ms，默认 2000
-   */
-  showToast(apiParams: showToastParams): void;
-  
-  /**
-   * 隐藏弱提示。
-   *
-   * 
-
-
-   */
-  hideToast(): void;
-  
-  /**
-   * 显示加载提示。
-   *
-   * @param apiParams abridge api showLoading params object
---------------------------
-参数                   描述
-content             loading 的文字提示
-delay               延迟显示，单位 ms，默认 0。如果在此时间之前调用了 ap.hideLoading 则不会显示
-   */
-  showLoading(apiParams: showLoadingParams): void;
-  
-  /**
-   * 隐藏加载提示。
-   *
-   * 
-
-
-   */
-  hideLoading(): void;
-  
-  /**
-   * 显示导航栏 loading。
-   *
-   * 
-
-
-   */
-  showNavigationBarLoading(): void;
-  
-  /**
-   * 隐藏导航栏 loading。
-   *
-   * 
-
-
-   */
-  hideNavigationBarLoading(): void;
-  
-  /**
-   * 显示操作菜单。
-   *
-   * @param apiParams abridge api showActionSheet params object
---------------------------
-参数                   描述
-title               菜单标题
-items               菜单按钮的文字数组
-cancelButtonText    取消按钮文案，默认为「取消」
-destructiveBtnIndex （IOS特殊处理）指定按钮的索引号，从0开始，使用场景：需要删除或清除数据等类似场景，默认红色
-   */
-  showActionSheet(apiParams: showActionSheetParams): void;
-  
-  /**
    * 隐藏键盘。
    *
    * 
@@ -2348,57 +1933,6 @@ destructiveBtnIndex （IOS特殊处理）指定按钮的索引号，从0开始�
 
    */
   navigateTo(): void;
-  
-  /**
-   * 关闭当前页面，跳转到应用内的某个页面。
-   *
-   * @param apiParams abridge api redirectTo params object
---------------------------
-参数                   描述
-url                 需要跳转的应用内非 tabBar 的页面的路径，路径后可以带参数。参数与路径之间使用
-   */
-  redirectTo(apiParams: redirectToParams): void;
-  
-  /**
-   * 关闭当前页面，返回上一页面或多级页面。可通过 
-   *
-   * @param apiParams abridge api navigateBack params object
---------------------------
-参数                   描述
-delta               返回的页面数，如果 delta 大于现有页面数，则返回到首页。
-   */
-  navigateBack(apiParams: navigateBackParams): void;
-  
-  /**
-   * 设置导航栏文字及样式。
-   *
-   * @param apiParams abridge api setNavigationBar params object
---------------------------
-参数                   描述
-title               导航栏标题
-backgroundColor     导航栏背景色，支持 16 进制颜色值
-borderBottomColor   导航栏底部边框颜色，支持16进制颜色值。若设置了 backgroundColor，borderBottomColor 会不生效，默认会和 backgroundColor 颜色一样。
-reset               是否重置导航栏为支付宝默认配色，默认 false
-   */
-  setNavigationBar(apiParams: setNavigationBarParams): void;
-  
-  /**
-   * 显示导航栏 loading。
-   *
-   * 
-
-
-   */
-  showNavigationBarLoading(): void;
-  
-  /**
-   * 隐藏导航栏 loading。
-   *
-   * 
-
-
-   */
-  hideNavigationBarLoading(): void;
   
   /**
    * 停止当前页面的下拉刷新。
@@ -2427,3 +1961,4 @@ declare var Abridge: {
 };
 
 declare var abridge: Abridge;
+declare var my: Abridge;

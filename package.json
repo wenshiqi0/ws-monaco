@@ -1,8 +1,8 @@
 {
   "name": "ant-monaco",
-  "version": "0.6.7",
+  "version": "0.7.0",
   "description": "Ant monaco with vscode-textmate. This module can only run under node runtime",
-  "main": "lib/index.min.js",
+  "main": "lib/index.js",
   "scripts": {
     "build:render": "webpack --config ./webpack.render.config.js",
     "build:main": "webpack --config ./webpack.main.config.js",
@@ -47,7 +47,7 @@
     "typescript": "^2.3.4",
     "uglify-es": "^3.0.13",
     "vscode": "^1.1.0",
-    "vscode-css-languageservice": "^2.1.1",
+    "vscode-css-languageservice-commonjs": "0.0.1",
     "vscode-languageserver": "^3.2.2",
     "vscode-languageserver-types": "^3.2.0",
     "vscode-languageserver-types-commonjs": "^0.0.1",

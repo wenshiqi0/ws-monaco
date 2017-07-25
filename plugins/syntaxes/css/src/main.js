@@ -1,5 +1,5 @@
 import { ipcMain as ipc } from 'electron';
-import { getCSSLanguageService, getLESSLanguageService } from 'vscode-css-languageservice';
+import { getCSSLanguageService, getLESSLanguageService } from 'vscode-css-languageservice-commonjs';
 import { TextDocument, Position, InsertTextFormat } from 'vscode-languageserver-types-commonjs';
 
 import { convertKind } from '../../utils';

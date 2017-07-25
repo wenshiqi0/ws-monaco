@@ -75,13 +75,13 @@ class Api {
     let params = '';
     (this.params || []).forEach((param, i) => {
       if (param.required) {
-        params += `${i === 0 ? '' : '\n  '}${param.name}: \'${i === 0 ? '$0' : ''}\', // ${param.desc}`;
+        params += `${i === 0 ? '' : '\n  '}${param.name}: \'${i === 0 ? '$1' : ''}\', // ${param.desc}`;
       }
     });
 
     if (!params) {
       return `${this.name.split('.')[1]}({
-  ${this.callback ? 'success: (res) => {\n    $0\n  },' : ''}
+  ${this.callback ? 'success: (res) => {\n    $1\n  },' : ''}
 });`;
     }
 
@@ -134,7 +134,7 @@ class Component {
     // 针对拥有group的组件的特殊处理
     // 目前看这种组件的string都是一致的
     if (this.tag.match(componentGroupReg)) {
-      return `<${this.tag}>$0</${this.tag}>`;
+      return `<${this.tag}>$1</${this.tag}>`;
     }
 
     if (this.close && this.reqAttr) {
@@ -173,7 +173,11 @@ dest.forEach((api) => {
         if (!realContent[j + 1] || !realContent[j + 1][1] || !realContent[j + 1][1].match || !realContent[j + 1][1].match(paramsReg)) {
           newApi.setParams(null);
         } else {
-          while (++j) if (realContent[j][0] === 'table') break;
+          try {
+            while (++j) if (realContent[j][0] === 'table') break;
+          } catch(e) {
+            return;
+          }
           const params = realContent[j][2];
           params.forEach((item) => {
             if (!item[1][1]) return;
@@ -233,7 +237,7 @@ dest2.forEach((component) => {
             label: item[1][1],
             type: item[2][1],
             default: (item[3] && item[3][1]) || '',
-            insertText: { value: `${item[1][1]}="$0"` },
+            insertText: { value: `${item[1][1]}="$1"` },
             documentation: (item[5] && item[5][1]) || (item[4] && item[4][1]) || null,
           });
         });
@@ -348,6 +352,7 @@ declare var Abridge: {
 };
 
 declare var abridge: Abridge;
+declare var my: Abridge;
 `;
 
 // 清理文件夹

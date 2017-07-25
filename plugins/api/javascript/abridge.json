@@ -1,91 +1,91 @@
 {
   "openBluetoothAdapter": {
     "insertText": {
-      "value": "openBluetoothAdapter({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "openBluetoothAdapter({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "初始化蓝牙适配器。"
   },
   "closeBluetoothAdapter": {
     "insertText": {
-      "value": "closeBluetoothAdapter({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "closeBluetoothAdapter({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "关闭本机蓝牙模块。"
   },
   "getBluetoothAdapterState": {
     "insertText": {
-      "value": "getBluetoothAdapterState({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "getBluetoothAdapterState({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "获取本机蓝牙模块状态。"
   },
   "startBluetoothDevicesDiscovery": {
     "insertText": {
-      "value": "startBluetoothDevicesDiscovery({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "startBluetoothDevicesDiscovery({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "开始搜寻附近的蓝牙外围设备。搜索结果将在 bluetoothDeviceFound 事件中返回。"
   },
   "stopBluetoothDevicesDiscovery": {
     "insertText": {
-      "value": "stopBluetoothDevicesDiscovery({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "stopBluetoothDevicesDiscovery({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "停止搜寻附近的蓝牙外围设备。"
   },
   "getBluetoothDevices": {
     "insertText": {
-      "value": "getBluetoothDevices({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "getBluetoothDevices({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "获取所有已发现的蓝牙设备，包括已经和本机处于连接状态的设备。"
   },
   "getConnectedBluetoothDevices": {
     "insertText": {
-      "value": "getConnectedBluetoothDevices({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "getConnectedBluetoothDevices({\n  success: (res) => {\n    $1\n  },\n});"
     },
-    "documentation": "根据service的uuid获取处于已连接状态的设备。"
+    "documentation": "获取处于已连接状态的设备。"
   },
   "connectBLEDevice": {
     "insertText": {
-      "value": "connectBLEDevice({\n  deviceId: '$0', // 蓝牙设备id\n  success: (res) => {\n    \n  },\n});"
+      "value": "connectBLEDevice({\n  deviceId: '$1', // 蓝牙设备id\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "连接低功耗蓝牙设备。"
   },
   "disconnectBLEDevice": {
     "insertText": {
-      "value": "disconnectBLEDevice({\n  deviceId: '$0', // 蓝牙设备id\n  success: (res) => {\n    \n  },\n});"
+      "value": "disconnectBLEDevice({\n  deviceId: '$1', // 蓝牙设备id\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "断开与低功耗蓝牙设备的连接。"
   },
   "writeBLECharacteristicValue": {
     "insertText": {
-      "value": "writeBLECharacteristicValue({\n  deviceId: '$0', // 蓝牙设备 id，参考 device 对象\n  serviceId: '', // 蓝牙特征值对应 service 的 uuid\n  characteristicId: '', // 蓝牙特征值的 uuid\n  value: '', // 蓝牙设备特征值对应的值，16进制字符串\n  success: (res) => {\n    \n  },\n});"
+      "value": "writeBLECharacteristicValue({\n  deviceId: '$1', // 蓝牙设备 id，参考 device 对象\n  serviceId: '', // 蓝牙特征值对应 service 的 uuid\n  characteristicId: '', // 蓝牙特征值的 uuid\n  value: '', // 蓝牙设备特征值对应的值，16进制字符串\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "向低功耗蓝牙设备特征值中写入数据。"
   },
   "readBLECharacteristicValue": {
     "insertText": {
-      "value": "readBLECharacteristicValue({\n  deviceId: '$0', // 蓝牙设备 id，参考 device 对象\n  serviceId: '', // 蓝牙特征值对应 service 的 uuid\n  characteristicId: '', // 蓝牙特征值的 uuid\n  success: (res) => {\n    \n  },\n});"
+      "value": "readBLECharacteristicValue({\n  deviceId: '$1', // 蓝牙设备 id，参考 device 对象\n  serviceId: '', // 蓝牙特征值对应 service 的 uuid\n  characteristicId: '', // 蓝牙特征值的 uuid\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "读取低功耗蓝牙设备特征值中的数据。调用后在"
   },
   "notifyBLECharacteristicValueChange": {
     "insertText": {
-      "value": "notifyBLECharacteristicValueChange({\n  deviceId: '$0', // 蓝牙设备 id，参考 device 对象\n  serviceId: '', // 蓝牙特征值对应 service 的 uuid\n  characteristicId: '', // 蓝牙特征值的 uuid\n  success: (res) => {\n    \n  },\n});"
+      "value": "notifyBLECharacteristicValueChange({\n  deviceId: '$1', // 蓝牙设备 id，参考 device 对象\n  serviceId: '', // 蓝牙特征值对应 service 的 uuid\n  characteristicId: '', // 蓝牙特征值的 uuid\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "启用低功耗蓝牙设备特征值变化时的 notify 功能。注意：必须设备的特征值支持notify才可以成功调用，具体参照 characteristic 的 properties 属性 另外，必须先启用notify才能监听到设备 characteristicValueChange 事件。"
   },
   "getBLEDeviceServices": {
     "insertText": {
-      "value": "getBLEDeviceServices({\n  deviceId: '$0', // 蓝牙设备 id，参考 device 对象\n  success: (res) => {\n    \n  },\n});"
+      "value": "getBLEDeviceServices({\n  deviceId: '$1', // 蓝牙设备 id，参考 device 对象\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "获取蓝牙设备所有 service（服务）"
   },
   "getBLEDeviceCharacteristics": {
     "insertText": {
-      "value": "getBLEDeviceCharacteristics({\n  deviceId: '$0', // 蓝牙设备 id，参考 device 对象\n  serviceId: '', // 蓝牙设备服务的 uuid\n  success: (res) => {\n    \n  },\n});"
+      "value": "getBLEDeviceCharacteristics({\n  deviceId: '$1', // 蓝牙设备 id，参考 device 对象\n  serviceId: '', // 蓝牙设备服务的 uuid\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "获取蓝牙设备所有 characteristic（特征值）"
   },
   "onBluetoothDeviceFound": {
     "insertText": {
-      "value": "onBluetoothDeviceFound({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "onBluetoothDeviceFound({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "寻找到新的蓝牙设备时触发此事件。"
   },
@@ -97,7 +97,7 @@
   },
   "onBLECharacteristicValueChange": {
     "insertText": {
-      "value": "onBLECharacteristicValueChange({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "onBLECharacteristicValueChange({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "监听低功耗蓝牙设备的特征值变化的事件。"
   },
@@ -109,7 +109,7 @@
   },
   "onBLEConnectionStateChanged": {
     "insertText": {
-      "value": "onBLEConnectionStateChanged({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "onBLEConnectionStateChanged({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "监听低功耗蓝牙连接的错误事件，包括设备丢失，连接异常断开等。"
   },
@@ -121,7 +121,7 @@
   },
   "onBluetoothAdapterStateChange": {
     "insertText": {
-      "value": "onBluetoothAdapterStateChange({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "onBluetoothAdapterStateChange({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "监听本机蓝牙状态变化的事件。"
   },
@@ -129,11 +129,11 @@
     "insertText": {
       "value": "offBluetoothAdapterStateChange();"
     },
-    "documentation": "移除本机蓝牙状态变化的事件的监听。\n "
+    "documentation": "移除本机蓝牙状态变化的事件的监听。"
   },
   "getSystemInfo": {
     "insertText": {
-      "value": "getSystemInfo({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "getSystemInfo({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "获取系统信息。"
   },
@@ -145,25 +145,25 @@
   },
   "getNetworkType": {
     "insertText": {
-      "value": "getNetworkType({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "getNetworkType({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "获取当前网络状态。"
   },
   "getClipboard": {
     "insertText": {
-      "value": "getClipboard({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "getClipboard({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "获取剪贴板数据。"
   },
   "setClipboard": {
     "insertText": {
-      "value": "setClipboard({\n  text: '$0', // 剪贴板数据\n  success: (res) => {\n    \n  },\n});"
+      "value": "setClipboard({\n  text: '$1', // 剪贴板数据\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "设置剪贴板数据。"
   },
   "scan": {
     "insertText": {
-      "value": "scan({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "scan({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "调用扫一扫功能。"
   },
@@ -181,31 +181,31 @@
   },
   "makePhoneCall": {
     "insertText": {
-      "value": "makePhoneCall({\n  number: '$0', // 电话号码\n  success: (res) => {\n    \n  },\n});"
+      "value": "makePhoneCall({\n  number: '$1', // 电话号码\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "拨打电话。"
   },
   "getServerTime": {
     "insertText": {
-      "value": "getServerTime({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "getServerTime({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "获取当前服务器时间的毫秒数。"
   },
   "getLocation": {
     "insertText": {
-      "value": "getLocation({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "getLocation({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "获取用户当前的地理位置信息。"
   },
   "openLocation": {
     "insertText": {
-      "value": "openLocation({\n  longitude: '$0', // 经度\n  latitude: '', // 纬度\n  success: (res) => {\n    \n  },\n});"
+      "value": "openLocation({\n  longitude: '$1', // 经度\n  latitude: '', // 纬度\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "使用支付宝内置地图查看位置。"
   },
   "playBackgroundAudio": {
     "insertText": {
-      "value": "playBackgroundAudio({\n  url: '$0', // 音乐链接地址\n  success: (res) => {\n    \n  },\n});"
+      "value": "playBackgroundAudio({\n  url: '$1', // 音乐链接地址\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "使用后台播放器播放音乐。"
   },
@@ -223,7 +223,7 @@
   },
   "seekBackgroundAudio": {
     "insertText": {
-      "value": "seekBackgroundAudio({\n  position: '$0', // 音乐位置，单位秒\n  success: (res) => {\n    \n  },\n});"
+      "value": "seekBackgroundAudio({\n  position: '$1', // 音乐位置，单位秒\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "控制音乐播放进度。"
   },
@@ -277,43 +277,43 @@
   },
   "chooseVideo": {
     "insertText": {
-      "value": "chooseVideo({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "chooseVideo({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "录制或从手机相册中选择视频。"
   },
   "uploadFile": {
     "insertText": {
-      "value": "uploadFile({\n  url: '$0', // 开发者服务器地址\n  filePath: '', // 要上传文件资源的本地定位符\n  fileName: '', // 文件名，即对应的 key, 开发者在服务器端通过这个 key 可以获取到文件二进制内容\n  fileType: '', // 文件类型，image/video\n  success: (res) => {\n    \n  },\n});"
+      "value": "uploadFile({\n  url: '$1', // 开发者服务器地址\n  filePath: '', // 要上传文件资源的本地定位符\n  fileName: '', // 文件名，即对应的 key, 开发者在服务器端通过这个 key 可以获取到文件二进制内容\n  fileType: '', // 文件类型，image/video\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "上传本地资源到开发者服务器。"
   },
   "downloadFile": {
     "insertText": {
-      "value": "downloadFile({\n  url: '$0', // 下载文件地址\n});"
+      "value": "downloadFile({\n  url: '$1', // 下载文件地址\n});"
     },
     "documentation": "下载文件资源到本地。"
   },
   "chooseImage": {
     "insertText": {
-      "value": "chooseImage({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "chooseImage({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "拍照或从手机相册中选择图片。"
   },
   "previewImage": {
     "insertText": {
-      "value": "previewImage({\n  urls: '$0', // 要预览的图片链接列表\n  success: (res) => {\n    \n  },\n});"
+      "value": "previewImage({\n  urls: '$1', // 要预览的图片链接列表\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "预览图片。"
   },
   "saveImage": {
     "insertText": {
-      "value": "saveImage({\n  url: '$0', // 要保存的图片链接\n  success: (res) => {\n    \n  },\n});"
+      "value": "saveImage({\n  url: '$1', // 要保存的图片链接\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "保存在线图片到手机相册。"
   },
   "startRecord": {
     "insertText": {
-      "value": "startRecord({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "startRecord({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "开始录音。当主动调用 "
   },
@@ -337,7 +337,7 @@
   },
   "playVoice": {
     "insertText": {
-      "value": "playVoice({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "playVoice({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "开始播放语音。"
   },
@@ -361,13 +361,13 @@
   },
   "httpRequest": {
     "insertText": {
-      "value": "httpRequest({\n  url: '$0', // 目标服务器 url\n  success: (res) => {\n    \n  },\n});"
+      "value": "httpRequest({\n  url: '$1', // 目标服务器 url\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "向指定服务器发起一个跨域 http 请求。"
   },
   "connectSocket": {
     "insertText": {
-      "value": "connectSocket({\n  url: '$0', // 开发者服务器接口地址，必须是 wss 协议，且域名必须是后台配置的合法域名\n  success: (res) => {\n    \n  },\n});"
+      "value": "connectSocket({\n  url: '$1', // 开发者服务器接口地址，必须是 wss 协议，且域名必须是后台配置的合法域名\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "创建一个 "
   },
@@ -385,7 +385,7 @@
   },
   "sendSocketMessage": {
     "insertText": {
-      "value": "sendSocketMessage({\n  data: '$0', // 需要发送的内容\n  success: (res) => {\n    \n  },\n});"
+      "value": "sendSocketMessage({\n  data: '$1', // 需要发送的内容\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "通过 WebSocket 连接发送数据，需要先 "
   },
@@ -409,7 +409,7 @@
   },
   "getAuthCode": {
     "insertText": {
-      "value": "getAuthCode({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "getAuthCode({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "获取授权码。"
   },
@@ -421,13 +421,13 @@
   },
   "tradePay": {
     "insertText": {
-      "value": "tradePay({\n  orderStr: '$0', // 完整的支付参数拼接成的字符串，从服务端获取\n  success: (res) => {\n    \n  },\n});"
+      "value": "tradePay({\n  orderStr: '$1', // 完整的支付参数拼接成的字符串，从服务端获取\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "发起支付。"
   },
   "reportAnalytics": {
     "insertText": {
-      "value": "reportAnalytics({\n  eventName: '$0', // 自定义事件名，需申请内部可 @习祯\n  data: '', // 上报的数据\n});"
+      "value": "reportAnalytics({\n  eventName: '$1', // 自定义事件名，需申请内部可 @习祯\n  data: '', // 上报的数据\n});"
     },
     "documentation": "自定义分析数据上报接口。"
   },
@@ -439,7 +439,7 @@
   },
   "setStorage": {
     "insertText": {
-      "value": "setStorage({\n  key: '$0', // 缓存数据的 key\n  data: '', // 要缓存的数据\n  success: (res) => {\n    \n  },\n});"
+      "value": "setStorage({\n  key: '$1', // 缓存数据的 key\n  data: '', // 要缓存的数据\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "将数据存储在本地缓存中指定的 key 中，会覆盖掉原来该 key 对应的数据。"
   },
@@ -451,7 +451,7 @@
   },
   "getStorage": {
     "insertText": {
-      "value": "getStorage({\n  key: '$0', // 缓存数据的 key\n  success: (res) => {\n    \n  },\n});"
+      "value": "getStorage({\n  key: '$1', // 缓存数据的 key\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "获取缓存数据。"
   },
@@ -463,7 +463,7 @@
   },
   "removeStorage": {
     "insertText": {
-      "value": "removeStorage({\n  key: '$0', // 缓存数据的 key\n  success: (res) => {\n    \n  },\n});"
+      "value": "removeStorage({\n  key: '$1', // 缓存数据的 key\n  success: (res) => {\n    \n  },\n});"
     },
     "documentation": "删除缓存数据。"
   },
@@ -487,7 +487,7 @@
   },
   "getStorageInfo": {
     "insertText": {
-      "value": "getStorageInfo({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "getStorageInfo({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "异步获取当前storage的相关信息。"
   },
@@ -511,81 +511,21 @@
   },
   "chooseCity": {
     "insertText": {
-      "value": "chooseCity({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "chooseCity({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "打开城市选择列表。"
   },
   "choosePhoneContact": {
     "insertText": {
-      "value": "choosePhoneContact({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "choosePhoneContact({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "选择本地系统通信录中某个联系人的电话。"
   },
   "chooseAlipayContact": {
     "insertText": {
-      "value": "chooseAlipayContact({\n  success: (res) => {\n    $0\n  },\n});"
+      "value": "chooseAlipayContact({\n  success: (res) => {\n    $1\n  },\n});"
     },
     "documentation": "唤起支付宝通讯录，选择一个或者多个支付宝联系人。"
-  },
-  "datePicker": {
-    "insertText": {
-      "value": "datePicker({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "打开日期选择列表。"
-  },
-  "alert": {
-    "insertText": {
-      "value": "alert({\n  title: '$0', // alert 框的标题\n  success: (res) => {\n    \n  },\n});"
-    },
-    "documentation": "alert 警告框。"
-  },
-  "confirm": {
-    "insertText": {
-      "value": "confirm({\n  title: '$0', // confirm 框的标题\n  success: (res) => {\n    \n  },\n});"
-    },
-    "documentation": "confirm 确认框。"
-  },
-  "showToast": {
-    "insertText": {
-      "value": "showToast({\n  content: '$0', // 文字内容\n  success: (res) => {\n    \n  },\n});"
-    },
-    "documentation": "显示一个弱提示，可选择多少秒之后消失。"
-  },
-  "hideToast": {
-    "insertText": {
-      "value": "hideToast();"
-    },
-    "documentation": "隐藏弱提示。"
-  },
-  "showLoading": {
-    "insertText": {
-      "value": "showLoading({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "显示加载提示。"
-  },
-  "hideLoading": {
-    "insertText": {
-      "value": "hideLoading();"
-    },
-    "documentation": "隐藏加载提示。"
-  },
-  "showNavigationBarLoading": {
-    "insertText": {
-      "value": "showNavigationBarLoading();"
-    },
-    "documentation": "显示导航栏 loading。"
-  },
-  "hideNavigationBarLoading": {
-    "insertText": {
-      "value": "hideNavigationBarLoading();"
-    },
-    "documentation": "隐藏导航栏 loading。"
-  },
-  "showActionSheet": {
-    "insertText": {
-      "value": "showActionSheet({\n  \n  items: '', // 菜单按钮的文字数组\n  success: (res) => {\n    \n  },\n});"
-    },
-    "documentation": "显示操作菜单。"
   },
   "hideKeyboard": {
     "insertText": {
@@ -605,24 +545,6 @@
     },
     "documentation": "保留当前页面，跳转到应用内的某个页面，使用 "
   },
-  "redirectTo": {
-    "insertText": {
-      "value": "redirectTo({\n  url: '$0', // 需要跳转的应用内非 tabBar 的页面的路径，路径后可以带参数。参数与路径之间使用\n});"
-    },
-    "documentation": "关闭当前页面，跳转到应用内的某个页面。"
-  },
-  "navigateBack": {
-    "insertText": {
-      "value": "navigateBack({\n  \n});"
-    },
-    "documentation": "关闭当前页面，返回上一页面或多级页面。可通过 "
-  },
-  "setNavigationBar": {
-    "insertText": {
-      "value": "setNavigationBar({\n  success: (res) => {\n    $0\n  },\n});"
-    },
-    "documentation": "设置导航栏文字及样式。"
-  },
   "stopPullDownRefresh": {
     "insertText": {
       "value": "stopPullDownRefresh();"
@@ -631,7 +553,7 @@
   },
   "switchTab": {
     "insertText": {
-      "value": "switchTab({\n  url: '$0', // 需要跳转的 tabBar 页面的路径（需在 app.json 的 tabBar 字段定义的页面），路径后不能带参数\n});"
+      "value": "switchTab({\n  url: '$1', // 需要跳转的 tabBar 页面的路径（需在 app.json 的 tabBar 字段定义的页面），路径后不能带参数\n});"
     },
     "documentation": "跳转到 tabBar 页面，并关闭其他所有非 tabBar 页面。"
   }

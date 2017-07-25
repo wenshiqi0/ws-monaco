@@ -11,7 +11,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "id=\"$0\""
+          "value": "id=\"$1\""
         },
         "documentation": "video 组件的唯一标识符"
       },
@@ -20,7 +20,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "src=\"$0\""
+          "value": "src=\"$1\""
         },
         "documentation": "要播放音频的资源地址"
       },
@@ -29,7 +29,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "loop=\"$0\""
+          "value": "loop=\"$1\""
         },
         "documentation": "是否循环播放"
       },
@@ -38,7 +38,7 @@
         "type": "Boolean",
         "default": "true",
         "insertText": {
-          "value": "controls=\"$0\""
+          "value": "controls=\"$1\""
         },
         "documentation": "是否显示默认控件"
       },
@@ -47,7 +47,7 @@
         "type": "String",
         "default": "默认控件上的音频封面的图片资源地址，如果 controls 属性值为 false 则设置 poster 无效",
         "insertText": {
-          "value": "poster=\"$0\""
+          "value": "poster=\"$1\""
         },
         "documentation": null
       },
@@ -56,7 +56,7 @@
         "type": "String",
         "default": "未知音频",
         "insertText": {
-          "value": "name=\"$0\""
+          "value": "name=\"$1\""
         },
         "documentation": "默认控件上的音频名字，如果 controls 属性值为 false 则设置 name 无效"
       },
@@ -65,7 +65,7 @@
         "type": "String",
         "default": "未知作者",
         "insertText": {
-          "value": "author=\"$0\""
+          "value": "author=\"$1\""
         },
         "documentation": "默认控件上的作者名字，如果 controls 属性值为 false 则设置 author 无效"
       },
@@ -74,7 +74,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onError=\"$0\""
+          "value": "onError=\"$1\""
         },
         "documentation": "当发生错误时触发 error 事件，detail = {errMsg: MediaError.code}"
       },
@@ -83,7 +83,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onPlay=\"$0\""
+          "value": "onPlay=\"$1\""
         },
         "documentation": "当开始/继续播放时触发play事件"
       },
@@ -92,7 +92,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onPause=\"$0\""
+          "value": "onPause=\"$1\""
         },
         "documentation": "当暂停播放时触发 pause 事件"
       },
@@ -101,7 +101,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onTimeUpdate=\"$0\""
+          "value": "onTimeUpdate=\"$1\""
         },
         "documentation": "当播放进度改变时触发 timeupdate 事件，detail = {currentTime, duration}"
       },
@@ -110,7 +110,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onEnded=\"$0\""
+          "value": "onEnded=\"$1\""
         },
         "documentation": "当播放到末尾时触发 ended 事件"
       }
@@ -128,7 +128,7 @@
         "type": "String",
         "default": "default",
         "insertText": {
-          "value": "size=\"$0\""
+          "value": "size=\"$1\""
         },
         "documentation": "有效值 default, mini"
       },
@@ -137,7 +137,7 @@
         "type": "String",
         "default": "default",
         "insertText": {
-          "value": "type=\"$0\""
+          "value": "type=\"$1\""
         },
         "documentation": "按钮的样式类型，有效值 primary, default, warn"
       },
@@ -146,7 +146,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "plain=\"$0\""
+          "value": "plain=\"$1\""
         },
         "documentation": "按钮是否镂空，背景色透明"
       },
@@ -155,7 +155,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "disabled=\"$0\""
+          "value": "disabled=\"$1\""
         },
         "documentation": "是否禁用"
       },
@@ -164,7 +164,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "loading=\"$0\""
+          "value": "loading=\"$1\""
         },
         "documentation": "名称前是否带 loading 图标"
       },
@@ -173,7 +173,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "form-type=\"$0\""
+          "value": "form-type=\"$1\""
         },
         "documentation": "有效值：submit, reset，用于 "
       },
@@ -182,7 +182,7 @@
         "type": "String",
         "default": "button-hover",
         "insertText": {
-          "value": "hover-class=\"$0\""
+          "value": "hover-class=\"$1\""
         },
         "documentation": "指定按钮按下去的样式类。当 hover-class=\"none\" 时，没有点击态效果"
       },
@@ -191,7 +191,7 @@
         "type": "Number",
         "default": "20",
         "insertText": {
-          "value": "hover-start-time=\"$0\""
+          "value": "hover-start-time=\"$1\""
         },
         "documentation": "按住后多久出现点击态，单位毫秒"
       },
@@ -200,7 +200,7 @@
         "type": "Number",
         "default": "70",
         "insertText": {
-          "value": "hover-stay-time=\"$0\""
+          "value": "hover-stay-time=\"$1\""
         },
         "documentation": "手指松开后点击态保留时间，单位毫秒"
       }
@@ -218,7 +218,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "id=\"$0\""
+          "value": "id=\"$1\""
         },
         "documentation": "canvas  组件的唯一标识符"
       },
@@ -227,7 +227,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "style=\"$0\""
+          "value": "style=\"$1\""
         },
         "documentation": null
       },
@@ -236,7 +236,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "class=\"$0\""
+          "value": "class=\"$1\""
         },
         "documentation": null
       },
@@ -245,7 +245,7 @@
         "type": "String",
         "default": "canvas width attribute",
         "insertText": {
-          "value": "width=\"$0\""
+          "value": "width=\"$1\""
         },
         "documentation": null
       },
@@ -254,7 +254,7 @@
         "type": "String",
         "default": "canvas height attribute",
         "insertText": {
-          "value": "height=\"$0\""
+          "value": "height=\"$1\""
         },
         "documentation": null
       },
@@ -263,7 +263,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "disable-scroll=\"$0\""
+          "value": "disable-scroll=\"$1\""
         },
         "documentation": "当在 canvas 中移动时，禁止屏幕滚动以及下拉刷新"
       },
@@ -272,7 +272,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onTouchStart=\"$0\""
+          "value": "onTouchStart=\"$1\""
         },
         "documentation": "手指触摸动作开始"
       },
@@ -281,7 +281,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onTouchMove=\"$0\""
+          "value": "onTouchMove=\"$1\""
         },
         "documentation": "手指触摸后移动"
       },
@@ -290,7 +290,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onTouchEnd=\"$0\""
+          "value": "onTouchEnd=\"$1\""
         },
         "documentation": "手指触摸动作结束"
       },
@@ -299,7 +299,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onTouchCancel=\"$0\""
+          "value": "onTouchCancel=\"$1\""
         },
         "documentation": "手指触摸动作被打断，如来电提醒，弹窗"
       },
@@ -308,7 +308,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onLongTap=\"$0\""
+          "value": "onLongTap=\"$1\""
         },
         "documentation": "手指长按 500ms 之后触发，触发了长按事件后进行移动不会触发屏幕的滚动"
       }
@@ -318,7 +318,7 @@
     "documentation": "多项选择器，内部由多个checkbox组成",
     "label": "checkbox-group",
     "insertText": {
-      "value": "<checkbox-group>$0</checkbox-group>"
+      "value": "<checkbox-group>$1</checkbox-group>"
     },
     "attributes": [
       {
@@ -326,7 +326,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onChange=\"$0\""
+          "value": "onChange=\"$1\""
         },
         "documentation": "<checkbox-group />中选中项发生改变时触发 change 事件，detail = {value: 选中的checkbox项value的值}"
       }
@@ -344,7 +344,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "value=\"$0\""
+          "value": "value=\"$1\""
         },
         "documentation": [
           "checkbox"
@@ -355,7 +355,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "checked=\"$0\""
+          "value": "checked=\"$1\""
         },
         "documentation": "当前是否选中，可用来设置默认选中"
       },
@@ -364,7 +364,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "disabled=\"$0\""
+          "value": "disabled=\"$1\""
         },
         "documentation": "是否禁用"
       },
@@ -373,7 +373,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onChange=\"$0\""
+          "value": "onChange=\"$1\""
         },
         "documentation": "发生改变时触发 change 事件，detail = {value: 该 checkbox 是否 checked}"
       }
@@ -391,7 +391,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onSubmit=\"$0\""
+          "value": "onSubmit=\"$1\""
         },
         "documentation": "携带 form 中的数据触发 submit 事件，event.detail = {value : {'name': 'value'} , formId: ''}"
       },
@@ -400,7 +400,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onReset=\"$0\""
+          "value": "onReset=\"$1\""
         },
         "documentation": "表单重置时会触发 reset 事件"
       }
@@ -418,7 +418,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "type=\"$0\""
+          "value": "type=\"$1\""
         },
         "documentation": "icon的类型，有效值：success, success_no_circle, info, warn, waiting, cancel, download, search, clear"
       },
@@ -427,7 +427,7 @@
         "type": "Number",
         "default": "23",
         "insertText": {
-          "value": "size=\"$0\""
+          "value": "size=\"$1\""
         },
         "documentation": "icon的大小，单位px"
       },
@@ -436,7 +436,7 @@
         "type": "Color",
         "default": "",
         "insertText": {
-          "value": "color=\"$0\""
+          "value": "color=\"$1\""
         },
         "documentation": "icon的颜色，同css的colo"
       }
@@ -454,7 +454,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "src=\"$0\""
+          "value": "src=\"$1\""
         },
         "documentation": "图片资源地址"
       },
@@ -463,7 +463,7 @@
         "type": "String",
         "default": "scaleToFill",
         "insertText": {
-          "value": "mode=\"$0\""
+          "value": "mode=\"$1\""
         },
         "documentation": "图片裁剪、缩放的模式"
       },
@@ -472,7 +472,7 @@
         "type": "HandleEvent",
         "default": "",
         "insertText": {
-          "value": "onError=\"$0\""
+          "value": "onError=\"$1\""
         },
         "documentation": "当错误发生时，发布到 AppService 的事件名，事件对象event.detail = {errMsg: 'something wrong'}"
       },
@@ -481,7 +481,7 @@
         "type": "HandleEvent",
         "default": "",
         "insertText": {
-          "value": "onLoad=\"$0\""
+          "value": "onLoad=\"$1\""
         },
         "documentation": "当图片载入完毕时，发布到 AppService 的事件名，事件对象event.detail = {height:'图片高度px', width:'图片宽度px'}"
       }
@@ -499,7 +499,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "value=\"$0\""
+          "value": "value=\"$1\""
         },
         "documentation": "输入框的初始内容"
       },
@@ -508,7 +508,7 @@
         "type": "String",
         "default": "text",
         "insertText": {
-          "value": "type=\"$0\""
+          "value": "type=\"$1\""
         },
         "documentation": "input 的类型，有效值：text, number, idcard, digit"
       },
@@ -517,7 +517,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "password=\"$0\""
+          "value": "password=\"$1\""
         },
         "documentation": "是否是密码类型"
       },
@@ -526,7 +526,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "placeholder=\"$0\""
+          "value": "placeholder=\"$1\""
         },
         "documentation": "输入框占位符"
       },
@@ -535,7 +535,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "disabled=\"$0\""
+          "value": "disabled=\"$1\""
         },
         "documentation": "是否禁用"
       },
@@ -544,7 +544,7 @@
         "type": "Number",
         "default": "140",
         "insertText": {
-          "value": "maxlength=\"$0\""
+          "value": "maxlength=\"$1\""
         },
         "documentation": "最大输入长度"
       },
@@ -553,7 +553,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "focus=\"$0\""
+          "value": "focus=\"$1\""
         },
         "documentation": "获取焦点"
       },
@@ -562,7 +562,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onInput=\"$0\""
+          "value": "onInput=\"$1\""
         },
         "documentation": "当键盘输入时，触发input事件，event.detail = {value: value}"
       },
@@ -571,7 +571,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onConfirm=\"$0\""
+          "value": "onConfirm=\"$1\""
         },
         "documentation": "当点击键盘完成时触发，event.detail = {value: value}"
       },
@@ -580,7 +580,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onFocus=\"$0\""
+          "value": "onFocus=\"$1\""
         },
         "documentation": "输入框聚焦时触发，event.detail = {value: value}"
       },
@@ -589,7 +589,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onBlur=\"$0\""
+          "value": "onBlur=\"$1\""
         },
         "documentation": "输入框失去焦点时触发，event.detail = {value: value}"
       }
@@ -607,7 +607,7 @@
         "type": "String",
         "default": "绑定控件的 id",
         "insertText": {
-          "value": "for=\"$0\""
+          "value": "for=\"$1\""
         },
         "documentation": null
       }
@@ -625,7 +625,7 @@
         "type": "Number",
         "default": "",
         "insertText": {
-          "value": "longitude=\"$0\""
+          "value": "longitude=\"$1\""
         },
         "documentation": "中心经度"
       },
@@ -634,7 +634,7 @@
         "type": "Number",
         "default": "",
         "insertText": {
-          "value": "latitude=\"$0\""
+          "value": "latitude=\"$1\""
         },
         "documentation": "中心纬度"
       },
@@ -643,7 +643,7 @@
         "type": "Number",
         "default": "16",
         "insertText": {
-          "value": "scale=\"$0\""
+          "value": "scale=\"$1\""
         },
         "documentation": "缩放级别，取值范围为5-18"
       },
@@ -652,7 +652,7 @@
         "type": "Array",
         "default": "",
         "insertText": {
-          "value": "markers=\"$0\""
+          "value": "markers=\"$1\""
         },
         "documentation": "标记点"
       },
@@ -661,7 +661,7 @@
         "type": "Array",
         "default": "",
         "insertText": {
-          "value": "polyline=\"$0\""
+          "value": "polyline=\"$1\""
         },
         "documentation": "路线"
       },
@@ -670,7 +670,7 @@
         "type": "Array",
         "default": "",
         "insertText": {
-          "value": "circles=\"$0\""
+          "value": "circles=\"$1\""
         },
         "documentation": "圆"
       },
@@ -679,7 +679,7 @@
         "type": "Array",
         "default": "",
         "insertText": {
-          "value": "controls=\"$0\""
+          "value": "controls=\"$1\""
         },
         "documentation": "控件"
       },
@@ -688,7 +688,7 @@
         "type": "Array",
         "default": "",
         "insertText": {
-          "value": "polygon=\"$0\""
+          "value": "polygon=\"$1\""
         },
         "documentation": "多边形"
       },
@@ -697,7 +697,7 @@
         "type": "Array",
         "default": "",
         "insertText": {
-          "value": "include-points=\"$0\""
+          "value": "include-points=\"$1\""
         },
         "documentation": "缩放视野以包含所有给定的坐标点"
       },
@@ -706,7 +706,7 @@
         "type": "Boolean",
         "default": "",
         "insertText": {
-          "value": "show-location=\"$0\""
+          "value": "show-location=\"$1\""
         },
         "documentation": "显示带有方向的当前定位点"
       },
@@ -715,7 +715,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onMarkerTap=\"$0\""
+          "value": "onMarkerTap=\"$1\""
         },
         "documentation": "点击标记点时触发"
       },
@@ -724,7 +724,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onCalloutTap=\"$0\""
+          "value": "onCalloutTap=\"$1\""
         },
         "documentation": "点击标记点对应的气泡时触发"
       },
@@ -733,7 +733,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onControlTap=\"$0\""
+          "value": "onControlTap=\"$1\""
         },
         "documentation": "点击控件时触发"
       },
@@ -742,7 +742,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onRegionChange=\"$0\""
+          "value": "onRegionChange=\"$1\""
         },
         "documentation": "视野发生变化时触发，{type: \"begin\"/ \"end\", latitude，longitude， scale}"
       },
@@ -751,7 +751,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onTap=\"$0\""
+          "value": "onTap=\"$1\""
         },
         "documentation": "点击地图时触发"
       }
@@ -769,7 +769,7 @@
         "type": "String",
         "default": "none",
         "insertText": {
-          "value": "hover-class=\"$0\""
+          "value": "hover-class=\"$1\""
         },
         "documentation": "点击时附加的类"
       },
@@ -778,7 +778,7 @@
         "type": "Number",
         "default": "",
         "insertText": {
-          "value": "hover-start-time=\"$0\""
+          "value": "hover-start-time=\"$1\""
         },
         "documentation": "按住后多久出现点击态，单位毫秒"
       },
@@ -787,7 +787,7 @@
         "type": "Number",
         "default": "",
         "insertText": {
-          "value": "hover-stay-time=\"$0\""
+          "value": "hover-stay-time=\"$1\""
         },
         "documentation": "手指松开后点击态保留时间，单位毫秒"
       },
@@ -796,7 +796,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "url=\"$0\""
+          "value": "url=\"$1\""
         },
         "documentation": "应用内的跳转链接"
       },
@@ -805,7 +805,7 @@
         "type": "String",
         "default": "navigate",
         "insertText": {
-          "value": "open-type=\"$0\""
+          "value": "open-type=\"$1\""
         },
         "documentation": "跳转方式"
       }
@@ -823,7 +823,7 @@
         "type": "Number Array",
         "default": "",
         "insertText": {
-          "value": "value=\"$0\""
+          "value": "value=\"$1\""
         },
         "documentation": "数组中的数字依次表示 picker-view 内的 picker-view-column 选择的第几项（下标从 0 开始），数字大于 picker-view-column 可选项长度时，选择最后一项。"
       },
@@ -832,7 +832,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "indicatorStyle=\"$0\""
+          "value": "indicatorStyle=\"$1\""
         },
         "documentation": "设置选择器中间选中框的样式"
       },
@@ -841,7 +841,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onChange=\"$0\""
+          "value": "onChange=\"$1\""
         },
         "documentation": "当滚动选择，value 改变时触发 change 事件，event.detail = {value: value}；value为数组，表示 picker-view 内的 picker-view-column 当前选择的是第几项（下标从 0 开始）"
       }
@@ -859,7 +859,7 @@
         "type": "Array / Object Array",
         "default": "[]",
         "insertText": {
-          "value": "range=\"$0\""
+          "value": "range=\"$1\""
         },
         "documentation": "mode为 selector 时，range 有效"
       },
@@ -868,7 +868,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "range-key=\"$0\""
+          "value": "range-key=\"$1\""
         },
         "documentation": "当 range 是一个 Object Array 时，通过 range-key 来指定 Object 中 key 的值作为选择器显示内容"
       },
@@ -877,7 +877,7 @@
         "type": "Number",
         "default": "",
         "insertText": {
-          "value": "value=\"$0\""
+          "value": "value=\"$1\""
         },
         "documentation": "value 的值表示表示选择了 range 中的第几个（下标从 0 开始）。"
       },
@@ -886,7 +886,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onChange=\"$0\""
+          "value": "onChange=\"$1\""
         },
         "documentation": "value 改变时触发 change 事件，event.detail = {value: value}"
       },
@@ -895,7 +895,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "disabled=\"$0\""
+          "value": "disabled=\"$1\""
         },
         "documentation": "是否禁用"
       }
@@ -913,7 +913,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "value=\"$0\""
+          "value": "value=\"$1\""
         },
         "documentation": "表示选中的时间，格式为\"hh:mm\""
       },
@@ -922,7 +922,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "start=\"$0\""
+          "value": "start=\"$1\""
         },
         "documentation": "表示有效时间范围的开始，字符串格式为\"hh:mm\""
       },
@@ -931,7 +931,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "end=\"$0\""
+          "value": "end=\"$1\""
         },
         "documentation": "表示有效时间范围的结束，字符串格式为\"hh:mm\""
       },
@@ -940,7 +940,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onChange=\"$0\""
+          "value": "onChange=\"$1\""
         },
         "documentation": "value 改变时触发 change 事件，event.detail = {value: value}"
       },
@@ -949,7 +949,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "disabled=\"$0\""
+          "value": "disabled=\"$1\""
         },
         "documentation": "是否禁用"
       }
@@ -967,7 +967,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "value=\"$0\""
+          "value": "value=\"$1\""
         },
         "documentation": "表示选中的日期，格式为\"YYYY-MM-DD\""
       },
@@ -976,7 +976,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "start=\"$0\""
+          "value": "start=\"$1\""
         },
         "documentation": "表示有效日期范围的开始，字符串格式为\"YYYY-MM-DD\""
       },
@@ -985,7 +985,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "end=\"$0\""
+          "value": "end=\"$1\""
         },
         "documentation": "表示有效日期范围的结束，字符串格式为\"YYYY-MM-DD\""
       },
@@ -994,7 +994,7 @@
         "type": "String",
         "default": "day",
         "insertText": {
-          "value": "fields=\"$0\""
+          "value": "fields=\"$1\""
         },
         "documentation": "有效值 year,month,day，表示选择器的粒度"
       },
@@ -1003,7 +1003,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onChange=\"$0\""
+          "value": "onChange=\"$1\""
         },
         "documentation": "value 改变时触发 change 事件，event.detail = {value: value}"
       },
@@ -1012,7 +1012,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "disabled=\"$0\""
+          "value": "disabled=\"$1\""
         },
         "documentation": "是否禁用"
       }
@@ -1030,7 +1030,7 @@
         "type": "Float",
         "default": "",
         "insertText": {
-          "value": "percent=\"$0\""
+          "value": "percent=\"$1\""
         },
         "documentation": "百分比0~100"
       },
@@ -1039,7 +1039,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "show-info=\"$0\""
+          "value": "show-info=\"$1\""
         },
         "documentation": "在进度条右侧显示百分比"
       },
@@ -1048,7 +1048,7 @@
         "type": "Number",
         "default": "6",
         "insertText": {
-          "value": "stroke-width=\"$0\""
+          "value": "stroke-width=\"$1\""
         },
         "documentation": "进度条线的宽度，单位px"
       },
@@ -1057,7 +1057,7 @@
         "type": "Color",
         "default": "#09BB07",
         "insertText": {
-          "value": "color=\"$0\""
+          "value": "color=\"$1\""
         },
         "documentation": "进度条颜色 （请使用 activeColor）"
       },
@@ -1066,7 +1066,7 @@
         "type": "Color",
         "default": "#09BB07",
         "insertText": {
-          "value": "activeColor=\"$0\""
+          "value": "activeColor=\"$1\""
         },
         "documentation": "已选择的进度条的颜色"
       },
@@ -1075,7 +1075,7 @@
         "type": "Color",
         "default": "",
         "insertText": {
-          "value": "backgroundColor=\"$0\""
+          "value": "backgroundColor=\"$1\""
         },
         "documentation": "未选择的进度条的颜色"
       },
@@ -1084,7 +1084,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "active=\"$0\""
+          "value": "active=\"$1\""
         },
         "documentation": "进度条从左往右的动画"
       }
@@ -1094,7 +1094,7 @@
     "documentation": "单项选择器，内部由多个",
     "label": "radio-group",
     "insertText": {
-      "value": "<radio-group>$0</radio-group>"
+      "value": "<radio-group>$1</radio-group>"
     },
     "attributes": [
       {
@@ -1102,7 +1102,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onChange=\"$0\""
+          "value": "onChange=\"$1\""
         },
         "documentation": "<radio-group/> 中的选中项发生变化时触发 change 事件，event.detail = {value: 选中项radio的value}"
       }
@@ -1120,7 +1120,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "value=\"$0\""
+          "value": "value=\"$1\""
         },
         "documentation": [
           "radio"
@@ -1131,7 +1131,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "checked=\"$0\""
+          "value": "checked=\"$1\""
         },
         "documentation": "当前是否选中"
       },
@@ -1140,7 +1140,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "disabled=\"$0\""
+          "value": "disabled=\"$1\""
         },
         "documentation": "是否禁用"
       }
@@ -1158,7 +1158,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "scroll-x=\"$0\""
+          "value": "scroll-x=\"$1\""
         },
         "documentation": "允许横向滚动"
       },
@@ -1167,7 +1167,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "scroll-y=\"$0\""
+          "value": "scroll-y=\"$1\""
         },
         "documentation": "允许纵向滚动"
       },
@@ -1176,7 +1176,7 @@
         "type": "Number",
         "default": "50",
         "insertText": {
-          "value": "upper-threshold=\"$0\""
+          "value": "upper-threshold=\"$1\""
         },
         "documentation": "距顶部/左边多远时（单位px），触发 scrolltoupper 事件"
       },
@@ -1185,7 +1185,7 @@
         "type": "Number",
         "default": "50",
         "insertText": {
-          "value": "lower-threshold=\"$0\""
+          "value": "lower-threshold=\"$1\""
         },
         "documentation": "距底部/右边多远时（单位px），触发 scrolltolower 事件"
       },
@@ -1194,7 +1194,7 @@
         "type": "Number",
         "default": "",
         "insertText": {
-          "value": "scroll-top=\"$0\""
+          "value": "scroll-top=\"$1\""
         },
         "documentation": "设置竖向滚动条位置"
       },
@@ -1203,7 +1203,7 @@
         "type": "Number",
         "default": "",
         "insertText": {
-          "value": "scroll-left=\"$0\""
+          "value": "scroll-left=\"$1\""
         },
         "documentation": "设置横向滚动条位置"
       },
@@ -1212,7 +1212,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "scroll-into-view=\"$0\""
+          "value": "scroll-into-view=\"$1\""
         },
         "documentation": "值应为某子元素id，则滚动到该元素，元素顶部对齐滚动区域顶部"
       },
@@ -1221,7 +1221,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "scroll-with-animation=\"$0\""
+          "value": "scroll-with-animation=\"$1\""
         },
         "documentation": "在设置滚动条位置时使用动画过渡"
       },
@@ -1230,7 +1230,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onScrollToUpper=\"$0\""
+          "value": "onScrollToUpper=\"$1\""
         },
         "documentation": "滚动到顶部/左边，会触发 scrolltoupper 事件"
       },
@@ -1239,7 +1239,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onScrollToLower=\"$0\""
+          "value": "onScrollToLower=\"$1\""
         },
         "documentation": "滚动到底部/右边，会触发 scrolltolower 事件"
       },
@@ -1248,7 +1248,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onScroll=\"$0\""
+          "value": "onScroll=\"$1\""
         },
         "documentation": "滚动时触发，event.detail = {scrollLeft, scrollTop, scrollHeight, scrollWidth, deltaX, deltaY}"
       }
@@ -1266,7 +1266,7 @@
         "type": "Number",
         "default": "0",
         "insertText": {
-          "value": "min=\"$0\""
+          "value": "min=\"$1\""
         },
         "documentation": "最小值"
       },
@@ -1275,7 +1275,7 @@
         "type": "Number",
         "default": "100",
         "insertText": {
-          "value": "max=\"$0\""
+          "value": "max=\"$1\""
         },
         "documentation": "最大值"
       },
@@ -1284,7 +1284,7 @@
         "type": "Number",
         "default": "1",
         "insertText": {
-          "value": "step=\"$0\""
+          "value": "step=\"$1\""
         },
         "documentation": "步长，取值必须大于 0，并且可被(max - min)整除"
       },
@@ -1293,7 +1293,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "disabled=\"$0\""
+          "value": "disabled=\"$1\""
         },
         "documentation": "是否禁用"
       },
@@ -1302,7 +1302,7 @@
         "type": "Number",
         "default": "0",
         "insertText": {
-          "value": "value=\"$0\""
+          "value": "value=\"$1\""
         },
         "documentation": "当前取值"
       },
@@ -1311,7 +1311,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "show-value=\"$0\""
+          "value": "show-value=\"$1\""
         },
         "documentation": "是否显示当前 value"
       },
@@ -1320,7 +1320,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "activeColor=\"$0\""
+          "value": "activeColor=\"$1\""
         },
         "documentation": "已选择的颜色"
       },
@@ -1329,7 +1329,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "backgroundColor=\"$0\""
+          "value": "backgroundColor=\"$1\""
         },
         "documentation": "背景条的颜色"
       },
@@ -1338,7 +1338,7 @@
         "type": "Number",
         "default": "",
         "insertText": {
-          "value": "trackSize=\"$0\""
+          "value": "trackSize=\"$1\""
         },
         "documentation": "轨道线条高度"
       },
@@ -1347,7 +1347,7 @@
         "type": "Number",
         "default": "",
         "insertText": {
-          "value": "handleSize=\"$0\""
+          "value": "handleSize=\"$1\""
         },
         "documentation": "滑块大小"
       },
@@ -1356,7 +1356,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "handleColor=\"$0\""
+          "value": "handleColor=\"$1\""
         },
         "documentation": "滑块填充色"
       },
@@ -1365,7 +1365,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onChange=\"$0\""
+          "value": "onChange=\"$1\""
         },
         "documentation": "完成一次拖动后触发的事件，event.detail = {value: value}"
       }
@@ -1383,7 +1383,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "indicator-dots=\"$0\""
+          "value": "indicator-dots=\"$1\""
         },
         "documentation": "是否显示面板指示点"
       },
@@ -1392,7 +1392,7 @@
         "type": "Color",
         "default": "rgba(0, 0, 0, .3)",
         "insertText": {
-          "value": "indicator-color=\"$0\""
+          "value": "indicator-color=\"$1\""
         },
         "documentation": "指示点颜色"
       },
@@ -1401,7 +1401,7 @@
         "type": "Color",
         "default": "#000",
         "insertText": {
-          "value": "indicator-active-color=\"$0\""
+          "value": "indicator-active-color=\"$1\""
         },
         "documentation": "当前选中的指示点颜色"
       },
@@ -1410,7 +1410,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "autoplay=\"$0\""
+          "value": "autoplay=\"$1\""
         },
         "documentation": "是否自动切换"
       },
@@ -1419,7 +1419,7 @@
         "type": "Number",
         "default": "0",
         "insertText": {
-          "value": "current=\"$0\""
+          "value": "current=\"$1\""
         },
         "documentation": "当前所在页面的 index"
       },
@@ -1428,7 +1428,7 @@
         "type": "Number",
         "default": "500",
         "insertText": {
-          "value": "duration=\"$0\""
+          "value": "duration=\"$1\""
         },
         "documentation": "滑动动画时长"
       },
@@ -1437,7 +1437,7 @@
         "type": "Number",
         "default": "5000",
         "insertText": {
-          "value": "interval=\"$0\""
+          "value": "interval=\"$1\""
         },
         "documentation": "自动切换时间间隔"
       },
@@ -1446,7 +1446,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "circular=\"$0\""
+          "value": "circular=\"$1\""
         },
         "documentation": "是否采用衔接滑动"
       },
@@ -1455,7 +1455,7 @@
         "type": "Function",
         "default": "否",
         "insertText": {
-          "value": "onChange=\"$0\""
+          "value": "onChange=\"$1\""
         },
         "documentation": "current 改变时会触发 change 事件，event.detail = {current: current}"
       }
@@ -1473,7 +1473,7 @@
         "type": "Boolean",
         "default": "",
         "insertText": {
-          "value": "checked=\"$0\""
+          "value": "checked=\"$1\""
         },
         "documentation": "是否选中"
       },
@@ -1482,7 +1482,7 @@
         "type": "Boolean",
         "default": "",
         "insertText": {
-          "value": "disabled=\"$0\""
+          "value": "disabled=\"$1\""
         },
         "documentation": "是否禁用"
       },
@@ -1491,7 +1491,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "color=\"$0\""
+          "value": "color=\"$1\""
         },
         "documentation": "switch 的颜色，同 css 的 color"
       },
@@ -1500,7 +1500,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onChange=\"$0\""
+          "value": "onChange=\"$1\""
         },
         "documentation": "checked 改变时触发 change 事件，event.detail={ value:checked}"
       }
@@ -1518,7 +1518,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "selectable=\"$0\""
+          "value": "selectable=\"$1\""
         },
         "documentation": "文本是否可选"
       }
@@ -1536,7 +1536,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "value=\"$0\""
+          "value": "value=\"$1\""
         },
         "documentation": "输入框的初始内容"
       },
@@ -1545,7 +1545,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "placeholder=\"$0\""
+          "value": "placeholder=\"$1\""
         },
         "documentation": "输入框占位符"
       },
@@ -1554,7 +1554,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "disabled=\"$0\""
+          "value": "disabled=\"$1\""
         },
         "documentation": "是否禁用"
       },
@@ -1563,7 +1563,7 @@
         "type": "Number",
         "default": "140",
         "insertText": {
-          "value": "maxlength=\"$0\""
+          "value": "maxlength=\"$1\""
         },
         "documentation": "最大输入长度"
       },
@@ -1572,7 +1572,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "focus=\"$0\""
+          "value": "focus=\"$1\""
         },
         "documentation": "获取焦点"
       },
@@ -1581,7 +1581,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "auto-height=\"$0\""
+          "value": "auto-height=\"$1\""
         },
         "documentation": "是否自动增高"
       },
@@ -1590,7 +1590,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onInput=\"$0\""
+          "value": "onInput=\"$1\""
         },
         "documentation": "当键盘输入时，触发input事件，event.detail = {value: value}，处理函数可以直接 return 一个字符串，将替换输入框的内容。"
       },
@@ -1599,7 +1599,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onFocus=\"$0\""
+          "value": "onFocus=\"$1\""
         },
         "documentation": "输入框聚焦时触发，event.detail = {value: value}"
       },
@@ -1608,7 +1608,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onBlur=\"$0\""
+          "value": "onBlur=\"$1\""
         },
         "documentation": "输入框失去焦点时触发，event.detail = {value: value}"
       },
@@ -1617,7 +1617,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onConfirm=\"$0\""
+          "value": "onConfirm=\"$1\""
         },
         "documentation": "点击完成时， 触发 confirm 事件，event.detail = {value: value}"
       }
@@ -1635,7 +1635,7 @@
         "type": "String",
         "default": "",
         "insertText": {
-          "value": "src=\"$0\""
+          "value": "src=\"$1\""
         },
         "documentation": "要播放视频的资源地址"
       },
@@ -1644,7 +1644,7 @@
         "type": "Boolean",
         "default": "true",
         "insertText": {
-          "value": "controls=\"$0\""
+          "value": "controls=\"$1\""
         },
         "documentation": "是否显示默认播放控件（播放/暂停按钮、播放进度、时间）"
       },
@@ -1653,7 +1653,7 @@
         "type": "Boolean",
         "default": "false",
         "insertText": {
-          "value": "autoplay=\"$0\""
+          "value": "autoplay=\"$1\""
         },
         "documentation": "是否自动播放"
       },
@@ -1662,7 +1662,7 @@
         "type": "Number",
         "default": "",
         "insertText": {
-          "value": "duration=\"$0\""
+          "value": "duration=\"$1\""
         },
         "documentation": "指定视频时长，到点会暂停播放"
       },
@@ -1671,7 +1671,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onPlay=\"$0\""
+          "value": "onPlay=\"$1\""
         },
         "documentation": "当开始/继续播放时触发play事件"
       },
@@ -1680,7 +1680,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onPause=\"$0\""
+          "value": "onPause=\"$1\""
         },
         "documentation": "当暂停播放时触发 pause 事件"
       },
@@ -1689,7 +1689,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onEnded=\"$0\""
+          "value": "onEnded=\"$1\""
         },
         "documentation": "当播放到末尾时触发 ended 事件"
       },
@@ -1698,7 +1698,7 @@
         "type": "EventHandle",
         "default": "",
         "insertText": {
-          "value": "onTimeUpdate=\"$0\""
+          "value": "onTimeUpdate=\"$1\""
         },
         "documentation": "播放进度变化时触发，event.detail = {currentTime: '当前播放时间'} 。触发频率应该在 250ms 一次"
       },
@@ -1707,7 +1707,7 @@
         "type": "String",
         "default": "contain",
         "insertText": {
-          "value": "objectFit=\"$0\""
+          "value": "objectFit=\"$1\""
         },
         "documentation": "当视频大小与 video 容器大小不一致时，视频的表现形式。contain：包含，fill：填充，cover：覆盖video标签认宽度300px、高度225px，设置宽高需要通过abridgess设置width和height。"
       },
@@ -1716,7 +1716,7 @@
         "type": "String",
         "default": "contain",
         "insertText": {
-          "value": "poster=\"$0\""
+          "value": "poster=\"$1\""
         },
         "documentation": "默认控件上的封面的图片资源地址"
       }
@@ -1734,7 +1734,7 @@
         "type": "String",
         "default": "none",
         "insertText": {
-          "value": "hover-class=\"$0\""
+          "value": "hover-class=\"$1\""
         },
         "documentation": "点击时附加的类"
       },
@@ -1743,7 +1743,7 @@
         "type": "Number",
         "default": "",
         "insertText": {
-          "value": "hover-start-time=\"$0\""
+          "value": "hover-start-time=\"$1\""
         },
         "documentation": "按住后多久出现点击态，单位毫秒"
       },
@@ -1752,7 +1752,7 @@
         "type": "Number",
         "default": "",
         "insertText": {
-          "value": "hover-stay-time=\"$0\""
+          "value": "hover-stay-time=\"$1\""
         },
         "documentation": "手指松开后点击态保留时间，单位毫秒"
       },
@@ -1761,7 +1761,7 @@
         "type": "boolean",
         "default": "false",
         "insertText": {
-          "value": "hidden=\"$0\""
+          "value": "hidden=\"$1\""
         },
         "documentation": "是否隐藏"
       }

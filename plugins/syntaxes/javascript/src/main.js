@@ -8,7 +8,25 @@ const ts = require('typescript/lib/typescriptServices');
 import libES6File from 'raw-loader!typescript/lib/lib.es6.d.ts';
 import abridgeFile from './../../../api/javascript/lib.abridge.spec.ts';
 
+import snippets from '../snippets/javascripttiny.json';
+
+let snippetsItems;
 const combineFile = `${abridgeFile}\n\n${libES6File}`;
+
+// snippets handle
+try {
+  if (!snippetsItems)
+    snippetsItems = Object.keys(snippets).map(key => {
+      return {
+        "label": key,
+        "type": 13,
+        "insertText": { value: (snippets[key].body || []).join('\n') },
+        "documentation": snippets[key].description,
+      }
+    }); 
+} catch (e) {
+  snippetsItems = null;
+}
 
 class AntMonacoMainHost {
   constructor(compilerOptions) {
@@ -69,6 +87,8 @@ class AntMonacoMainHost {
   getCompletionsAtPosition(uri, position, offset) {
     let completionsItems;
     const info = this._languageService.getCompletionsAtPosition(uri, offset);
+
+    // normal handle
     try {
       completionsItems = info.entries.map(entry => {
         return {
@@ -82,9 +102,17 @@ class AntMonacoMainHost {
     } catch(e) {
       completionsItems = null;
     }
-    return {
-      isIncomplete: false,
-      items: completionsItems,
+
+    if (completionsItems && Array.isArray(completionsItems)) {
+      return {
+        isIncomplete: false,
+        items: completionsItems.concat(info.isMemberCompletion ? [] : snippetsItems),
+      }
+    } else {
+      return {
+        isIncomplete: false,
+        items: info.isMemberCompletion ? null : snippetsItems,
+      }
     }
   }
 
@@ -198,7 +226,7 @@ const host = new AntMonacoMainHost({
   allowNonTsExtensions: true,
   target: 5, // lib.es6.d.ts
   noSemanticValidation: true,
-  noSyntaxValidation: false
+  noSyntaxValidation: true
 });
 
 ipc.on('javascript:getCompletionsAtPosition', (event, args) => {
