@@ -39,7 +39,7 @@
     "insertText": {
       "value": "getConnectedBluetoothDevices({\n  success: (res) => {\n    $1\n  },\n});"
     },
-    "documentation": "获取处于已连接状态的设备。"
+    "documentation": "根据service的uuid获取处于已连接状态的设备。"
   },
   "connectBLEDevice": {
     "insertText": {
@@ -129,7 +129,7 @@
     "insertText": {
       "value": "offBluetoothAdapterStateChange();"
     },
-    "documentation": "移除本机蓝牙状态变化的事件的监听。"
+    "documentation": "移除本机蓝牙状态变化的事件的监听。\n "
   },
   "getSystemInfo": {
     "insertText": {
@@ -527,6 +527,66 @@
     },
     "documentation": "唤起支付宝通讯录，选择一个或者多个支付宝联系人。"
   },
+  "datePicker": {
+    "insertText": {
+      "value": "datePicker({\n  success: (res) => {\n    $1\n  },\n});"
+    },
+    "documentation": "打开日期选择列表。"
+  },
+  "alert": {
+    "insertText": {
+      "value": "alert({\n  title: '$1', // alert 框的标题\n  success: (res) => {\n    \n  },\n});"
+    },
+    "documentation": "alert 警告框。"
+  },
+  "confirm": {
+    "insertText": {
+      "value": "confirm({\n  title: '$1', // confirm 框的标题\n  success: (res) => {\n    \n  },\n});"
+    },
+    "documentation": "confirm 确认框。"
+  },
+  "showToast": {
+    "insertText": {
+      "value": "showToast({\n  content: '$1', // 文字内容\n  success: (res) => {\n    \n  },\n});"
+    },
+    "documentation": "显示一个弱提示，可选择多少秒之后消失。"
+  },
+  "hideToast": {
+    "insertText": {
+      "value": "hideToast();"
+    },
+    "documentation": "隐藏弱提示。"
+  },
+  "showLoading": {
+    "insertText": {
+      "value": "showLoading({\n  success: (res) => {\n    $1\n  },\n});"
+    },
+    "documentation": "显示加载提示。"
+  },
+  "hideLoading": {
+    "insertText": {
+      "value": "hideLoading();"
+    },
+    "documentation": "隐藏加载提示。"
+  },
+  "showNavigationBarLoading": {
+    "insertText": {
+      "value": "showNavigationBarLoading();"
+    },
+    "documentation": "显示导航栏 loading。"
+  },
+  "hideNavigationBarLoading": {
+    "insertText": {
+      "value": "hideNavigationBarLoading();"
+    },
+    "documentation": "隐藏导航栏 loading。"
+  },
+  "showActionSheet": {
+    "insertText": {
+      "value": "showActionSheet({\n  \n  items: '', // 菜单按钮的文字数组\n  success: (res) => {\n    \n  },\n});"
+    },
+    "documentation": "显示操作菜单。"
+  },
   "hideKeyboard": {
     "insertText": {
       "value": "hideKeyboard();"
@@ -544,6 +604,24 @@
       "value": "navigateTo();"
     },
     "documentation": "保留当前页面，跳转到应用内的某个页面，使用 "
+  },
+  "redirectTo": {
+    "insertText": {
+      "value": "redirectTo({\n  url: '$1', // 需要跳转的应用内非 tabBar 的页面的路径，路径后可以带参数。参数与路径之间使用\n});"
+    },
+    "documentation": "关闭当前页面，跳转到应用内的某个页面。"
+  },
+  "navigateBack": {
+    "insertText": {
+      "value": "navigateBack({\n  \n});"
+    },
+    "documentation": "关闭当前页面，返回上一页面或多级页面。可通过 "
+  },
+  "setNavigationBar": {
+    "insertText": {
+      "value": "setNavigationBar({\n  success: (res) => {\n    $1\n  },\n});"
+    },
+    "documentation": "设置导航栏文字及样式。"
   },
   "stopPullDownRefresh": {
     "insertText": {
