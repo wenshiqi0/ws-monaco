@@ -1,9 +1,10 @@
 import { ipcMain as ipc } from 'electron';
 
 import '../plugins/syntaxes/javascript/src/main';
-import '../plugins/syntaxes/eslint/src/main';
+import { NewEsLintCLIEngine } from '../plugins/syntaxes/eslint/src/main';
 import '../plugins/syntaxes/css/src/main';
 
+global.NewEsLintCLIEngine = NewEsLintCLIEngine;
 global.Ant = {};
 const Ant = global.Ant;
 

@@ -6,7 +6,7 @@ import jshint from 'jshint';
 
 let cli = null;
 
-export function NewCLIEngine(configFile) {
+export function NewEsLintCLIEngine(configFile) {
   if (existsSync(configFile)) {
     try {
       cli = new CLIEngine({
@@ -14,7 +14,7 @@ export function NewCLIEngine(configFile) {
       });
     } catch (error) {
       cli = null;
-      console.error('NewCLIEngine ERROR', error);
+      console.error('NewEsLintCLIEngine ERROR', error);
     }
   } else {
     cli = null;
