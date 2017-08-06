@@ -3,7 +3,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
-    index: './src/index.ts',
+    index: './src/renderer/index.js',
   },
   output: {
     path: join(__dirname, 'lib'),
@@ -14,9 +14,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts$/,
+        test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'ts-loader',
+        loader: 'babel-loader',
       },
     ],
   },
@@ -28,7 +28,7 @@ module.exports = {
     callback(null, isExternals);
   },
   resolve: {
-    extensions: ['.ts', '.js', '.json'],
+    extensions: ['.js', '.json'],
   },
   plugins: [
     new CopyWebpackPlugin([

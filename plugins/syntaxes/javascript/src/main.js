@@ -47,7 +47,7 @@ class AntMonacoMainHost {
   getScriptVersion(uri) {
     const model = Ant.modelsMap.get(uri);
     if (model)
-      return model.getVersion();
+      return model.version;
     return '1';
   }
 
@@ -57,7 +57,7 @@ class AntMonacoMainHost {
 
     if (model) {
       // a true editor model
-      text = model.getValue() || '';
+      text = model.getText() || '';
     } else if (uri in this._extraLibs) {
       // static extra lib
       text = this._extraLibs[uri];
@@ -193,7 +193,6 @@ class AntMonacoMainHost {
 
   provideDocumentFormattingEdits(uri, options) {
     const info = this._languageService.getFormattingEditsForDocument(uri, this._convertOptions(options));
-    console.log(info);
     return info;
   }
 

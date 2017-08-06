@@ -2,7 +2,9 @@ const { join } = require('path');
 
 module.exports = {
   entry: {
-    main: './src/main.ts',
+    main: './src/server/main.js',
+    server: './src/server/index.js',
+    eslint: './plugins/syntaxes/eslint/src/server.js'
   },
   output: {
     path: join(__dirname, 'lib'),
@@ -11,9 +13,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts$/,
+        test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'ts-loader',
+        loader: 'babel-loader',
       },
       {
         test: /\.spec.ts$/,
@@ -23,11 +25,11 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.ts', '.js', '.json'],
+    extensions: ['.js', '.json'],
   },
   externals(context, request, callback) {
     let isExternals = false;
-    if (request === 'eslint' || request === 'electron') {
+    if (request === 'eslint' || request === 'electron' || request === 'vscode-textmate' || request === 'vscode-languageserver') {
       isExternals = `require('${request}')`;
     }
     callback(null, isExternals);

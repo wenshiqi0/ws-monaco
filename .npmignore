@@ -5,3 +5,4 @@ plugins/
 webpack.config.js
 tsconfig.json
 .vscode/
+tmp/

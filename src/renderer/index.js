@@ -2,32 +2,29 @@
 import { ipcRenderer as ipc } from 'electron';
 
 // interface
-import { IGrammarRegistry, Global } from './index.d';
+import FlushQueue from './flushQueue';
+import Event from '../event';
 import { Registry, INITIAL } from 'vscode-textmate';
 import { join } from 'path';
-import { activate as activateJs } from '../plugins/syntaxes/javascript/src/index';
-import { activate as activateEslint } from '../plugins/syntaxes/eslint/src/index';
-import { activate as activateCss } from '../plugins/syntaxes/css/src/index';
+import { activate as activateJs } from '../../plugins/syntaxes/javascript/src/index';
+import { activate as activateEslint } from '../../plugins/syntaxes/eslint/src/index';
+import { activate as activateCss } from '../../plugins/syntaxes/css/src/index';
 import * as theme from './theme';
 
-// ensure monaco is on the global window
-declare const window: Global;
-declare const __dirname: string;
-
 // language configs
-const jsConfig = require('../plugins/syntaxes/javascript/js-configuration');
-const cssConfig = require('../plugins/syntaxes/css/language-configuration.css.json');
-const lessConfig = require('../plugins/syntaxes/css/language-configuration.less.json');
-const jsonConfig = require('../plugins/syntaxes/json/language-configuration');
-const axmlConfig = require('../plugins/syntaxes/axml/language-configuration.json');
-const nunjucksConfig = require('../plugins/syntaxes/nunjucks/nunjucks.configuration.json');
-const schemaConfig = require('../plugins/syntaxes/fengdie/language-configuration.json')
+const jsConfig = require('../../plugins/syntaxes/javascript/js-configuration');
+const cssConfig = require('../../plugins/syntaxes/css/language-configuration.css.json');
+const lessConfig = require('../../plugins/syntaxes/css/language-configuration.less.json');
+const jsonConfig = require('../../plugins/syntaxes/json/language-configuration');
+const axmlConfig = require('../../plugins/syntaxes/axml/language-configuration.json');
+const nunjucksConfig = require('../../plugins/syntaxes/nunjucks/nunjucks.configuration.json');
+const schemaConfig = require('../../plugins/syntaxes/fengdie/language-configuration.json')
 
-const completionsHelp = require('../plugins/syntaxes/axml/completions/main');
+const completionsHelp = require('../../plugins/syntaxes/axml/completions/main');
 
 let mode = 'light';
 
-const generateTokensCSSForColorMap = (colorMap: any[]) => {
+const generateTokensCSSForColorMap = (colorMap) => {
   const rules = [];
   for (let i = 1, len = colorMap.length; i < len; i += 1) {
     const color = colorMap[i];
@@ -39,7 +36,7 @@ const generateTokensCSSForColorMap = (colorMap: any[]) => {
   return rules.join('\n');
 }
 
-const rebuildMtkColors = (cssRules: string) => {
+const rebuildMtkColors = (cssRules) => {
   const head = document.head;
   const tokensColor = document.createElement('style');
   tokensColor.innerHTML = `${cssRules}`;
@@ -47,7 +44,7 @@ const rebuildMtkColors = (cssRules: string) => {
   return true;
 };
 
-const globalLanguageMap: any = {
+const globalLanguageMap = {
   javascript: {
     scope: 'source.js',
     config: jsConfig,
@@ -104,15 +101,8 @@ const globalLanguageMap: any = {
 };
 
 // grammar registry
-class GrammarRegistry implements IGrammarRegistry {
-  private scopeRegistry: any;
-  private injections: any;
-  private embeddedLanguages: string[];
-  private registry: Registry;
-  private editor: any;
-  private currentModel: any;
-
-  constructor(scopeRegistry: any) {
+class GrammarRegistry {
+  constructor(scopeRegistry) {
     this.scopeRegistry = scopeRegistry;
     this.injections = {};
     this.embeddedLanguages = [];
@@ -127,46 +117,46 @@ class GrammarRegistry implements IGrammarRegistry {
     });
   }
 
-  getRegistry(): Registry {
+  getRegistry() {
     return this.registry;
   }
 
-  getScopeRegistry(): any {
+  getScopeRegistry() {
     return this.scopeRegistry;
   }
 
-  getEmbeddedLanguages(): string[] {
+  getEmbeddedLanguages() {
     return this.embeddedLanguages;
   }
  
-  pushLanguageEmbedded(languageId: string): Number {
+  pushLanguageEmbedded(languageId) {
     this.embeddedLanguages.push(languageId);
     return this.embeddedLanguages.length;
   }
 
-  updateTheme(name: string) {
+  updateTheme(name) {
     this.registry.setTheme({ name, settings: theme[mode].tokens });
   }
 
-  reloadTheme(name: string) {
+  reloadTheme(name) {
     this.updateTheme(name);
-    const cssRules: string = generateTokensCSSForColorMap(this.registry.getColorMap());
+    const cssRules = generateTokensCSSForColorMap(this.registry.getColorMap());
     rebuildMtkColors(cssRules);
   }
 
-  setCurrentEditor(editor: any) {
+  setCurrentEditor(editor) {
     this.editor = editor;
   }
 
-  getCurrentEditor(): any {
+  getCurrentEditor() {
     return this.editor;
   }
 
-  getCurrentModel(): any {
+  getCurrentModel() {
     return this.editor.getModel();
   }
 
-  setCurrentModelMarkers(owner: string, markers: any) {
+  setCurrentModelMarkers(owner, markers) {
     const model = this.getCurrentModel();
     window.monaco.editor.setModelMarkers(model, owner, markers);
   }
@@ -176,21 +166,48 @@ class GrammarRegistry implements IGrammarRegistry {
     const originalCreateModel = window.monaco.editor.createModel;
     window.monaco.editor.createModel = (value, language, uri) => {
       const model = (originalCreateModel.bind(window.monaco.editor))(value, language, uri);
+
+      model.queue = new FlushQueue(model, 'ant-monaco:updateModel');
       if (language && uri) {
-        ipc.send('ant-monaco:createOrUpdateModel', { value, language, uri, version: model._versionId.toString() });
+        Event.dispatchGlobalEvent('onInitDocument', {
+          uri, language, 
+          eol: model.getEOL(),
+          version: model.getVersionId(),
+          lines: model.getLinesContent(),
+        });
+        ipc.send('ant-monaco:createModel', {
+          uri, language, 
+          eol: model.getEOL(),
+          version: model.getVersionId(),
+          lines: model.getLinesContent(),
+        });
       }
       const originalSetValue = model.setValue;
+
+      // Hook setValue method.
+      // While doing this will also change the value in the mirror model. 
       model.setValue = (value) => {
         if (!value && value !== '') return;
-        ipc.send('ant-monaco:createOrUpdateModel', { value, uri, language, version: model._versionId.toString() });
+        Event.dispatchGlobalEvent('onInitDocument', {
+          uri, language, 
+          eol: model.getEOL(),
+          version: model.getVersionId(),
+          lines: model.getLinesContent(),
+        });
+        ipc.send('ant-monaco:createModel', {
+          uri, language, 
+          eol: model.getEOL(),
+          version: model.getVersionId(),
+          lines: model.getLinesContent(),
+        });
+
         return (originalSetValue.bind(model))(value);
       }
-      model.onDidChangeContent(() => {
-        ipc.send('ant-monaco:createOrUpdateModel', {
-          value: model.getValue(),
-          uri: model.uri, language,
-          version: model._versionId.toString() 
-        });
+
+      // flush the change of model values
+      model.onDidChangeContent((event) => {
+        Event.dispatchGlobalEvent('onDidChangeContent', { model, event });
+        model.queue.cache(event);
       })
       return model;
     }
@@ -208,12 +225,12 @@ class GrammarRegistry implements IGrammarRegistry {
     }
   }
 
-  static setMode(themeMode: string) {
+  static setMode(themeMode) {
     mode = themeMode;
   }
 
-  static loadGrammar({ registry, languageId }): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
+  static loadGrammar({ registry, languageId }) {
+    return new Promise((resolve, reject) => {
       if (registry.getEmbeddedLanguages().indexOf(languageId) > -1) resolve({ languageId: null });
       else if (!globalLanguageMap[languageId]) resolve({ languageId: globalLanguageMap.default });
       else {
@@ -237,8 +254,8 @@ class GrammarRegistry implements IGrammarRegistry {
     });
   }
 
-  static registerLanguage({ languageId, grammar }): Promise<any> {
-    return new Promise<any>((resolve) => {
+  static registerLanguage({ languageId, grammar }){
+    return new Promise((resolve) => {
       if (!languageId) return resolve(false);
       if (languageId === 'plaintext') return resolve({ languageId, grammar: null });
       const languages = window.monaco.languages;
@@ -265,14 +282,14 @@ class GrammarRegistry implements IGrammarRegistry {
     });
   }
 
-  static getDefaultColors(): Promise<any> {
+  static getDefaultColors() {
     return theme[mode].defaultColors;
   }
 }
 
 const getDefaultRegistry = () => {
   return new GrammarRegistry({
-    'source.js': join(__dirname, 'syntaxes/JavaScript.tmLanguage.json'),
+    'source.js': join(__dirname, 'syntaxes/javaScript.tmLanguage.json'),
     'source.css': join(__dirname, 'syntaxes/css.tmLanguage.json'),
     'source.css.less': join(__dirname, 'syntaxes/less.tmLanguage.json'),
     'source.json': join(__dirname, 'syntaxes/JSON.tmLanguage'),
