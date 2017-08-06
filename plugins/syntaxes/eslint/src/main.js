@@ -46,7 +46,7 @@ ipc.on(
     if (!cli) return;
     const { results } = cli.executeOnText(arg, 'source.js');
     const { messages } = results[0];
-    event.sender.send('eslint:return', messages);
+    event.sender.send('eslint:return', messages.map(message => Object.assign({}, message, { source: '' })));
   }
 );
 
