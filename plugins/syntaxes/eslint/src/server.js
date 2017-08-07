@@ -4,13 +4,6 @@ import { CLIEngine } from 'eslint';
 import jshint from 'jshint';
 import Event from '../../../../src/server/event';
 import MirrorModel from '../../../../src/server/mirrorModel';
-import { WorkQueue } from '../../utils';
-
-const cli = new CLIEngine({
-  configFile: '/Users/munong/Documents/own/PuerTea/app/lint/.tiny.eslintrc',
-});
-
-const workQueue = new WorkQueue();
 
 const handleJsonLint = (data, callback) => {
   jshint.JSHINT(data);
@@ -31,7 +24,20 @@ const handleJsonLint = (data, callback) => {
   callback(results);
 }
 
-Event.addGlobalListenerEvent(MirrorModel.Events.onDidChangeFlushed, ({ model }) => {
+let cli;
+Event.addGlobalListenerEvent('lintrc', (params) => {
+  cli = new CLIEngine({
+    configFile: params,
+  });
+  Event.addGlobalListenerEvent(MirrorModel.Events.onDidChangeFlushed, ({ model }) => {
+    doParse(model);
+  });
+  Event.addGlobalListenerEvent(MirrorModel.Events.onInitDocument, ({ model }) => {
+    doParse(model);
+  });
+})
+
+function doParse(model) {
   switch (model.language) {
     case 'javascript':
       {
@@ -73,4 +79,4 @@ Event.addGlobalListenerEvent(MirrorModel.Events.onDidChangeFlushed, ({ model }) 
     default:
       break;
   }
-})
+}

@@ -3,7 +3,7 @@ import { ipcRenderer as ipc } from 'electron';
 
 // interface
 import FlushQueue from './flushQueue';
-import Event from '../event';
+import Event from './event';
 import { Registry, INITIAL } from 'vscode-textmate';
 import { join } from 'path';
 import { activate as activateJs } from '../../plugins/syntaxes/javascript/src/index';
@@ -175,12 +175,6 @@ class GrammarRegistry {
           version: model.getVersionId(),
           lines: model.getLinesContent(),
         });
-        ipc.send('ant-monaco:createModel', {
-          uri, language, 
-          eol: model.getEOL(),
-          version: model.getVersionId(),
-          lines: model.getLinesContent(),
-        });
       }
       const originalSetValue = model.setValue;
 
@@ -194,19 +188,13 @@ class GrammarRegistry {
           version: model.getVersionId(),
           lines: model.getLinesContent(),
         });
-        ipc.send('ant-monaco:createModel', {
-          uri, language, 
-          eol: model.getEOL(),
-          version: model.getVersionId(),
-          lines: model.getLinesContent(),
-        });
-
         return (originalSetValue.bind(model))(value);
       }
 
       // flush the change of model values
       model.onDidChangeContent((event) => {
-        Event.dispatchGlobalEvent('onDidChangeContent', { model, event });
+        if (event)
+          Event.dispatchGlobalEvent('onDidChangeContent', { model, event });
         model.queue.cache(event);
       })
       return model;
@@ -322,8 +310,13 @@ const editorOptions = {
   }
 };
 
+function setLintRc(rc) {
+  global.lintrc = rc;
+}
+
 module.exports = {
   getDefaultRegistry,
   GrammarRegistry,
   editorOptions,
+  setLintRc,
 }

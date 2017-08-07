@@ -9,7 +9,7 @@
     "build": "npm run build:render && npm run build:main",
     "watch:render": "webpack --config ./webpack.render.config.js -w",
     "watch:main": "webpack --config ./webpack.main.config.js -w",
-    "watch": "npm run watch:main & npm run watch:render",
+    "dev": "npm run watch:main & npm run watch:render",
     "minify:render": "uglifyjs lib/index.js -o lib/index.min.js",
     "minify:main": "uglifyjs lib/main.js -o lib/main.min.js",
     "rebuild": "electron-rebuild-ln -d=https://gh-contractor-zcbenz.cnpmjs.org/atom-shell/dist/ -m .",
@@ -19,8 +19,7 @@
     "js": "node scripts/javascript.js && npm run js-extra",
     "js-extra": "node scripts/js-extra.js",
     "api": "node scripts/completions.js $site",
-    "sync": "node scripts/lark-sdk.js",
-    "prepublish": "npm run minify"
+    "sync": "node scripts/lark-sdk.js"
   },
   "keywords": [
     "monaco",
@@ -53,17 +52,13 @@
     "fs-extra": "^3.0.1",
     "jshint": "^2.9.4",
     "mark-twain": "^1.1.6",
-    "node-ipc": "^9.1.0",
     "raw-loader": "^0.5.1",
     "request": "^2.81.0",
-    "ts-loader": "^2.1.0",
     "typescript": "^2.3.4",
     "uglify-es": "^3.0.13",
     "vscode": "^1.1.0",
     "vscode-css-languageservice-commonjs": "0.0.1",
     "vscode-jsonrpc": "^3.3.1",
-    "vscode-languageserver": "^3.3.0",
-    "vscode-languageserver-types": "^3.2.0",
     "vscode-languageserver-types-commonjs": "^0.0.1",
     "webpack": "^2.6.1"
   }

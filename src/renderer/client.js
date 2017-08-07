@@ -1,5 +1,6 @@
 import { fork } from 'child_process';
-import Event from '../event';
+import { join } from 'path';
+import Event from './event';
 
 class ChunkQueue {
   constructor() {
@@ -40,9 +41,10 @@ const chunkQueue = new ChunkQueue();
 let child;
 export default function getChildProcess() {
   if (!child) {
-    child = fork('/Users/munong/Documents/github/ant-monaco/lib/server.js');
+    child = fork(join(__dirname, './server.js'));
+    child.send({ method: 'lintrc', params: global.lintrc })
     child.on('message', (params) => {
-      const { method, log, error, chunk } = params || {};
+      const { method, log, error, chunk, trigger } = params || {};
       if (error) {
         // remote log
         console.error(params);
@@ -51,15 +53,17 @@ export default function getChildProcess() {
         console.log(params);
       } else if (chunk) {
         handleChunk(method, params, (data) => {
-          Event.dispatchGlobalEvent(method, data);
+          if (trigger)
+            Event.doGlobalTrigger(method, data);
+          else
+            Event.dispatchGlobalEvent(method, data);
         });
       } else {
         // handle event
-        try {
+        if (trigger)
+          Event.doGlobalTrigger(method, params);
+        else
           Event.dispatchGlobalEvent(method, params);
-        } catch (error) {
-          throw new Error(error);
-        }
       }
     })
   }
@@ -67,7 +71,6 @@ export default function getChildProcess() {
 }
 
 function handleChunk(method, chunk, callback) {
-  console.log(chunk);
   chunkQueue.registerCallback(method, callback);
   chunkQueue.pushChunk(method, chunk);
 }

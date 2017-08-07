@@ -1,5 +1,5 @@
 import { ipcRenderer as ipc } from 'electron';
-import Event from '../event';
+import Event from './event';
 
 export default class FlushQueue {
   constructor(model, event) {
@@ -61,10 +61,8 @@ export default class FlushQueue {
     const uri = this._model.uri;
 
     this.reset();
-    ipc.send(this._registryEvent, { uri, events });
 
     Event.dispatchGlobalEvent('onDidChangeFlushed', { events, model: this._model });
-
     this.status = FlushQueue.Status.flushed;
   }
 }

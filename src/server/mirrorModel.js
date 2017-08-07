@@ -1,4 +1,4 @@
-import Event from '../event';
+import Event from './event';
 
 export default class MirrorModel extends Event {
 	constructor(uri, lines, eol, language, versionId) {
@@ -142,3 +142,5 @@ MirrorModel.Events = {
 	onContentChange: Symbol('MirrorModel.Events.onContentChange'),
 	onInitDocument: Symbol('MirrorModel.Events.onInitDocument'),
 }
+
+global.MirrorModel = MirrorModel;

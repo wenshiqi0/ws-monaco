@@ -1,5 +1,5 @@
 import { ipcRenderer as ipc } from 'electron';
-import Event from '../../../../src/event';
+import Event from '../../../../src/renderer/event';
 
 let globalRegistry;
 export const activate = (registry) => {
@@ -8,7 +8,6 @@ export const activate = (registry) => {
 
 Event.addGlobalListenerEvent('onEslintChange', ({ params }) => {
   const messages = params;
-  console.error(messages);
   globalRegistry.setCurrentModelMarkers('eslint', messages.map((marker) => {
     const { severity, line, column, fatal, message } = marker;
     return {

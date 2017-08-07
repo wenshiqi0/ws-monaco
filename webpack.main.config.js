@@ -2,9 +2,8 @@ const { join } = require('path');
 
 module.exports = {
   entry: {
-    main: './src/server/main.js',
+    main: './src/server/index.js',
     server: './src/server/index.js',
-    eslint: './plugins/syntaxes/eslint/src/server.js'
   },
   output: {
     path: join(__dirname, 'lib'),

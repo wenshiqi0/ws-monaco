@@ -1,8 +1,11 @@
-import getChildProcess from './renderer/client.js';
+import getChildProcess from './client.js';
+
+let processQueue = [];
 
 export default class Event {
   constructor(type) {
     this._eventsMap = new Map();
+    this._triggersMap = new Map();
   }
 
   addListenerEvent(event, func) {
@@ -23,6 +26,26 @@ export default class Event {
     doPromise();
   }
 
+  addTrigger(trigger, params, callback, cancel) {
+    const child = getChildProcess();
+    const { lastCancel } = this._triggersMap.get(trigger) || {};
+    if (lastCancel) {
+      lastCancel();
+    }
+
+    this._triggersMap.set(trigger, { callback, cancel });
+    if (child)
+      child.send({ method: trigger, params, trigger: true });
+  }
+
+  doTrigger(trigger, args) {
+    const chunks = this._triggersMap.get(trigger) || {};
+    const { callback } = chunks;
+    const { version, uri } = args;
+    if (callback)
+      callback(args);
+  }
+
   static dispatchGlobalEvent(event, params) {
     globalEvent.dispatchEvent(event, params);
     const child = getChildProcess();
@@ -31,9 +54,6 @@ export default class Event {
         params.uri = params.model.uri;
         params.model = null;
       }
-      if (params.event)
-        params.event = null;
-      console.log(event, params);
       child.send({
         method: event,
         params
@@ -50,10 +70,30 @@ export default class Event {
     globalEvent.addListenerEvent(event, func);
   }
 
+  static addGlobalListenerEventOnce(event, func) {
+    globalEvent.addListenerEventOnce(event, func);
+  }
+
   static addLocalListenerEvent(local, event, func) {
     if (local.addListenerEvent && typeof local.addListenerEvent === 'function')
       local.addListenerEvent(event, func);
   }
+
+  static addGlobalTrigger(trigger, params, callback, cancel) {
+    globalEvent.addTrigger(trigger, params, callback, cancel);
+  }
+
+  static doGlobalTrigger(trigger, args) {
+    globalEvent.doTrigger(trigger, args);
+  }
 }
 
 const globalEvent = new Event();
+
+Event.addGlobalListenerEvent('onDidChangeContent', () => {
+  processQueue.forEach((process) => {
+    process();
+  })
+  processQueue = [];
+})
+

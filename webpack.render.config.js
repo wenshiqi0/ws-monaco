@@ -18,6 +18,11 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
       },
+      {
+        test: /\.spec.ts$/,
+        exclude: /node_modules/,
+        loader: 'raw-loader',
+      },
     ],
   },
   externals(context, request, callback) {

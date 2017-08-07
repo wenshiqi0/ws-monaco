@@ -1,7 +1,7 @@
-import { ipcMain as ipc } from 'electron';
 import { join } from 'path';
 
 import { convertKind } from '../../utils';
+import Event from '../../../../src/server/event';
 
 const ts = require('typescript/lib/typescriptServices');
 
@@ -23,7 +23,7 @@ try {
         "insertText": { value: (snippets[key].body || []).join('\n') },
         "documentation": snippets[key].description,
       }
-    }); 
+    });
 } catch (e) {
   snippetsItems = null;
 }
@@ -36,16 +36,16 @@ class AntMonacoMainHost {
   }
 
   getCompilationSettings() {
-		return this._compilerOptions;
-	}
+    return this._compilerOptions;
+  }
 
   getScriptFileNames() {
-    const filenames = Array.from(Ant.modelsMap.keys());
+    const filenames = global.getAllFileNames();
     return filenames;
   }
 
   getScriptVersion(uri) {
-    const model = Ant.modelsMap.get(uri);
+    const model = global.getModel(uri);
     if (model)
       return model.version;
     return '1';
@@ -53,7 +53,7 @@ class AntMonacoMainHost {
 
   getScriptSnapshot(uri) {
     let text;
-    const model = Ant.modelsMap.get(uri);
+    const model = global.getModel(uri);
 
     if (model) {
       // a true editor model
@@ -75,9 +75,9 @@ class AntMonacoMainHost {
   }
 
   getCurrentDirectory() {
-		return '';
+    return '';
   }
-  
+
   getDefaultLibFileName() {
     return 'lib.es6.d.ts';
   }
@@ -92,14 +92,14 @@ class AntMonacoMainHost {
     try {
       completionsItems = info.entries.map(entry => {
         return {
-				  uri,
-				  position,
+          uri,
+          position,
           label: entry.name,
           sortText: entry.sortText,
-				  kind: convertKind(entry.kind),
+          kind: convertKind(entry.kind),
         };
-		  });
-    } catch(e) {
+      });
+    } catch (e) {
       completionsItems = null;
     }
 
@@ -125,12 +125,12 @@ class AntMonacoMainHost {
       const detail = ts.displayPartsToString(details.displayParts);
       const documentation = ts.displayPartsToString(details.documentation);
       result = {
-				uri,
-				position,
-				label: details.name,
+        uri,
+        position,
+        label: details.name,
         kind: convertKind(details.kind),
-				detail: detail.match(/\(method\) Abridge/g) ? documentation : detail,
-				documentation,
+        detail: detail.match(/\(method\) Abridge/g) ? documentation : detail,
+        documentation,
       }
     }
     return result;
@@ -138,57 +138,57 @@ class AntMonacoMainHost {
 
   provideSignatureHelp(uri, position, offset) {
     let resource = uri;
-    
+
     const info = this._languageService.getSignatureHelpItems(uri, offset);
 
-		if (!info) {
-			return;
-		}
+    if (!info) {
+      return;
+    }
 
-		let ret = {
-			activeSignature: info.selectedItemIndex,
-			activeParameter: info.argumentIndex,
-			signatures: []
-		};
+    let ret = {
+      activeSignature: info.selectedItemIndex,
+      activeParameter: info.argumentIndex,
+      signatures: []
+    };
 
-		info.items.forEach(item => {
-			let signature = {
-				label: '',
-				documentation: null,
-				parameters: []
-			};
+    info.items.forEach(item => {
+      let signature = {
+        label: '',
+        documentation: null,
+        parameters: []
+      };
 
-			signature.label += ts.displayPartsToString(item.prefixDisplayParts);
-			item.parameters.forEach((p, i, a) => {
-				let label = ts.displayPartsToString(p.displayParts);
-				let parameter = {
-					label: label,
-					documentation: ts.displayPartsToString(p.documentation)
-				};
-				signature.label += label;
-				signature.parameters.push(parameter);
-				if (i < a.length - 1) {
-					signature.label += ts.displayPartsToString(item.separatorDisplayParts);
-				}
-			});
+      signature.label += ts.displayPartsToString(item.prefixDisplayParts);
+      item.parameters.forEach((p, i, a) => {
+        let label = ts.displayPartsToString(p.displayParts);
+        let parameter = {
+          label: label,
+          documentation: ts.displayPartsToString(p.documentation)
+        };
+        signature.label += label;
+        signature.parameters.push(parameter);
+        if (i < a.length - 1) {
+          signature.label += ts.displayPartsToString(item.separatorDisplayParts);
+        }
+      });
       signature.label += ts.displayPartsToString(item.suffixDisplayParts);
-			ret.signatures.push(signature);
-		});
+      ret.signatures.push(signature);
+    });
 
-		return ret;
+    return ret;
   }
-  
+
   provideHover(uri, position, offset) {
     let resource = uri;
     const info = this._languageService.getQuickInfoAtPosition(uri, offset);
-		if (!info) {
-			return;
-		}
-		let contents = ts.displayPartsToString(info.displayParts);
-		return {
+    if (!info) {
+      return;
+    }
+    let contents = ts.displayPartsToString(info.displayParts);
+    return {
       contents: [contents],
       textSpan: info.textSpan,
-		};
+    };
   }
 
   provideDocumentFormattingEdits(uri, options) {
@@ -200,25 +200,25 @@ class AntMonacoMainHost {
     return this._languageService.getFormattingEditsForRange(uri, offsetStart, offsetEnd, this._convertOptions(options));
   }
 
-   _convertOptions(options) {
-		return {
-			ConvertTabsToSpaces: options.insertSpaces,
-			TabSize: options.tabSize,
-			IndentSize: options.tabSize,
-			IndentStyle: ts.IndentStyle.Smart,
-			NewLineCharacter: '\n',
-			InsertSpaceAfterCommaDelimiter: true,
-			InsertSpaceAfterSemicolonInForStatements: true,
-			InsertSpaceBeforeAndAfterBinaryOperators: true,
-			InsertSpaceAfterKeywordsInControlFlowStatements: true,
-			InsertSpaceAfterFunctionKeywordForAnonymousFunctions: true,
-			InsertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis: false,
-			InsertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets: false,
-			InsertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces: false,
-			PlaceOpenBraceOnNewLineForControlBlocks: false,
-			PlaceOpenBraceOnNewLineForFunctions: false
-		};
-	}
+  _convertOptions(options) {
+    return {
+      ConvertTabsToSpaces: options.insertSpaces,
+      TabSize: options.tabSize,
+      IndentSize: options.tabSize,
+      IndentStyle: ts.IndentStyle.Smart,
+      NewLineCharacter: '\n',
+      InsertSpaceAfterCommaDelimiter: true,
+      InsertSpaceAfterSemicolonInForStatements: true,
+      InsertSpaceBeforeAndAfterBinaryOperators: true,
+      InsertSpaceAfterKeywordsInControlFlowStatements: true,
+      InsertSpaceAfterFunctionKeywordForAnonymousFunctions: true,
+      InsertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis: false,
+      InsertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets: false,
+      InsertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces: false,
+      PlaceOpenBraceOnNewLineForControlBlocks: false,
+      PlaceOpenBraceOnNewLineForFunctions: false
+    };
+  }
 }
 
 const host = new AntMonacoMainHost({
@@ -228,38 +228,44 @@ const host = new AntMonacoMainHost({
   noSyntaxValidation: true
 });
 
-ipc.on('javascript:getCompletionsAtPosition', (event, args) => {
+Event.addGlobalListenerEvent('getCompletionsAtPosition', (args) => {
   const { uri, position, offset, entry } = args;
   const res = host.getCompletionsAtPosition(uri, position, offset);
-  event.sender.send('javascript:getCompletionsAtPosition', res);
+  const version = host.getScriptVersion(uri);
+  global.trigger({ method: 'getCompletionsAtPosition', params: res, uri, version });
 })
 
-ipc.on('javascript:resolveCompletionItem', (event, args) => {
+Event.addGlobalListenerEvent('resolveCompletionItem', (args) => {
   const { uri, position, offset, entry } = args;
   const res = host.resolveCompletionItem(uri, position, offset, entry);
-  event.sender.send('javascript:resolveCompletionItem', res);
+  const version = host.getScriptVersion(uri);
+  global.trigger({ method: 'resolveCompletionItem', params: res, uri, version });
 })
 
-ipc.on('javascript:provideSignatureHelp', (event, args) => {
+Event.addGlobalListenerEvent('provideSignatureHelp', (args) => {
   const { uri, position, offset } = args;
   const res = host.provideSignatureHelp(uri, position, offset);
-  event.sender.send('javascript:provideSignatureHelp', res);
+  const version = host.getScriptVersion(uri);
+  global.trigger({ method: 'resolveCompletionItem', params: res, uri, version });
 })
 
-ipc.on('javascript:provideHover', (event, args) => {
+Event.addGlobalListenerEvent('provideHover', (args) => {
   const { uri, position, offset } = args;
   const res = host.provideHover(uri, position, offset);
-  event.sender.send('javascript:provideHover', res);
+  const version = host.getScriptVersion(uri);
+  global.trigger({ method: 'resolveCompletionItem', params: res, uri, version });
 })
 
-ipc.on('javascript:provideDocumentFormattingEdits', (event, args) => {
+Event.addGlobalListenerEvent('provideDocumentFormattingEdits', (args) => {
   const { uri, options } = args;
   const res = host.provideDocumentFormattingEdits(uri, options);
-  event.sender.send('javascript:provideDocumentFormattingEdits', res);
+  const version = host.getScriptVersion(uri);
+  global.trigger({ method: 'resolveCompletionItem', params: res, uri, version });
 })
 
-ipc.on('javascript:provideDocumentRangeFormattingEdits', (event, args) => {
+Event.addGlobalListenerEvent('provideDocumentRangeFormattingEdits', (args) => {
   const { uri, options, offsetStart, offsetEnd } = args;
   const res = host.provideDocumentRangeFormattingEdits(uri, offsetStart, offsetEnd, options);
-  event.sender.send('javascript:provideDocumentRangeFormattingEdits', res);
+  const version = host.getScriptVersion(uri);
+  global.trigger({ method: 'resolveCompletionItem', params: res, uri, version });
 })
