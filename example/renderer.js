@@ -4,13 +4,12 @@ const container = document.getElementById('editor')
 
 const { GrammarRegistry, getDefaultRegistry, editorOptions, setLintRc } = require('../lib');
 
-setLintRc('/Users/munong/Documents/own/PuerTea/app/lint/.tiny.eslintrc');
-
 let editor;
 const language = 'javascript';
 
 // 新的 vscode textmate 语法解析实现
 const registry = getDefaultRegistry(join(__dirname, '../lib'));
+setLintRc(join(__dirname, './lint.json'));
 const body = document.body;
 
 // theme 注册为黑色的 token
