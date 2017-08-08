@@ -251,9 +251,13 @@ export const activate = (registry, monaco) => {
       })
     },
     resolveCompletionItem: (item, token) => {
-      if (!item) return resolve(null);
+      let model;
       const position = item.position;
-      const model = monaco.editor.getModel(item.uri);
+      try {
+        model = monaco.editor.getModel(item.uri);
+      } catch (e) {
+        return null;
+      }
       return new Promise((resolve, reject) => {
         token.onCancellationRequested(() => {
           reject();
