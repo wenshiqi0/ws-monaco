@@ -89,11 +89,3 @@ export default class Event {
 }
 
 const globalEvent = new Event();
-
-Event.addGlobalListenerEvent('onDidChangeContent', () => {
-  processQueue.forEach((process) => {
-    process();
-  })
-  processQueue = [];
-})
-

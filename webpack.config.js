@@ -4,6 +4,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
   entry: {
     index: './src/renderer/index.js',
+    server: './src/server/index.js',
   },
   output: {
     path: join(__dirname, 'lib'),
@@ -27,7 +28,7 @@ module.exports = {
   },
   externals(context, request, callback) {
     let isExternals = false;
-    if (request === 'vscode-textmate' || request === 'electron' ) {
+    if (request === 'vscode-textmate' || request === 'electron' || request === 'eslint' || request === 'vscode-languageserver') {
       isExternals = request;
     }
     callback(null, isExternals);

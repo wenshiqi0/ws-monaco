@@ -29,11 +29,11 @@ Event.addGlobalListenerEvent('lintrc', (params) => {
   cli = new CLIEngine({
     configFile: params,
   });
-  Event.addGlobalListenerEvent(MirrorModel.Events.onDidChangeFlushed, ({ model }) => {
-    doParse(model);
-  });
   Event.addGlobalListenerEvent(MirrorModel.Events.onInitDocument, ({ model }) => {
     doParse(model);
+    Event.addGlobalListenerEvent(MirrorModel.Events.onDidChangeFlushed, ({ model }) => {
+      doParse(model);
+    });
   });
 })
 
@@ -44,7 +44,7 @@ function doParse(model) {
         const text = model.getText();
         const { results } = cli.executeOnText(text, 'source.js');
         const { messages } = results[0];
-        global.sendRequest({ method: 'onEslintChange', params: messages.map(message => Object.assign({}, message, { source: '' } )) });
+        global.sendRequest({ method: 'onEslintChange', params: messages.map(message => Object.assign({}, message, { source: '', fix: '' })).slice(0, 200) });
       }
       break;
 
