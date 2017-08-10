@@ -50,19 +50,17 @@ global.sendRequest = function(args, len, extra) {
     const str = JSON.stringify(params);
     const splited = chunkString(str, len || 512);
     const size = splited.length;
-
-    if (splited.length < 512)
-      return process.send(Object.assign({}, args, extra, { timestamp }));
-
+    if (str.length < 512)
+      return process.send(JSON.stringify(Object.assign({}, args, extra, { timestamp })));
     splited.forEach((chunk, index) => {
-      process.send(Object.assign({}, args, extra, {
+      process.send(JSON.stringify(Object.assign({}, args, extra, {
         timestamp, index, size,
         params: chunk,
         chunk: true,
-      }))
+      })))
     }, this);
   } else {
-    return process.send(Object.assign({}, args, extra, { timestamp }));
+    return process.send(JSON.stringify(Object.assign({}, args, extra, { timestamp })));
   }
 }
 

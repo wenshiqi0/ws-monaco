@@ -44,6 +44,7 @@ export default function getChildProcess() {
     child = fork(join(__dirname, './server.js'));
     child.send({ method: 'lintrc', params: global.lintrc })
     child.on('message', (params) => {
+      if (typeof params === 'string') params = JSON.parse(params);
       const { method, log, error, chunk, trigger } = params || {};
       if (error) {
         // remote log
