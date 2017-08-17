@@ -9,6 +9,7 @@ import { join } from 'path';
 import { activate as activateJs } from '../../plugins/syntaxes/javascript/src/index';
 import { activate as activateEslint } from '../../plugins/syntaxes/eslint/src/index';
 import { activate as activateCss } from '../../plugins/syntaxes/css/src/index';
+import { activate as activateJson } from '../../plugins/syntaxes/json/src/index';
 import * as theme from './theme';
 
 // language configs
@@ -204,6 +205,7 @@ class GrammarRegistry {
     activateJs(this, window.monaco);
     activateEslint(this, window.monaco);
     activateCss(this, window.monaco);
+    activateJson(this, window.monaco);
   }
 
   static activateCompletionItems(modeId) {

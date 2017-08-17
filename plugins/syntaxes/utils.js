@@ -22,7 +22,7 @@ const CompletionItemKind = {
   Folder: 18,
 }
 
-const Kind = {
+export const Kind = {
 	unknown : '',
 	keyword : 'keyword',
 	script : 'script',

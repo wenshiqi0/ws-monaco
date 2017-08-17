@@ -41,7 +41,10 @@ const chunkQueue = new ChunkQueue();
 let child;
 export default function getChildProcess() {
   if (!child) {
-    child = fork(join(__dirname, './server.js'));
+    child = fork(join(__dirname, './server.js'), [], {
+      silent: true,
+      stdio: [0, 1, 2, 'ipc'],
+    });
     child.send({ method: 'lintrc', params: global.lintrc })
     child.on('message', (params) => {
       if (typeof params === 'string') params = JSON.parse(params);

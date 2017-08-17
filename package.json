@@ -1,20 +1,21 @@
 {
   "name": "ant-monaco",
-  "version": "0.8.0-beta-9",
+  "version": "0.8.0",
   "description": "Ant monaco with vscode-textmate. This module can only run under node runtime",
   "main": "lib/index.js",
   "scripts": {
     "build": "webpack --config ./webpack.config.js",
     "watch": "webpack --config ./webpack.config.js -w",
     "dev": "npm run watch",
-    "minify": "uglifyjs lib/index.js -o lib/index.js",
+    "minify": "uglifyjs lib/index.js -o lib/index.js && uglifyjs lib/server.js -o lib/server.js",
     "rebuild": "electron-rebuild-ln -d=https://gh-contractor-zcbenz.cnpmjs.org/atom-shell/dist/ -m .",
     "start": "electron ./example/main.js",
     "clean": "node scripts/clean.js",
     "js": "node scripts/javascript.js && npm run js-extra",
     "js-extra": "node scripts/js-extra.js",
     "api": "node scripts/completions.js $site",
-    "sync": "node scripts/lark-sdk.js"
+    "sync": "node scripts/lark-sdk.js",
+    "prepublishOnly": "npm run minify && npm run clean"
   },
   "keywords": [
     "monaco",

@@ -6,6 +6,7 @@ module.exports = {
     index: './src/renderer/index.js',
     server: './src/server/index.js',
   },
+  devtool: "cheap-source-map",
   output: {
     path: join(__dirname, 'lib'),
     filename: '[name].js',
