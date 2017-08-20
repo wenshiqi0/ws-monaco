@@ -1,4 +1,10 @@
 const electron = require('electron')
+const { fork } = require('child_process')
+const { join } = require('path');
+
+fork(join(__dirname, '../lib/server'));
+
+// require('../lib/server');
 
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow

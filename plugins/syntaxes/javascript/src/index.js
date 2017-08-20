@@ -244,10 +244,10 @@ export const activate = (registry, monaco) => {
     provideCompletionItems: (model, position, token) => {
       return new Promise((resolve, reject) => {
         token.onCancellationRequested(() => {
-          reject();
+          reject({});
         })
         const res = host.getCompletionsAtPosition(model.uri, position, model.getOffsetAt(position));
-        resolve(res);
+        resolve(res || {});
       })
     },
     resolveCompletionItem: (item, token) => {
@@ -260,7 +260,7 @@ export const activate = (registry, monaco) => {
       }
       return new Promise((resolve, reject) => {
         token.onCancellationRequested(() => {
-          reject();
+          reject({});
         })
         const res = host.resolveCompletionItem(item.uri, position, model.getOffsetAt(position), item.label);
         const ret = res ? res : item;
@@ -268,7 +268,7 @@ export const activate = (registry, monaco) => {
         if (insertText)
           ret.insertText = insertText;
 
-        resolve(ret);
+        resolve(ret || {});
       })
     }
   });
@@ -278,10 +278,10 @@ export const activate = (registry, monaco) => {
     provideSignatureHelp: (model, position, token) => {
       return new Promise((resolve, reject) => {
         token.onCancellationRequested(() => {
-          reject();
+          reject({});
         })
         const res = host.provideSignatureHelp(model.uri, position, model.getOffsetAt(position));
-        resolve(res);
+        resolve(res || {});
       })
     },
   });
@@ -290,14 +290,14 @@ export const activate = (registry, monaco) => {
     provideHover: (model, position, token) => {
       return new Promise((resolve, reject) => {
         token.onCancellationRequested(() => {
-          reject();
+          reject({});
         })
         const res = host.provideHover(model.uri, position, model.getOffsetAt(position));
         const { textSpan, contents } = res || {};
         resolve({
           contents,
           range: textSpan ? textSpanToRange(model, textSpan) : null,
-        });
+        } || {});
       })
     }
   });
@@ -306,10 +306,10 @@ export const activate = (registry, monaco) => {
     provideDocumentFormattingEdits: (model, options, token) => {
       return new Promise((resolve, reject) => {
         token.onCancellationRequested(() => {
-          reject();
+          reject({});
         })
         const res = host.provideDocumentFormattingEdits(model.uri, options);
-        resolve(res.map(edit => convertTextChanges(model, edit)));
+        resolve(res.map(edit => convertTextChanges(model, edit)) || {});
       })
     }
   });
@@ -320,10 +320,10 @@ export const activate = (registry, monaco) => {
       const offsetEnd = model.getOffsetAt({ lineNumber: range.endLineNumber, column: range.endColumn });
       return new Promise((resolve, reject) => {
         token.onCancellationRequested(() => {
-          reject();
+          reject({});
         })
         const res = host.provideDocumentRangeFormattingEdits(model.uri, offsetStart, offsetEnd, options);
-        resolve(res.map(edit => convertTextChanges(model, edit)));
+        resolve(res.map(edit => convertTextChanges(model, edit)) || {});
       })
     }
   });

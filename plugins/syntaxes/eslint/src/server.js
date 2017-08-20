@@ -26,25 +26,26 @@ const handleJsonLint = (data, callback) => {
 
 let cli;
 Event.addGlobalListenerEvent('lintrc', (params) => {
+  console.log(params);
   cli = new CLIEngine({
     configFile: params,
   });
-  Event.addGlobalListenerEvent(MirrorModel.Events.onInitDocument, ({ model }) => {
-    doParse(model);
-    Event.addGlobalListenerEvent(MirrorModel.Events.onDidChangeFlushed, ({ model }) => {
-      doParse(model);
+  Event.addGlobalListenerEvent(MirrorModel.Events.onInitDocument, ({ model, event }) => {
+    doParse(event, model);
+    Event.addGlobalListenerEvent(MirrorModel.Events.onDidChangeFlushed, ({ model, event }) => {
+      doParse(event, model);
     });
   });
 })
 
-function doParse(model) {
+function doParse(event, model) {
   switch (model.language) {
     case 'javascript':
       {
         const text = model.getText();
         const { results } = cli.executeOnText(text, 'source.js');
         const { messages } = results[0];
-        global.sendRequest({ method: 'onEslintChange', params: messages.map(message => Object.assign({}, message, { source: '', fix: '' })).slice(0, 200) });
+        global.sendRequest({ event, method: 'onEslintChange', params: messages.map(message => Object.assign({}, message, { source: '', fix: '' })).slice(0, 200) });
       }
       break;
 
@@ -52,7 +53,7 @@ function doParse(model) {
       {
         const text = model.getText();
         handleJsonLint(text, (messages) => {
-          global.sendRequest({ method: 'onEslintChange', params: messages });
+          global.sendRequest({ event, method: 'onEslintChange', params: messages });
         })
       }
       break;
@@ -72,7 +73,7 @@ function doParse(model) {
             message: message.message,
           }
         })
-        global.sendRequest({ method: 'onEslintChange', params: messages });
+        global.sendRequest({ event, method: 'onEslintChange', params: messages });
       }
       break;
 

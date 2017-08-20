@@ -1,4 +1,4 @@
-import { fork } from 'child_process';
+import net from 'net';
 import { join } from 'path';
 import Event from './event';
 
@@ -38,48 +38,89 @@ class ChunkQueue {
 }
 const chunkQueue = new ChunkQueue();
 
-let child;
-export default function getChildProcess() {
-  if (!child) {
-    child = fork(join(__dirname, './server.js'), [], {
-      silent: true,
-      stdio: [0, 1, 2, 'ipc'],
-    });
-    child.send({ method: 'lintrc', params: global.lintrc })
-    child.on('message', (params) => {
-      if (typeof params === 'string') params = JSON.parse(params);
-      const { method, log, error, chunk, trigger } = params || {};
-      if (error) {
-        // remote log
-        console.error(params);
-      } else if (log) {
-        // remote error
-        console.log(params);
-      } else if (chunk) {
-        handleChunk(method, params, (data) => {
-          if (trigger)
-            Event.doGlobalTrigger(method, data);
-          else
-            Event.dispatchGlobalEvent(method, data);
-        });
-      } else {
-        // handle event
-        if (trigger)
-          Event.doGlobalTrigger(method, params);
-        else
-          Event.dispatchGlobalEvent(method, params);
-      }
-    })
+let remaining = '';
+
+function safeParseJSON(text) {
+  try {
+    const res = JSON.parse(text);
+    return res;
+  } catch (error) {
+    return false;
   }
-  return child;
+}
+
+export default function init() {
+  const socket = new net.Socket();
+  global.socket = socket;
+  socket.connect(12345);
+  socket.write(JSON.stringify({ method: 'lintrc', params: global.lintrc }) + '\s\s\s\n');
+  socket.on('data', (data) => {
+    const events = [];
+    try {
+      const stringData = `${remaining}${data.toString('utf-8')}` || '{}';            
+      const mutipleObjString = stringData.split('\s\s\s\n');
+      if (mutipleObjString.length === 2 && !mutipleObjString[1] && !safeParseJSON(mutipleObjString[0])) {
+        return remaining + stringData;
+      }
+
+      const last = mutipleObjString.pop();
+
+      // We only use the last object string.
+      // If the data is not completed, we store it and use the last one.
+      // FIX ME: all the method will come to here, may some repeat methods.
+      mutipleObjString.forEach((one) => {
+        const res = safeParseJSON(one);
+        if (res) {
+          events.push(res);
+        }
+      })
+      if (last) {
+        const res = safeParseJSON(last);
+        if (res) {
+          remaining = '';
+          events.push(res);
+        } else {
+          remaining = last;
+        }
+      } else {
+        remaining = '';        
+      }
+    } catch (e) {
+      console.error(e);
+      remaining = '';
+    }
+
+    events.forEach((args) => {
+      handleEvent(args);      
+    })
+  })
+}
+
+function handleEvent(params) {
+  const { method, log, error, chunk, trigger } = params || {};
+  if (error) {
+    // remote log
+    console.error(params);
+  } else if (log) {
+    // remote error
+    console.log(params);
+  } else if (chunk) {
+    handleChunk(method, params, (data) => {
+      if (trigger)
+        Event.doGlobalTrigger(method, data);
+      else
+        Event.dispatchGlobalEvent(method, data);
+    });
+  } else {
+    // handle event
+    if (trigger)
+      Event.doGlobalTrigger(method, params);
+    else
+      Event.dispatchGlobalEvent(method, params);
+  }
 }
 
 function handleChunk(method, chunk, callback) {
   chunkQueue.registerCallback(method, callback);
   chunkQueue.pushChunk(method, chunk);
 }
-
-process.on('exit', () => {
-  if (child)
-    child.kill();
-})

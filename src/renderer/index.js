@@ -1,5 +1,6 @@
 // electron
 import { ipcRenderer as ipc } from 'electron';
+import initIpc from './client';
 
 // interface
 import FlushQueue from './flushQueue';
@@ -200,6 +201,8 @@ class GrammarRegistry {
       })
       return model;
     }
+
+    initIpc();
 
     // activate language features
     activateJs(this, window.monaco);

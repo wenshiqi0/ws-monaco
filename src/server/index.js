@@ -1,6 +1,6 @@
-import * as cp from 'child_process';
 import MirrorModel from './mirrorModel';
 import Event from './event';
+import initServer from './tcp'; 
 
 import '../../plugins/syntaxes/eslint/src/server';
 // import '../../plugins/syntaxes/javascript/src/server';
@@ -31,36 +31,91 @@ const messageHandler = {
   }
 }
 
-process.on('message', ({ method, params, trigger }) => {
-  if (trigger) {
-    Event.dispatchGlobalEvent(method, params);
-  } else if (messageHandler[method]) {
-    try {
-      messageHandler[method](params);
-    } catch (error) {
-      throw new Error(error);
-    }
+let remaining = '';
+
+function safeParseJSON(text) {
+  try {
+    const res = JSON.parse(text);
+    return res;
+  } catch (error) {
+    return false;
   }
-});
+}
+
+initServer((socket) => {
+  socket.on('data', (data) => {
+    let args;
+    let result;
+    const events = [];
+    try {
+      const stringData = `${remaining}${data.toString('utf-8')}` || '{}';            
+      const mutipleObjString = stringData.split('\s\s\s\n');
+      if (mutipleObjString.length === 2 && !mutipleObjString[1] && !safeParseJSON(mutipleObjString[0])) {
+        return remaining + stringData;
+      }
+
+      const last = mutipleObjString.pop();
+
+      // We only use the last object string.
+      // If the data is not completed, we store it and use the last one.
+      // FIX ME: all the method will come to here, may some repeat methods.
+      mutipleObjString.forEach((one) => {
+        const res = safeParseJSON(one);
+        if (res) {
+          result = res;
+          events.push(result);
+        }
+      })
+      if (last) {
+        const res = safeParseJSON(last);
+        if (res) {
+          remaining = '';
+          events.push(res);
+        } else {
+          remaining = last;
+        }
+      } else {
+        remaining = '';        
+      }
+    } catch (e) {
+      console.error(e);
+      remaining = '';
+    }
+    events.forEach((args) => {
+      const { method, params, trigger } = args || {};
+      if (trigger) {
+        Event.dispatchGlobalEvent(method, params);
+      } else if (messageHandler[method]) {
+        try {
+          messageHandler[method](params);
+        } catch (error) {
+          throw new Error(error);
+        }
+      }
+    })
+  })
+})
 
 global.sendRequest = function(args, len, extra) {
+  if (!global.socket) return;
   const { params } = args;
   const timestamp = Date.now();
   if (typeof params === 'object') {
     const str = JSON.stringify(params);
     const splited = chunkString(str, len || 512);
     const size = splited.length;
-    if (str.length < 512)
-      return process.send(JSON.stringify(Object.assign({}, args, extra, { timestamp })));
+    // 不在分包
+    if (true)
+      return global.socket.write(JSON.stringify(Object.assign({}, args, extra, { timestamp })));
     splited.forEach((chunk, index) => {
-      process.send(JSON.stringify(Object.assign({}, args, extra, {
+      global.socket.write(JSON.stringify(Object.assign({}, args, extra, {
         timestamp, index, size,
         params: chunk,
         chunk: true,
       })))
     }, this);
   } else {
-    return process.send(JSON.stringify(Object.assign({}, args, extra, { timestamp })));
+    return global.socket.write(JSON.stringify(Object.assign({}, args, extra, { timestamp })));
   }
 }
 

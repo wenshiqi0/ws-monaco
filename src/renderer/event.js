@@ -1,5 +1,3 @@
-import getChildProcess from './client.js';
-
 let processQueue = [];
 
 export default class Event {
@@ -27,15 +25,14 @@ export default class Event {
   }
 
   addTrigger(trigger, params, callback, cancel) {
-    const child = getChildProcess();
     const { lastCancel } = this._triggersMap.get(trigger) || {};
     if (lastCancel) {
       lastCancel();
     }
 
     this._triggersMap.set(trigger, { callback, cancel });
-    if (child)
-      child.send({ method: trigger, params, trigger: true });
+    if (global.socket)
+      global.socket.write(JSON.stringify({ method: trigger, params, trigger: true }));
   }
 
   doTrigger(trigger, args) {
@@ -48,17 +45,15 @@ export default class Event {
 
   static dispatchGlobalEvent(event, params) {
     globalEvent.dispatchEvent(event, params);
-    const child = getChildProcess();
-    if (child) {
-      if (params.model) {
-        params.uri = params.model.uri;
-        params.model = null;
-      }
-      child.send({
-        method: event,
-        params
-      })
+    if (params.model) {
+      params.uri = params.model.uri;
+      params.model = null;
     }
+    if (global.socket)
+      global.socket.write(JSON.stringify({
+        method: event,
+        params,
+      }) + '\s\s\s\n');
   }
 
   static dispatchLocalEvent(local, event, args) {
