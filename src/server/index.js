@@ -43,10 +43,12 @@ function safeParseJSON(text) {
 }
 
 initServer((socket) => {
+  socket.on('end', () => {
+    console.log('one socket end');
+    global.socket = null;
+  })
   socket.on('data', (data) => {
-    let args;
-    let result;
-    const events = [];
+    const events = new Map();
     try {
       const stringData = `${remaining}${data.toString('utf-8')}` || '{}';            
       const mutipleObjString = stringData.split('\s\s\s\n');
@@ -61,16 +63,14 @@ initServer((socket) => {
       // FIX ME: all the method will come to here, may some repeat methods.
       mutipleObjString.forEach((one) => {
         const res = safeParseJSON(one);
-        if (res) {
-          result = res;
-          events.push(result);
-        }
+        if (res)
+          events.set(res.method, res);
       })
       if (last) {
         const res = safeParseJSON(last);
         if (res) {
           remaining = '';
-          events.push(res);
+          events.set(res.method, res);
         } else {
           remaining = last;
         }
@@ -81,7 +81,8 @@ initServer((socket) => {
       console.error(e);
       remaining = '';
     }
-    events.forEach((args) => {
+
+    Array.from(events.values()).forEach(args => {
       const { method, params, trigger } = args || {};
       if (trigger) {
         Event.dispatchGlobalEvent(method, params);
@@ -106,16 +107,16 @@ global.sendRequest = function(args, len, extra) {
     const size = splited.length;
     // 不在分包
     if (true)
-      return global.socket.write(JSON.stringify(Object.assign({}, args, extra, { timestamp })));
+      return global.socket.write(JSON.stringify(Object.assign({}, args, extra, { timestamp })) + '\s\s\s\n');
     splited.forEach((chunk, index) => {
       global.socket.write(JSON.stringify(Object.assign({}, args, extra, {
         timestamp, index, size,
         params: chunk,
         chunk: true,
-      })))
+      })) + '\s\s\s\n')
     }, this);
   } else {
-    return global.socket.write(JSON.stringify(Object.assign({}, args, extra, { timestamp })));
+    return global.socket.write(JSON.stringify(Object.assign({}, args, extra, { timestamp })) + '\s\s\s\n');
   }
 }
 

@@ -49,13 +49,13 @@ function safeParseJSON(text) {
   }
 }
 
-export default function init() {
+export default function init(port) {
   const socket = new net.Socket();
   global.socket = socket;
-  socket.connect(12345);
+  socket.connect(port);
   socket.write(JSON.stringify({ method: 'lintrc', params: global.lintrc }) + '\s\s\s\n');
   socket.on('data', (data) => {
-    const events = [];
+    const events = new Map();
     try {
       const stringData = `${remaining}${data.toString('utf-8')}` || '{}';            
       const mutipleObjString = stringData.split('\s\s\s\n');
@@ -71,14 +71,14 @@ export default function init() {
       mutipleObjString.forEach((one) => {
         const res = safeParseJSON(one);
         if (res) {
-          events.push(res);
+          events.set(res.method, res);
         }
       })
       if (last) {
         const res = safeParseJSON(last);
         if (res) {
           remaining = '';
-          events.push(res);
+          events.set(res.method, res);
         } else {
           remaining = last;
         }
@@ -90,8 +90,8 @@ export default function init() {
       remaining = '';
     }
 
-    events.forEach((args) => {
-      handleEvent(args);      
+    Array.from(events.values()).forEach(args => {
+      handleEvent(args);
     })
   })
 }
@@ -124,3 +124,11 @@ function handleChunk(method, chunk, callback) {
   chunkQueue.registerCallback(method, callback);
   chunkQueue.pushChunk(method, chunk);
 }
+
+window.addEventListener('beforeunload', () => {
+  if (global.socket) {
+    global.socket.end();
+    global.socket.destroy();
+    global.socket = null;
+  }
+})

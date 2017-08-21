@@ -163,7 +163,7 @@ class GrammarRegistry {
     window.monaco.editor.setModelMarkers(model, owner, markers);
   }
 
-  activateExtensions() {
+  activateExtensions(port) {
     // hook the createMoldel and setValue function
     const originalCreateModel = window.monaco.editor.createModel;
     window.monaco.editor.createModel = (value, language, uri) => {
@@ -202,7 +202,7 @@ class GrammarRegistry {
       return model;
     }
 
-    initIpc();
+    initIpc(port);
 
     // activate language features
     activateJs(this, window.monaco);
