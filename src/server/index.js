@@ -48,7 +48,7 @@ initServer((socket) => {
     global.socket = null;
   })
   socket.on('data', (data) => {
-    const events = new Map();
+    const events = [];
     try {
       const stringData = `${remaining}${data.toString('utf-8')}` || '{}';            
       const mutipleObjString = stringData.split('\s\s\s\n');
@@ -64,13 +64,13 @@ initServer((socket) => {
       mutipleObjString.forEach((one) => {
         const res = safeParseJSON(one);
         if (res)
-          events.set(res.method, res);
+          events.push(res);
       })
       if (last) {
         const res = safeParseJSON(last);
         if (res) {
           remaining = '';
-          events.set(res.method, res);
+          events.push(res);
         } else {
           remaining = last;
         }
@@ -82,7 +82,7 @@ initServer((socket) => {
       remaining = '';
     }
 
-    Array.from(events.values()).forEach(args => {
+    events.forEach(args => {
       const { method, params, trigger } = args || {};
       if (trigger) {
         Event.dispatchGlobalEvent(method, params);
