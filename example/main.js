@@ -1,7 +1,5 @@
 const electron = require('electron')
 
-require('../lib/main.js');
-
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 

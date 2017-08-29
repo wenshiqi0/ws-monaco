@@ -2,14 +2,13 @@ const { readFile } = require('fs');
 const join = require('path').join;
 const container = document.getElementById('editor')
 
-const { GrammarRegistry, getDefaultRegistry, editorOptions, setLintRc } = require('../lib');
+const { start, editorOptions, GrammarRegistry } = require('../lib/editor');
 
 let editor;
 const language = 'javascript';
 
 // 新的 vscode textmate 语法解析实现
-const registry = getDefaultRegistry(join(__dirname, '../lib'));
-setLintRc(join(__dirname, './lint.json'));
+// const registry = getDefaultRegistry(join(__dirname, '../lib'));
 const body = document.body;
 
 // theme 注册为黑色的 token
@@ -89,18 +88,18 @@ loader.require(['./vs/editor/editor.main'], async function () {
   }));
 
   // 设置编辑器为当前上下文
-  registry.setCurrentEditor(editor);
+  // registry.setCurrentEditor(editor);
   // 启动语法插件
-  registry.activateExtensions();
+  start();
 
   // monaco 根据 token rules 解析出来的 css rules 和 vscode-textmate 有差异
   // 所以这个地方直接复写掉这一部分的 css 样式，用 vscode-textmate 的解析结果来代替
-  registry.reloadTheme('tiny');
+  // registry.reloadTheme('tiny');
 
   // 异步注册语言，并创建 textModel，将当前 model 装载进 editor 中
-  await Promise.resolve({ languageId: language, registry })
-    .then((res) => { if (language) return GrammarRegistry.loadGrammar(res); })
-    .then((res) => { if (language) return GrammarRegistry.registerLanguage(res); })
+  await Promise.resolve({ languageId: language })
+    // .then((res) => { if (language) return GrammarRegistry.loadGrammar(res); })
+    // .then((res) => { if (language) return GrammarRegistry.registerLanguage(res); })
     .then(() => {
         const model = window.monaco.editor.createModel(initText, language, 'ant-monaco://test');
         editor.setModel(model);
