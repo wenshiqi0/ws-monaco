@@ -1,4 +1,4 @@
-{
+export default {
   "File": 0,
   "Module": 1,
   "Namespace": 2,

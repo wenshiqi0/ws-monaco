@@ -6,7 +6,7 @@ export class CodeLens {
   
 }
 
-class Disposable {
+export class Disposable {
 
   /**
    * overwrite
