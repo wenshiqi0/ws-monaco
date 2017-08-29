@@ -1,9 +1,10 @@
+import getChildProcess from './client.js';
+
 let processQueue = [];
 
 export default class Event {
   constructor(type) {
     this._eventsMap = new Map();
-    this._triggersMap = new Map();
   }
 
   addListenerEvent(event, func) {
@@ -24,36 +25,19 @@ export default class Event {
     doPromise();
   }
 
-  addTrigger(trigger, params, callback, cancel) {
-    const { lastCancel } = this._triggersMap.get(trigger) || {};
-    if (lastCancel) {
-      lastCancel();
-    }
-
-    this._triggersMap.set(trigger, { callback, cancel });
-    if (global.socket)
-      global.socket.write(JSON.stringify({ method: trigger, params, trigger: true }));
-  }
-
-  doTrigger(trigger, args) {
-    const chunks = this._triggersMap.get(trigger) || {};
-    const { callback } = chunks;
-    const { version, uri } = args;
-    if (callback)
-      callback(args);
-  }
-
   static dispatchGlobalEvent(event, params) {
     globalEvent.dispatchEvent(event, params);
-    if (params.model) {
-      params.uri = params.model.uri;
-      params.model = null;
-    }
-    if (global.socket)
-      global.socket.write(JSON.stringify({
+    const child = getChildProcess();
+    if (child) {
+      if (params.model) {
+        params.uri = params.model.uri;
+        params.model = null;
+      }
+      child.send({
         method: event,
-        params,
-      }) + '\s\s\s\n');
+        params
+      })
+    }
   }
 
   static dispatchLocalEvent(local, event, args) {
@@ -84,3 +68,11 @@ export default class Event {
 }
 
 const globalEvent = new Event();
+
+Event.addGlobalListenerEvent('onDidChangeContent', () => {
+  processQueue.forEach((process) => {
+    process();
+  })
+  processQueue = [];
+})
+

@@ -1,7 +1,6 @@
 export default class Event {
   constructor(type) {
     this._eventsMap = new Map();
-    this._triggerMap = new Map();
   }
 
   addListenerEvent(event, func) {
@@ -17,26 +16,6 @@ export default class Event {
       this._eventsMap.delete(event);
     });
     this._eventsMap.set(event, methods);
-  }
-
-  addTrigger(event, func) {
-    const methods = this._triggerMap.get(event) || [];
-    methods.push(func);
-    this._triggerMap.set(event, methods);
-  }
-
-  doTrigger(event) {
-    const self = this;
-    const methods = this._triggerMap.get(event) || [];
-    async function doPromise() {
-      for (const method of methods) {
-        await new Promise((resolve) => {
-          resolve(method());
-        })
-      }
-      self._triggerMap.delete(event);
-    }
-    doPromise();
   }
 
   dispatchEvent(event, args) {
@@ -66,14 +45,6 @@ export default class Event {
 
   static addGlobalListenerEventOnce(event, func) {
     globalEvent.addListenerEventOnce(event, func);
-  }
-
-  static addTrigger(event, func) {
-    globalEvent.addTrigger(event, func);
-  }
-
-  static doTrigger(event) {
-    globalEvent.doTrigger(event);
   }
 
   static addLocalListenerEvent(local, event, func) {

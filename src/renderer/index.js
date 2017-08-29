@@ -1,6 +1,5 @@
 // electron
 import { ipcRenderer as ipc } from 'electron';
-import initIpc from './client';
 
 // interface
 import FlushQueue from './flushQueue';
@@ -10,7 +9,6 @@ import { join } from 'path';
 import { activate as activateJs } from '../../plugins/syntaxes/javascript/src/index';
 import { activate as activateEslint } from '../../plugins/syntaxes/eslint/src/index';
 import { activate as activateCss } from '../../plugins/syntaxes/css/src/index';
-import { activate as activateJson } from '../../plugins/syntaxes/json/src/index';
 import * as theme from './theme';
 
 // language configs
@@ -163,7 +161,7 @@ class GrammarRegistry {
     window.monaco.editor.setModelMarkers(model, owner, markers);
   }
 
-  activateExtensions(port) {
+  activateExtensions() {
     // hook the createMoldel and setValue function
     const originalCreateModel = window.monaco.editor.createModel;
     window.monaco.editor.createModel = (value, language, uri) => {
@@ -202,13 +200,10 @@ class GrammarRegistry {
       return model;
     }
 
-    initIpc(port);
-
     // activate language features
     activateJs(this, window.monaco);
     activateEslint(this, window.monaco);
     activateCss(this, window.monaco);
-    activateJson(this, window.monaco);
   }
 
   static activateCompletionItems(modeId) {
