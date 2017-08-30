@@ -359,6 +359,7 @@ class TypeScriptServiceClient {
                 if (version) {
                     this._apiVersion = new typescriptService_1.API(version);
                 }
+
                 const label = version || localize('versionNumber.custom', 'custom');
                 const tooltip = modulePath;
                 this.modulePath = modulePath;
@@ -687,7 +688,7 @@ class TypeScriptServiceClient {
             }
         }
     }
-    normalizePath(resource) {
+    normalizePath(resource) {     
         if (resource.scheme === TypeScriptServiceClient.WALK_THROUGH_SNIPPET_SCHEME) {
             return resource.toString();
         }

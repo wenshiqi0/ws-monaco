@@ -1,12 +1,13 @@
 import Promise from 'bluebird';
-import { writeFilee} from 'fs';
+import { writeFileSync } from 'fs';
+import TextLine from './textLine';
 
 /**
  * Represents a text document, such as a source file. Text documents have
  * [lines](#TextLine) and knowledge about an underlying resource like a file.
  */
 export default class TextDocument {
-  constructor(uri, filename, languageId, version, eol) {
+  constructor(value, uri, filename, languageId, version, eol) {
     /**
 		 * The associated URI for this document. Most documents have the __file__-scheme, indicating that they
 		 * represent files on disk. However, some documents may have other schemes indicating that they are not
@@ -40,7 +41,7 @@ export default class TextDocument {
     /**
      * Mutiple lines content.
      */
-    this._lines = [];
+    this._lines = value.split(eol);
 
     // features
 
@@ -71,7 +72,7 @@ export default class TextDocument {
       if (this._isDirty || this._isClosed) resolve(false);
       else {
         try {
-          writeFilee(this._uri.toString(), this.lines.join(this._eol), 'utf-8', (err) => {
+          writeFileSync(this._uri.toString(), this.lines.join(this._eol), 'utf-8', (err) => {
             if (err) throw err;
             resolve(true); 
           });
@@ -80,6 +81,13 @@ export default class TextDocument {
         }
       }
     })
+  }
+
+  /**
+   * @reutrn text of the document with eol.
+   */
+  getText() {
+    return this._lines.join(this._eol);
   }
 
   /**
@@ -103,5 +111,41 @@ export default class TextDocument {
    */
   get lineCount() {
     return this._lines.length;
+  }
+
+  /**
+   * get uri
+   */
+  get uri() {
+    return this._uri;
+  }
+
+  /**
+   * get language id
+   */
+  get languageId() {
+    return this._languageId;
+  }
+
+  /**
+  * Returns a text line denoted by the line number. Note
+  * that the returned object is *not* live and changes to the
+  * document are not reflected.
+  *
+  * @param line A line number in [0, lineCount).
+  * @return A [line](#TextLine).
+  */
+  lineAt(line) {
+    if (typeof line === 'number') {
+      const lineText = this._lines[line];
+      return new TextLine(line, lineText, new monaco.Range(line, 0, line, lineText.length - 1));
+    } else {
+      console.log(line);
+
+    }
+  }
+
+  getWordRangeAtPosition(position, regex) {
+    
   }
 }

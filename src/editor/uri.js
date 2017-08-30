@@ -1,7 +1,7 @@
 /**
  * schema regex
  */
-const schemaReg = /^([a-zA-Z0-9]*)\:\/\//;
+const schemeReg = /^([a-zA-Z0-9]*)\:\/\//;
 /**
  * authority regex
  */
@@ -10,7 +10,7 @@ const authorityReg = /\:\/\/([a-zA-Z0-9\.]*)\//;
  * path regex
  */
 const pathReg = /[a-zA-Z]\/([a-zA-Z0-9\/]*)\??/;
-const noAuthorityReg = /\:\/\/\/\/([a-zA-Z0-9\/]*)\??/;
+const noAuthorityReg = /\:\/\/\/([a-zA-Z0-9\/]*)\??/;
 
 /**
  * A universal resource identifier representing either a file on disk
@@ -20,16 +20,16 @@ export default class Uri {
   /**
    * Create a URI with schema, path and authority.
    * 
-   * @param {string} schema 
+   * @param {string} scheme
    * @param {string} path 
    * @param {string} authority 
    */
-  constructor(schema, authority, path) {
+  constructor(scheme, authority, path) {
     /**
 		 * Scheme is the `http` part of `http://www.msft.com/some/path?query#fragment`.
 		 * The part before the first colon.
 		 */
-    this._schema = schema;
+    this._scheme = scheme;
 
     /**
 		 * Path is the `/some/path` part of `http://www.msft.com/some/path?query#fragment`.
@@ -41,6 +41,16 @@ export default class Uri {
 		 * The part between the first double slashes and the next slash.
 		 */
     this._authority = authority;
+  }
+
+  get scheme() {
+    return this._scheme;
+  }
+
+  get fsPath() {
+    if (this._scheme === 'file')
+      return this._path;
+    return null;
   }
 
   /**
@@ -62,11 +72,11 @@ export default class Uri {
    * @return A new Uri instance.
    */
   static parse(str) {
-    const schema = getSchema(str);
+    const scheme = getScheme(str);
     const authority = getAuthority(str);
     const path = getPath(str);
 
-    return new Uri(schema, authority, path);
+    return new Uri(scheme, authority, path);
   }
 
   /**
@@ -84,8 +94,8 @@ export default class Uri {
  *  is not changing anything.
  */
   with(change) {
-    const { schema, authority, path } = change;
-    this._schema = schema || this._schema;
+    const { scheme, authority, path } = change;
+    this._scheme = scheme || this._scheme;
     this.authority = authority || this._authority;
     this._path = path || this._path;
   }
@@ -98,7 +108,7 @@ export default class Uri {
    * @return A string representation of this Uri.
    */
   toString() {
-    return `${this._schema}://${this._authority}/${this._path}`;
+    return `${this._scheme}://${this._authority}${this._path}`;
   }
 
   /**
@@ -108,7 +118,7 @@ export default class Uri {
  */
   toJSON() {
     return {
-      schema: this._schema,
+      schema: this._scheme,
       authority: this._authority,
       path: this._path,
     }
@@ -121,8 +131,8 @@ export default class Uri {
  * @param {string} uri
  * @return matched string
  */
-function getSchema(uri) {
-  const matched = uri.match(schemaReg);
+function getScheme(uri) {
+  const matched = uri.match(schemeReg);
   if (matched.length > 1)
     return matched[1];
   return '';

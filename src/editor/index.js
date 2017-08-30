@@ -1,8 +1,9 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import hook from './hook';
 import editorOptions from './editorOptions';
 import GrammarRegistry from './GrammarRegistry';
-import ExtensionContext from './ExtensionContext';
+import { workspaceState } from './ExtensionContext';
 import antMonaco, { extensions } from '../ant';
 
 const { addExtension } = extensions;
@@ -24,7 +25,10 @@ global.subscriptions = [];
 })()
 
 function scanExtensionsDir() {
-  return ['/Users/munong/Documents/github/ant-monaco/extesions/typescript'];
+  return [
+    '/Users/munong/Documents/github/ant-monaco/extesions/javascript',
+    '/Users/munong/Documents/github/ant-monaco/extesions/typescript'
+  ];
 }
 
 function readJson(path) {
@@ -48,6 +52,10 @@ function registerLanguageConf(extPath, extension) {
         languagesMap.set(language.id, Object.assign({}, language, grammar));
 
         addExtension(language.id, Object.assign({}, language, grammar));
+        monaco.languages.register({
+          id: language.id,
+          extensions: Object.assign({}, language, grammar),
+        })
       })
     }
   })
@@ -65,16 +73,19 @@ function start() {
     scripts.push(join(ext, packageJson.main));
   })
 
-  const registry = new GrammarRegistry(languagesConfigure);
+  // const registry = new GrammarRegistry(languagesConfigure);
 
   scripts.forEach((script, i) => {
     const extMain = require(script);
     extMain.activate({
       subscriptions: global.subscriptions,
       extensionPath: extensions[i],
+      workspaceState,
       storagePath: '',
     });
   })
+
+  hook();
 }
 
 module.exports = {

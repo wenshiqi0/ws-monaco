@@ -101,7 +101,7 @@ loader.require(['./vs/editor/editor.main'], async function () {
     // .then((res) => { if (language) return GrammarRegistry.loadGrammar(res); })
     // .then((res) => { if (language) return GrammarRegistry.registerLanguage(res); })
     .then(() => {
-        const model = window.monaco.editor.createModel(initText, language, 'ant-monaco://test');
+        const model = window.monaco.editor.createModel(initText, language, '/Users/munong/Documents/github/ant-monaco/example/test.js');
         editor.setModel(model);
     })
 });

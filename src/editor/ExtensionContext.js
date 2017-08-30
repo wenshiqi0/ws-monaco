@@ -1,3 +1,5 @@
-export default class ExtensionContext {
-
+export const workspaceState = {
+  get: () => {
+    return {};
+  }
 }

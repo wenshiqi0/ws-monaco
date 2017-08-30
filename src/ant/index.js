@@ -1,7 +1,10 @@
-import SymbolKind from './SymbolKind';
 import * as extensions from './extensions';
 import * as commands from './commands';
-import { CompletionItem, CodeLens, Disposable } from './class.d';
+import * as workspace from './workspace';
+import window from './window';
+import languages from './languages';
+import { EventEmitter } from './Event';
+import { Range, Position, Disposable, CompletionItem, CodeLens, Disposable, SymbolKind, StatusBarAlignment, IndentAction, CompletionItemKind } from './types';
 
 export default {
   env: {
@@ -11,6 +14,21 @@ export default {
   SymbolKind,
   CompletionItem,
   CodeLens,
+  Range,
+  Position,
+
+  // features
   extensions,
-  commands
+  commands,
+  workspace,
+  window,
+  languages,
+
+  // event
+  EventEmitter,
+
+  // const
+  StatusBarAlignment,
+  IndentAction,
+  CompletionItemKind
 }

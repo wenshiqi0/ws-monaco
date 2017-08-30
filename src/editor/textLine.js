@@ -15,6 +15,10 @@ export default class TextLine {
     this._firstNoWhitespaceIndex = index;
   }
 
+  get text() {
+    return this._text;
+  }
+
   /**
    * range with eol
    * 
@@ -25,8 +29,8 @@ export default class TextLine {
     return new monaco.Range(
       range.startLineNumber,
       range.startColumn,
-      range.endLineNumber + 1,
-      range.endColumn
+      range.endLineNumber,
+      range.endColumn + 1
     );
   }
 
@@ -46,15 +50,15 @@ export default class TextLine {
  * caculate the index of the first non-whitespce character from the text,
  * and modify it filled of whitespce (empty) or not.
  * 
- * @param {string} str
+ * @param {string} text
  * @return Object with {boolean} isEmptyOrWhitespace and {number|undefined} index
  */
-function initWitespaceIndex(str) {
+function initWitespaceIndex(text) {
   let i = 0;
-  if (!this._text)
+  if (!text)
     return { isEmptyOrWhitespace: true };
-  while(this._text[i]) {
-    if (this._text[i] !== '\s')
+  while(text[i]) {
+    if (text[i] !== '\s')
       return { isEmptyOrWhitespace: false, index: i + 1 }; // monaco index start with 1
     i += 1;
   }

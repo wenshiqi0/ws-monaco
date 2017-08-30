@@ -10,5 +10,4 @@ export function getExtension (id) {
   return extensions.get(id);
 }
 
-
 export const all = allExtensions;

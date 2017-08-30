@@ -120,7 +120,6 @@ function activate(context) {
         }
         return false;
     }
-    ;
     const openListener = vscode_1.workspace.onDidOpenTextDocument(didOpenTextDocument);
     for (let textDocument of vscode_1.workspace.textDocuments) {
         if (didOpenTextDocument(textDocument)) {
