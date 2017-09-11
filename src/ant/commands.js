@@ -2,6 +2,10 @@ const commandsMap = new Map();
 
 export function registerCommand(id, callback) {
   commandsMap.set(id, callback);
+
+  return {
+    dispose: () => {}
+  }
 }
 
 export function executeCommand() {

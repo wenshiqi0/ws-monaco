@@ -16,8 +16,15 @@ const configure = {
         trace: 'off'
       }
     },
-    tsdk_version: '2.4.2'
-  }
+    tsdk_version: '2.4.0',
+    eslint: {
+      enable: true,
+      validate: [
+        "javascript",
+        "javascriptreact"
+      ]
+    }
+  },
 };
 
 export function getConfiguration(section) {
@@ -49,9 +56,8 @@ export function getConfiguration(section) {
       */
     },
     inspect: (key) => {
-      /*
       key = section ? `${section}.${key}` : key;
-      const config = this._configuration.data[key];
+      const config = configure[key];
 			if (config) {
 				return {
           key,
@@ -61,7 +67,6 @@ export function getConfiguration(section) {
 				};
 			}
       return undefined;
-      */
 		}
 	};
 

@@ -122,3 +122,4 @@ export class EventEmitter {
 EventEmitter._noop = () => {};
 
 const globalEvent = new Event();
+window.__GLOBAL_EVENT__ = globalEvent;

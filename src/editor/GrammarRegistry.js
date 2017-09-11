@@ -41,7 +41,7 @@ function rebuildMtkColors(cssRules) {
 // grammar registry
 export default class GrammarRegistry {
   constructor(scopeRegistry) {
-    this.scopeRegistry = scopeRegistry;
+    this.scopeRegistry = scopeRegistry || global.languagesConfigure;
     this.injections = {};
     this.embeddedLanguages = [];
     this.registry = new Registry({
@@ -132,77 +132,24 @@ export default class GrammarRegistry {
   }
 
   /**
+   * set theme mode.
    * 
-   * @param {*} owner 
-   * @param {Array<any>} markers An array with Monaco markers.
+   * @param {"dark" | "light"} themeMode 
    */
-  setCurrentModelMarkers(owner, markers) {
-    const model = this.getCurrentModel();
-    window.monaco.editor.setModelMarkers(model, owner, markers);
-  }
-
-  activateExtensions() {
-    // hook the createMoldel and setValue function
-    const originalCreateModel = window.monaco.editor.createModel;
-    window.monaco.editor.createModel = (value, language, uri) => {
-      const model = (originalCreateModel.bind(window.monaco.editor))(value, language, uri);
-
-      model.queue = new FlushQueue(model, 'ant-monaco:updateModel');
-      if (language && uri) {
-        Event.dispatchGlobalEvent('onInitDocument', {
-          uri, language, 
-          eol: model.getEOL(),
-          version: model.getVersionId(),
-          lines: model.getLinesContent(),
-        });
-      }
-      const originalSetValue = model.setValue;
-
-      // Hook setValue method.
-      // While doing this will also change the value in the mirror model. 
-      model.setValue = (value) => {
-        if (!value && value !== '') return;
-        Event.dispatchGlobalEvent('onInitDocument', {
-          uri, language, 
-          eol: model.getEOL(),
-          version: model.getVersionId(),
-          lines: model.getLinesContent(),
-        });
-        return (originalSetValue.bind(model))(value);
-      }
-
-      // flush the change of model values
-      model.onDidChangeContent((event) => {
-        if (event)
-          Event.dispatchGlobalEvent('onDidChangeContent', { model, event });
-        model.queue.cache(event);
-      })
-      return model;
-    }
-
-    // activate language features
-    activateJs(this, window.monaco);
-    activateEslint(this, window.monaco);
-    activateCss(this, window.monaco);
-  }
-
-  static activateCompletionItems(modeId) {
-    const languages = window.monaco.languages;
-    if (modeId === 'axml') {
-      languages.registerCompletionItemProvider(modeId, completionsHelp);
-    }
-  }
-
   static setMode(themeMode) {
     mode = themeMode;
   }
 
+  /**
+   * lazy load a language.
+   * 
+   * @param {Object} language detail
+   */
   static loadGrammar({ registry, languageId }) {
-    const language = global.languagesMap.get(languageId);    
-
+    const language = global.languagesMap.get(languageId);
     return new Promise((resolve, reject) => {
       if (registry.getEmbeddedLanguages().indexOf(languageId) > -1) resolve({ languageId: null });
-      else if (language) resolve({ languageId: 'plaintext' });
+      else if (!language) resolve({ languageId: 'plaintext' });
       else {
         // Id index map to language. vscode-textmate does not use index 0.
         const id = registry.pushLanguageEmbedded(languageId);
@@ -224,20 +171,17 @@ export default class GrammarRegistry {
     });
   }
 
+  /**
+   * set grammar token provider for vscode-textmate.
+   * 
+   * @param {Object} param language detail
+   */
   static registerLanguage({ languageId, grammar }){
-    const language = global.languagesMap.get(languageId);    
-
+    const language = global.languagesMap.get(languageId);
     return new Promise((resolve) => {
       if (!languageId) return resolve(false);
       if (languageId === 'plaintext') return resolve({ languageId, grammar: null });
       const languages = window.monaco.languages;
-      languages.register({
-        id: languageId,
-        extensions: language.extensions,
-      });
-
-      languages.setLanguageConfiguration(languageId, globalLanguageMap[languageId].config);
-      GrammarRegistry.activateCompletionItems(languageId);
       languages.setTokensProvider(languageId, {
         getInitialState: () => {
           return INITIAL;

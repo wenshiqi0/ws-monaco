@@ -2,7 +2,7 @@ const { readFile } = require('fs');
 const join = require('path').join;
 const container = document.getElementById('editor')
 
-const { start, editorOptions, GrammarRegistry } = require('../lib/editor');
+const { start, openProject, editorOptions, GrammarRegistry } = require('../lib/editor');
 
 let editor;
 const language = 'javascript';
@@ -28,7 +28,7 @@ Page({
   bindViewTap() {
     abridge.navigateTo({
       url: '../logs/logs',
-    })
+          })
 
 
   },
@@ -46,15 +46,78 @@ Page({
 });
 `;
 
+const cssText = `
+/*---------------------------------------------------------------------------------------------
+*  Copyright (c) Microsoft Corporation. All rights reserved.
+*  Licensed under the MIT License. See License.txt in the project root for license information.
+*--------------------------------------------------------------------------------------------*/
+
+.monaco-list {
+ height: 100%;
+ width: 100%;
+ white-space: nowrap;
+ -webkit-user-select: none;
+ -khtml-user-select: none;
+ -moz-user-select: -moz-none;
+ -ms-user-select: none;
+ -o-user-select: none;
+ user-select: none;
+}
+
+.monaco-list > .monaco-scrollable-element {
+ height: 100%;
+}
+
+.monaco-list-rows {
+ position: relative;
+ width: 100%;
+ height: 100%;
+}
+
+.monaco-list-row {
+ position: absolute;
+ -moz-box-sizing:	border-box;
+ -o-box-sizing:		border-box;
+ -ms-box-sizing:		border-box;
+ box-sizing:			border-box;
+ cursor: pointer;
+ overflow: hidden;
+ width: 100%;
+ touch-action: none;
+}
+
+/* for OS X ballistic scrolling */
+.monaco-list-row.scrolling {
+ display: none !important;
+}
+
+/* Focus */
+.monaco-list.element-focused { outline: 0 !important; }
+`
+
+const schemaText = `
+Object(配置) {
+	html(HTML/VM代码):Text,
+	data(JSON数据):Text
+}
+`
+
+const textMap = {
+  schema: schemaText,
+  javascript: initText,
+  css: cssText,
+}
+
 // monaco 使用的 amd 方式来加载 monaco
 const loader = require('ant-monaco-editor/dev/vs/loader');
 
 // 指定 monaco 文件的地址目录，这里需要使用绝对路径
 loader.require.config({
   baseUrl: join(__dirname, '../node_modules/ant-monaco-editor/dev'),
+  // baseUrl: '/Users/munong/Documents/github/vscode/out-editor',
 })
 
-// 开始加载 monaco
+// 开始加载 monaco`
 loader.require(['./vs/editor/editor.main'], async function () {
   const globalEditor = window.monaco.editor;
 
@@ -91,19 +154,21 @@ loader.require(['./vs/editor/editor.main'], async function () {
   // registry.setCurrentEditor(editor);
   // 启动语法插件
   start();
+  openProject('/Users/munong/Documents/github/ant-monaco/example/test/');
 
   // monaco 根据 token rules 解析出来的 css rules 和 vscode-textmate 有差异
   // 所以这个地方直接复写掉这一部分的 css 样式，用 vscode-textmate 的解析结果来代替
   // registry.reloadTheme('tiny');
+  
 
   // 异步注册语言，并创建 textModel，将当前 model 装载进 editor 中
   await Promise.resolve({ languageId: language })
     // .then((res) => { if (language) return GrammarRegistry.loadGrammar(res); })
     // .then((res) => { if (language) return GrammarRegistry.registerLanguage(res); })
     .then(() => {
-        const model = window.monaco.editor.createModel(initText, language, '/Users/munong/Documents/github/ant-monaco/example/test.js');
-        editor.setModel(model);
+      return window.monaco.editor.createModel(textMap[language], language, `/Users/munong/Documents/github/ant-monaco/example/test/test.${language === 'javascript' ? 'js' : language}`);
     })
+    .then((model) => editor.setModel(model))
 });
 
 function handleDragFile(dom) {
@@ -115,11 +180,24 @@ function handleDragFile(dom) {
     e.preventDefault()
 
     const file = e.dataTransfer.files[0];
+    const splited = (file.path || '').split(/\./g);
+    const extension = splited[splited.length - 1];
 
-    readFile(file.path, 'utf8', (err, text) => {
-      const models = window.monaco.editor.getModels();
-      if (models[0])
-        models[0].setValue(text);
+    const extMap = {
+      js: 'javascript',
+      css: 'css',
+      schema: 'schema',
+      axml: 'html',
+    }
+
+    readFile(file.path, 'utf8', async (err, text) => {
+      await Promise.resolve({ languageId: extMap[extension] || extension })
+        // .then((res) => { if (language) return GrammarRegistry.loadGrammar(res); })
+        // .then((res) => { if (language) return GrammarRegistry.registerLanguage(res); })
+        .then(() => {
+          return window.monaco.editor.createModel(text, extMap[extension] || extension, file.path);
+        })
+        .then((model) => editor.setModel(model))
     });
     
     return false;

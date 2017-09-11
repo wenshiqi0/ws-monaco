@@ -1,16 +1,16 @@
 /**
  * schema regex
  */
-const schemeReg = /^([a-zA-Z0-9]*)\:\/\//;
+const schemeReg = /^([a-zA-Z0-9\-]*)\:\/\//;
 /**
  * authority regex
  */
-const authorityReg = /\:\/\/([a-zA-Z0-9\.]*)\//;
+const authorityReg = /\:\/\/([a-zA-Z0-9\.\-]*)\//;
 /**
  * path regex
  */
-const pathReg = /[a-zA-Z]\/([a-zA-Z0-9\/]*)\??/;
-const noAuthorityReg = /\:\/\/\/([a-zA-Z0-9\/]*)\??/;
+const pathReg = /[a-zA-Z]\/([a-zA-Z0-9\/\-\.]*)\??/;
+const noAuthorityReg = /\:\/\/\/([a-zA-Z0-9\/\-\.]*)\??/;
 
 /**
  * A universal resource identifier representing either a file on disk
@@ -158,9 +158,11 @@ function getAuthority(uri) {
  * @return matched string
  */
 function getPath(uri) {
-  const matched = uri.match(uri.indexOf('////') > 0 ? noAuthorityReg : pathReg);
-  if (matched.length > 1)
+  const matched = uri.match(uri.indexOf('///') > 0 ? noAuthorityReg : pathReg);
+  if (matched.length > 1) {
+    if (matched[1][0] !== '/') return `/${matched[1]}`;
     return matched[1];
+  }
   return '';
 }
 

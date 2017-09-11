@@ -13,7 +13,18 @@ class Window {
   createOutputChannel() {
     return {
       appendLine: () => {},
+      append: () => {},
+      dispose: () => {},
+      show: () => {},
     };
+  }
+
+  showErrorMessage(message) {
+    console.error(message)    
+  }
+
+  showInformationMessage(message) {
+    console.info(message)
   }
 
   onDidChangeActiveTextEditor(callback) {

@@ -5,6 +5,9 @@ import editorOptions from './editorOptions';
 import GrammarRegistry from './GrammarRegistry';
 import { workspaceState } from './ExtensionContext';
 import antMonaco, { extensions } from '../ant';
+import Memento from '../ant/memento';
+import Telemetry from '../ant/Telemetry';
+import * as workspace from '../ant/workspace';
 
 const { addExtension } = extensions;
 
@@ -18,6 +21,8 @@ global.subscriptions = [];
   Module.prototype.require = function() {
     if (arguments[0] === 'vscode') {
       return antMonaco;
+    } else if (arguments[0] === 'vscode-extension-telemetry') {
+      return { default: Telemetry };
     } else {
       return originalRequire.apply(this, arguments);
     }
@@ -26,8 +31,16 @@ global.subscriptions = [];
 
 function scanExtensionsDir() {
   return [
-    '/Users/munong/Documents/github/ant-monaco/extesions/javascript',
-    '/Users/munong/Documents/github/ant-monaco/extesions/typescript'
+    '/Users/munong/Documents/github/vscode/extensions/javascript',
+    '/Users/munong/Documents/github/vscode/extensions/typescript',
+    '/Users/munong/Documents/github/vscode/extensions/css',
+    '/Users/munong/Documents/github/vscode/extensions/less',
+    '/Users/munong/Documents/github/vscode/extensions/scss',
+    '/Users/munong/Documents/github/vscode/extensions/json',
+    '/Users/munong/Documents/github/vscode/extensions/html',
+    '/Users/munong/Documents/github/ant-monaco/extensions/schema',
+    '/Users/munong/Documents/github/ant-monaco/extensions/nunjucks',
+    // '/Users/munong/Documents/github/ant-monaco/extesions/eslint'
   ];
 }
 
@@ -38,6 +51,10 @@ function readJson(path) {
 
 function readScript(path) {
   return readFileSync(path, 'utf-8');
+}
+
+function initEditorTheme() {
+  GrammarRegistry.setMode('dark');
 }
 
 function registerLanguageConf(extPath, extension) {
@@ -62,6 +79,8 @@ function registerLanguageConf(extPath, extension) {
 }
 
 function start() {
+  hook();  
+
   const extensions = scanExtensionsDir();
   const scripts = [];
 
@@ -70,26 +89,30 @@ function start() {
     if (packageJson.contributes && packageJson.contributes.languages) {
       registerLanguageConf(ext, packageJson);
     }
-    scripts.push(join(ext, packageJson.main));
+    if (packageJson.main)
+      scripts.push(join(ext, packageJson.main));
   })
-
-  // const registry = new GrammarRegistry(languagesConfigure);
 
   scripts.forEach((script, i) => {
     const extMain = require(script);
     extMain.activate({
       subscriptions: global.subscriptions,
       extensionPath: extensions[i],
-      workspaceState,
+      workspaceState: new Memento(),
+      globalState: new Memento(),
       storagePath: '',
+      asAbsolutePath: (relative) => join(extensions[i], relative),
     });
   })
+}
 
-  hook();
+function openProject(path) {
+  workspace.openProject(path);
 }
 
 module.exports = {
   start,
+  openProject,
   editorOptions,
   GrammarRegistry,
 }
