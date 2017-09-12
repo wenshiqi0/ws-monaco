@@ -1,5 +1,3 @@
-import matchGlobPattern from 'glob';
-
 export default function matches(selection, uri, language) {
   return score(selection, uri, language) > 0;
 }
@@ -57,12 +55,13 @@ export function score(selector, candidateUri, candidateLanguage) {
       }
     }
 
+    // FIX ME
     if (pattern) {
-      if (pattern === candidateUri.fsPath || matchGlobPattern(pattern, candidateUri.fsPath)) {
-        ret = 10;
-      } else {
-        return 0;
-      }
+      // if (pattern === candidateUri.fsPath || matchGlobPattern(pattern, candidateUri.fsPath)) {
+        // ret = 10;
+      // } else {
+        return 10;
+      // }
     }
 
     return ret;

@@ -210,11 +210,13 @@ export default {
 }
 
 Event.addGlobalListenerEvent('setEntriesMarkers', entries => {
-  entries.forEach(function(entry) {
-    const uri = entry[0];
-    const model = monaco.editor.getModel(uri.toString());   
-    monaco.editor.setModelMarkers(model, uri.toString(), entry[1]);
-  }, this);
+  if (entries) {
+    entries.forEach(function(entry) {
+      const uri = entry[0];
+      const model = monaco.editor.getModel(uri.toString());   
+      monaco.editor.setModelMarkers(model, uri.toString(), entry[1]);
+    }, this);
+  }
 })
 
 const unknownLanguages = ['razor', 'handlebars'];

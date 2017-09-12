@@ -113,8 +113,6 @@ export class DiagnosticCollection {
         entries.push([uri, marker]);
       }
 
-      console.log(entries);
-
       // Global Event.
       Event.dispatchGlobalEvent('setEntriesMarkers', entries);              
     }
