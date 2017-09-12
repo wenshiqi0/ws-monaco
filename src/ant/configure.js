@@ -19,6 +19,12 @@ const configure = {
     tsdk_version: '2.4.0',
     eslint: {
       enable: true,
+      trace: {
+        server: 'off',
+      },
+      options: {},
+      run: 'onType',
+      autoFixOnSave: false,
       validate: [
         "javascript",
         "javascriptreact"

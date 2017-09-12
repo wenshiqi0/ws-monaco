@@ -1,5 +1,5 @@
 const { readFile } = require('fs');
-const join = require('path').join;
+const { join, dirname } = require('path');
 const container = document.getElementById('editor')
 
 const { start, openProject, editorOptions, GrammarRegistry } = require('../lib/editor');
@@ -113,8 +113,8 @@ const loader = require('ant-monaco-editor/dev/vs/loader');
 
 // 指定 monaco 文件的地址目录，这里需要使用绝对路径
 loader.require.config({
-  baseUrl: join(__dirname, '../node_modules/ant-monaco-editor/dev'),
-  // baseUrl: '/Users/munong/Documents/github/vscode/out-editor',
+  // baseUrl: join(__dirname, '../node_modules/ant-monaco-editor/dev'),
+  baseUrl: '/Users/munong/Documents/github/vscode/out-editor',
 })
 
 // 开始加载 monaco`
@@ -195,6 +195,7 @@ function handleDragFile(dom) {
         // .then((res) => { if (language) return GrammarRegistry.loadGrammar(res); })
         // .then((res) => { if (language) return GrammarRegistry.registerLanguage(res); })
         .then(() => {
+          openProject(dirname(file.path));
           return window.monaco.editor.createModel(text, extMap[extension] || extension, file.path);
         })
         .then((model) => editor.setModel(model))

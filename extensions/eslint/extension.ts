@@ -332,7 +332,6 @@ export function realActivate(context: ExtensionContext) {
 		udpateStatusBarVisibility(window.activeTextEditor);
 	});
 	client.onReady().then(() => {
-		console.log('ready');
 		client.onNotification(StatusNotification.type, (params) => {
 			updateStatus(params.state);
 		});

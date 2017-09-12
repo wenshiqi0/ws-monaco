@@ -22,8 +22,7 @@ export class DiagnosticCollection {
     }
   
 
-    set(first, diagnostics) {
-  
+    set(first, diagnostics) {  
       if (!first) {
         // this set-call is a clear-call
         this.clear();
@@ -114,13 +113,18 @@ export class DiagnosticCollection {
         entries.push([uri, marker]);
       }
 
+      console.log(entries);
+
       // Global Event.
-      Event.dispatchGlobalEvent('setEntriesMarkers', entries);      
+      Event.dispatchGlobalEvent('setEntriesMarkers', entries);              
     }
   
     delete(uri) {
       this._checkDisposed();
       this._data.delete(uri.toString());
+
+      // Global Event.
+      Event.dispatchGlobalEvent('setEntriesMarkers', [[ uri, undefined]]);
     }
   
     clear() {

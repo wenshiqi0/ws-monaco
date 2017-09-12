@@ -490,21 +490,15 @@ messageQueue.onNotification(ValidateNotification.type, (document) => {
 // and close on the connection
 documents.listen(connection);
 documents.onDidOpen((event) => {
-	require('fs').writeFileSync('/Users/munong/Downloads/test4.txt', JSON.stringify(supportedLanguages));
-
 	if (!supportedLanguages[event.document.languageId]) {
 		return;
 	}
-
-	require('fs').writeFileSync('/Users/munong/Downloads/test4.txt', event.document.uri);
-
 	if (!document2Library[event.document.uri]) {
 		let uri = Uri.parse(event.document.uri);
 		let promise: Thenable<string>
 		if (uri.scheme === 'file') {
 			let file = uri.fsPath;
 			let directory = path.dirname(file);
-			require('fs').writeFileSync('/Users/munong/Downloads/test4.txt', directory);
 			if (nodePath) {
 				 promise = Files.resolve('eslint', nodePath, nodePath, trace).then<string, string>(undefined, () => {
 					 return Files.resolve('eslint', globalNodePath, directory, trace);
@@ -555,7 +549,6 @@ function getFixes(textDocument: TextDocument): TextEdit[] {
 		if (fixes.isEmpty() || textDocument.version !== fixes.getDocumentVersion()) {
 			return [];
 		}
-		require('fs').writeFileSync('/Users/munong/Downloads/test.txt', JSON.stringify(fixes));
 		return fixes.getOverlapFree().map(createTextEdit);
 	}
 	return [];
@@ -621,8 +614,6 @@ connection.onInitialize((params) => {
 
 
 messageQueue.registerNotification(DidChangeConfigurationNotification.type, (params) => {
-	require('fs').writeFileSync('/Users/munong/Downloads/test6.txt', JSON.stringify(params));
-
 	// settings = params.settings || {};
 	settings = {
 		eslint: {
@@ -631,6 +622,7 @@ messageQueue.registerNotification(DidChangeConfigurationNotification.type, (para
 				"javascript",
 				"javascriptreact"
 			]
+			run: 'onType',
 		}
 	}
 	settings.eslint = settings.eslint || {};
@@ -823,8 +815,6 @@ const singleErrorHandlers: ((error: any, document: TextDocument, library: ESLint
 function validateSingle(document: TextDocument, publishDiagnostics: boolean = true): Thenable<void> {
 	// We validate document in a queue but open / close documents directly. So we need to deal with the
 	// fact that a document might be gone from the server.
-	require('fs').writeFileSync('/Users/munong/Downloads/test2.txt', JSON.stringify(documents.get(document.uri)));
-	require('fs').writeFileSync('/Users/munong/Downloads/test3.txt', JSON.stringify(document2Library[document.uri]));
 	if (!documents.get(document.uri) || !document2Library[document.uri]) {
 		return Promise.resolve(undefined);
 	}
@@ -870,15 +860,11 @@ function getMessage(err: any, document: TextDocument): string {
 }
 
 function validate(document: TextDocument, library: ESLintModule, publishDiagnostics: boolean = true): void {
-	require('fs').writeFileSync('/Users/munong/Downloads/test1.log', JSON.stringify(document));
-
 	let newOptions: CLIOptions = Object.assign(Object.create(null), options);
 	let content = document.getText();
 	let uri = document.uri;
 	let file = getFilePath(document);
 	let cwd = process.cwd();
-
-	require('fs').writeFileSync('/Users/munong/Downloads/test12.log', );
 
 	try {
 		if (file) {

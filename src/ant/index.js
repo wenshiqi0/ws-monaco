@@ -5,7 +5,7 @@ import window from './window';
 import languages from './languages';
 import { EventEmitter } from './Event';
 import { IndentAction } from './const.d';
-import { Range, Position, Diagnostic, DiagnosticSeverity, Disposable, SnippetString, CompletionItem, CompletionList, CodeLens, SymbolKind, StatusBarAlignment, CompletionItemKind, TextEdit, Hover, Uri } from './types';
+import { Range, Position, SignatureHelp, SignatureInformation, ParameterInformation, WorkspaceEdit, Location, Diagnostic, DiagnosticSeverity, Disposable, SnippetString, CompletionItem, CompletionList, CodeLens, SymbolKind, StatusBarAlignment, CompletionItemKind, TextEdit, Hover, Uri } from './types';
 
 export default {
   env: {
@@ -23,6 +23,11 @@ export default {
   SnippetString,
   Diagnostic,
   DiagnosticSeverity,
+  Location,
+  WorkspaceEdit,
+  SignatureHelp,
+  SignatureInformation,
+  ParameterInformation,
   Uri,
 
   // features

@@ -2,6 +2,7 @@ import { Disposable } from './class.d';
 import { Event, EventEmitter } from './Event';
 import Watcher from './watcher'; 
 import { getConfiguration as getConf } from './configure';
+import { getDiagnosticCollection } from './languages';
 import Uri from '../editor/uri';
 
 const emitter = new EventEmitter();
@@ -12,7 +13,7 @@ export let rootPath = '';
 export const workspaceFolders = [];
 
 export function onDidChangeConfiguration(callback, client, disposes) {
-  Event.addGlobalListenerEvent('onDidChangeConfiguration', callback);
+  Event.addGlobalListenerEvent('onDidChangeConfiguration', callback.bind(client));
   return {
     dispose: () => {
       Event.removeGlobalListener('onDidChangeConfiguration', callback);      

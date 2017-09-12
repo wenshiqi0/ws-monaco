@@ -40,7 +40,7 @@ function scanExtensionsDir() {
     '/Users/munong/Documents/github/vscode/extensions/html',
     '/Users/munong/Documents/github/ant-monaco/extensions/schema',
     '/Users/munong/Documents/github/ant-monaco/extensions/nunjucks',
-    // '/Users/munong/Documents/github/ant-monaco/extesions/eslint'
+    // '/Users/munong/Documents/github/ant-monaco/extensions/eslint'
   ];
 }
 

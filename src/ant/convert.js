@@ -27,7 +27,7 @@ export function toRange(range) {
 		return undefined;
 	}
 	let { startLineNumber, startColumn, endLineNumber, endColumn } = range;
-	return new types.Range(startLineNumber - 1, startColumn - 1, endLineNumber - 1, endColumn);
+	return new types.Range(startLineNumber - 1, startColumn - 1, endLineNumber - 1, endColumn - 1);
 }
 
 export const TextEdit = {
