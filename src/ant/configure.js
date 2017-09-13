@@ -17,6 +17,12 @@ const configure = {
       }
     },
     tsdk_version: '2.4.0',
+    css: {
+      validate: true,
+      trace: {
+        server: 'off',
+      }
+    },
     eslint: {
       enable: true,
       trace: {
@@ -29,6 +35,37 @@ const configure = {
         "javascript",
         "javascriptreact"
       ]
+    },
+    http: {
+      proxy: '',
+      proxyStrictSSL: false,
+      proxyAuthorization: null,
+    },
+    json: {
+      trace: {
+        server: 'off',
+      },
+      format: {
+        enable: true,
+      },
+      schemas: [],
+    },
+    html: {
+      format: {
+        enable: true,
+        wrapAttributes: 'auto'
+      },
+      suggest: {
+        html5: true,
+      },
+      validate: {
+        scripts: true,
+        styles: true,
+      },
+      autoClosingTags: true,
+      trace: {
+        server: 'off',
+      }
     }
   },
 };

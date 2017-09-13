@@ -66,7 +66,7 @@ function registerLanguageConf(extPath, extension) {
         const language = languages[i];
 
         languagesConfigure[grammar.scopeName] = join(extPath, grammar.path);
-        languagesMap.set(language.id, Object.assign({}, language, grammar));
+        languagesMap.set(language.id, Object.assign({}, language, grammar, { extPath }));
 
         addExtension(language.id, Object.assign({}, language, grammar));
         monaco.languages.register({
@@ -84,24 +84,27 @@ function start() {
   const extensions = scanExtensionsDir();
   const scripts = [];
 
-  extensions.forEach(ext => {
+  extensions.forEach((ext, index) => {
     const packageJson = readJson(join(ext, 'package.json'));
     if (packageJson.contributes && packageJson.contributes.languages) {
       registerLanguageConf(ext, packageJson);
     }
     if (packageJson.main)
-      scripts.push(join(ext, packageJson.main));
+      scripts.push({
+        main: join(ext, packageJson.main),
+        index,
+      });
   })
 
-  scripts.forEach((script, i) => {
-    const extMain = require(script);
+  scripts.forEach(({ main, index }) => {
+    const extMain = require(main);
     extMain.activate({
       subscriptions: global.subscriptions,
-      extensionPath: extensions[i],
+      extensionPath: extensions[index],
       workspaceState: new Memento(),
       globalState: new Memento(),
       storagePath: '',
-      asAbsolutePath: (relative) => join(extensions[i], relative),
+      asAbsolutePath: (relative) => join(extensions[index], relative),
     });
   })
 }

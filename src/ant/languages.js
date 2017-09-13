@@ -1,9 +1,12 @@
 import Promise from 'bluebird';
+import fs from 'fs';
+import { join } from 'path';
 import * as convert from './convert';
 import { score } from './languageSelector';
 import { DiagnosticCollection } from './diagnostic';
 import { Event } from './Event';
 import { getContentChangePromise } from '../editor/hook';
+import { Location } from './types';
 
 async function delay(ms) {
   return new Promise(resolve => {
@@ -49,15 +52,15 @@ export default {
     };
     return result;
   },
-  registerCompletionItemProvider: (id, client, trigger) => {
+  registerCompletionItemProvider: (id, provider, trigger) => {
     monaco.languages.registerCompletionItemProvider(id, {
       triggerCharacters: [trigger],
       provideCompletionItems: async (model, position, token) => {
-        // For bufferSupport to sync textDocuments.
+        // For bufferSupport to sync textDocuments (typescript & javascript).
         await delay();
         const pos = convert.toPosition(position);        
         const textDocument = uriToDocument.get(model.uri);
-        const args = await client.provideCompletionItems(textDocument, pos, token);
+        const args = await provider.provideCompletionItems(textDocument, pos, token);
         return {
           isIncomplete: Array.isArray(args) ? false : args.isIncomplete,
           items: (Array.isArray(args) ? args : args.items).map(item => {
@@ -67,8 +70,8 @@ export default {
         };
       },
       resolveCompletionItem: (item, token) => {
-        if (!client.resolveCompletionItem) return item;
-        return client.resolveCompletionItem(item, token);
+        if (!provider.resolveCompletionItem) return item;
+        return provider.resolveCompletionItem(item, token);
       }
     });
   },
@@ -116,6 +119,8 @@ export default {
       provideDefinition: async (model, position, token) => {
         const textDocument = uriToDocument.get(model.uri);
         const args = await provider.provideDefinition(textDocument, convert.toPosition(position), token);
+        if (args instanceof Location)
+          return { ...args, range: convert.fromRange(args.range) };
         return (args || []).map(item => ({ ...item, range: convert.fromRange(item.range) }));        
       }
     });
@@ -198,8 +203,19 @@ export default {
     });
   },
   setLanguageConfiguration: (id, configure) => {
+    let moreConfigure = {}
     if (unknownLanguages.indexOf(id) > -1) return;
-    monaco.languages.setLanguageConfiguration(id, configure);
+    try {
+      const { extPath, configuration: confPath } = languagesMap.get(id);      
+      const absConfPath = join(extPath, confPath);
+      if (fs.existsSync(absConfPath)) {
+        const stringBuffer = fs.readFileSync(join(extPath, confPath), 'utf-8');
+        moreConfigure = JSON.parse(stringBuffer);
+      }
+    } catch (e) {
+      moreConfigure = {};
+    }
+    monaco.languages.setLanguageConfiguration(id, { ...moreConfigure, ...configure });
   },
   registerWorkspaceSymbolProvider: () => {
   },

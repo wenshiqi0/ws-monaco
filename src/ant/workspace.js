@@ -72,6 +72,10 @@ export function registerTextDocumentContentProvider(scheme, provider) {
 
 }
 
+export function didChangeConfiguration(callback, self) {
+  Event.addGlobalListenerEvent('didChangeConfiguration', callback.bind(self));  
+}
+
 export function openProject(path) {
   if (rootPath !== path && workspaceFolders.indexOf(path) === -1) {
     const uri = new Uri('file', '', path);

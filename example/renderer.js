@@ -188,6 +188,7 @@ function handleDragFile(dom) {
       css: 'css',
       schema: 'schema',
       axml: 'html',
+      json: 'json',
     }
 
     readFile(file.path, 'utf8', async (err, text) => {

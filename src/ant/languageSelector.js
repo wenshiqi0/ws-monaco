@@ -1,3 +1,5 @@
+import { isMatch } from 'micromatch';
+
 export default function matches(selection, uri, language) {
   return score(selection, uri, language) > 0;
 }
@@ -55,13 +57,12 @@ export function score(selector, candidateUri, candidateLanguage) {
       }
     }
 
-    // FIX ME
     if (pattern) {
-      // if (pattern === candidateUri.fsPath || matchGlobPattern(pattern, candidateUri.fsPath)) {
-        // ret = 10;
-      // } else {
-        return 10;
-      // }
+      if (pattern === candidateUri.fsPath || isMatch(candidateUri.fsPath, pattern, { cache: true })) {
+        ret = 10;
+      } else {
+        return 0;
+      }
     }
 
     return ret;
