@@ -1,3 +1,5 @@
+import { platform } from 'os';
+
 /**
  * schema regex
  */
@@ -9,8 +11,8 @@ const authorityReg = /\:\/\/([a-zA-Z0-9\.\-]*)\//;
 /**
  * path regex
  */
-const pathReg = /[a-zA-Z]\/([a-zA-Z0-9\/\-\.]*)\??/;
-const noAuthorityReg = /\:\/\/\/([a-zA-Z0-9\/\-\.]*)\??/;
+const pathReg = platform() === 'win32' ? /([A-Z]\:[\/\\][a-zA-Z0-9\.\-\/\\]*)/ : /[a-zA-Z]\/([a-zA-Z0-9\/\-\.]*)\??/;
+const noAuthorityReg = platform() === 'win32' ? /([A-Z]\:[\/\\][a-zA-Z0-9\.\-\/\\]*)/ : /\:\/\/\/([a-zA-Z0-9\/\-\.]*)\??/;
 
 /**
  * A universal resource identifier representing either a file on disk
@@ -108,7 +110,7 @@ export default class Uri {
    * @return A string representation of this Uri.
    */
   toString() {
-    return `${this._scheme}://${this._authority}${this._path}`;
+    return `${this._scheme}://${platform() === 'win32' ? '/' : ''}${this._authority}${this._path}`;
   }
 
   /**
@@ -160,7 +162,7 @@ function getAuthority(uri) {
 function getPath(uri) {
   const matched = uri.match(uri.indexOf('///') > 0 ? noAuthorityReg : pathReg);
   if (matched.length > 1) {
-    if (matched[1][0] !== '/') return `/${matched[1]}`;
+    if (matched[1][0] !== '/' && platform() !== 'win32') return `/${matched[1]}`;
     return matched[1];
   }
   return '';
