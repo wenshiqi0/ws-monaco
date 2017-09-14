@@ -110,7 +110,7 @@ export default class Uri {
    * @return A string representation of this Uri.
    */
   toString() {
-    return `${this._scheme}://${platform() === 'win32' ? '/' : ''}${this._authority}${this._path}`;
+    return `${this._scheme}://${platform() === 'win32' ? '/' : ''}${this._authority}${this._path}`.replace(/\\/g, '/');
   }
 
   /**
@@ -163,7 +163,7 @@ function getPath(uri) {
   const matched = uri.match(uri.indexOf('///') > 0 ? noAuthorityReg : pathReg);
   if (matched.length > 1) {
     if (matched[1][0] !== '/' && platform() !== 'win32') return `/${matched[1]}`;
-    return matched[1];
+    return matched[1].replace(/\\/g, '/');
   }
   return '';
 }
