@@ -8,6 +8,8 @@ import antMonaco, { extensions } from '../ant';
 import Memento from '../ant/memento';
 import Telemetry from '../ant/Telemetry';
 import * as workspace from '../ant/workspace';
+import Uri from './uri';
+import '../ant/promise';
 
 const { addExtension } = extensions;
 
@@ -31,8 +33,8 @@ global.subscriptions = [];
 
 function scanExtensionsDir() {
   return [
+    '/Users/munong/Documents/github/vscode/extensions/typescript',    
     '/Users/munong/Documents/github/vscode/extensions/javascript',
-    '/Users/munong/Documents/github/vscode/extensions/typescript',
     '/Users/munong/Documents/github/vscode/extensions/css',
     '/Users/munong/Documents/github/vscode/extensions/less',
     '/Users/munong/Documents/github/vscode/extensions/scss',
@@ -79,7 +81,20 @@ function registerLanguageConf(extPath, extension) {
 }
 
 function start() {
-  hook();  
+  hook();
+
+  const globalEditor = window.monaco.editor;
+
+  // 定义编辑器的外观皮肤，目前实现有 dark 和 light
+  globalEditor.defineTheme('tiny', {
+    base: GrammarRegistry.getMode() === 'dark' ? 'vs-dark' : 'vs',
+    inherit: true,
+    rules: [], // 之后实际要复写这些rules的，所以干脆就传个空数组进去
+    colors: GrammarRegistry.getDefaultColors(),
+  });
+
+  // 注册编辑器的皮肤
+  globalEditor.setTheme('tiny');
 
   const extensions = scanExtensionsDir();
   const scripts = [];
@@ -118,4 +133,6 @@ module.exports = {
   openProject,
   editorOptions,
   GrammarRegistry,
+
+  Uri,
 }

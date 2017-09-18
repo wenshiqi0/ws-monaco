@@ -7,6 +7,7 @@ import { DiagnosticCollection } from './diagnostic';
 import { Event } from './Event';
 import { getContentChangePromise } from '../editor/hook';
 import { Location } from './types';
+import { wireCancellationToken } from './promise';
 
 async function delay(ms) {
   return new Promise(resolve => {
@@ -37,6 +38,9 @@ export default {
     return score(selector, document.uri, document.languageId);    
   },
   createDiagnosticCollection: (id) => {
+    if (id === 'javascript') {
+      return null;
+    }
     const result = new class extends DiagnosticCollection {
       constructor() {
         super(id);
@@ -52,15 +56,15 @@ export default {
     };
     return result;
   },
-  registerCompletionItemProvider: (id, provider, trigger) => {
+  registerCompletionItemProvider: (id, provider, ...trigger) => {
     monaco.languages.registerCompletionItemProvider(id, {
-      triggerCharacters: [trigger],
+      triggerCharacters: trigger,
       provideCompletionItems: async (model, position, token) => {
         // For bufferSupport to sync textDocuments (typescript & javascript).
         await delay();
         const pos = convert.toPosition(position);        
         const textDocument = uriToDocument.get(model.uri);
-        const args = await provider.provideCompletionItems(textDocument, pos, token);
+        const args = await wireCancellationToken(token, provider.provideCompletionItems(textDocument, pos, token));
         return {
           isIncomplete: Array.isArray(args) ? false : args.isIncomplete,
           items: (Array.isArray(args) ? args : args.items).map(item => {
@@ -91,7 +95,7 @@ export default {
     return monaco.languages.registerDocumentFormattingEditProvider(id, {
       provideDocumentFormattingEdits: async (model, options, token) => {
         const textDocument = uriToDocument.get(model.uri);
-        const args = await provider.provideDocumentFormattingEdits(textDocument, options, token);
+        const args = await wireCancellationToken(token, provider.provideDocumentFormattingEdits(textDocument, options, token));        
         return args.map(convert.TextEdit.from);
       }
     });
@@ -100,7 +104,7 @@ export default {
     return monaco.languages.registerDocumentRangeFormattingEditProvider(id, {
       provideDocumentRangeFormattingEdits: async (model, range, options, token) => {
         const textDocument = uriToDocument.get(model.uri);
-        const args = await provider.provideDocumentRangeFormattingEdits(textDocument, convert.toRange(range), options, token);
+        const args = await wireCancellationToken(token, provider.provideDocumentRangeFormattingEdits(textDocument, convert.toRange(range), options, token));          
         return args.map(convert.TextEdit.from);
       }
     });
@@ -109,7 +113,7 @@ export default {
     return monaco.languages.registerHoverProvider(id, {
       provideHover: async (model, position, token) => {
         const textDocument = uriToDocument.get(model.uri);
-        const args = await provider.provideHover(textDocument, convert.toPosition(position), token);
+        const args = await wireCancellationToken(token, provider.provideHover(textDocument, convert.toPosition(position), token));
         return args && { ...args, range: convert.fromRange(args.range) };
       }
     });
@@ -118,7 +122,7 @@ export default {
     return monaco.languages.registerDefinitionProvider(id, {
       provideDefinition: async (model, position, token) => {
         const textDocument = uriToDocument.get(model.uri);
-        const args = await provider.provideDefinition(textDocument, convert.toPosition(position), token);
+        const args = await wireCancellationToken(token, provider.provideDefinition(textDocument, convert.toPosition(position), token));
         if (args instanceof Location)
           return { ...args, range: convert.fromRange(args.range) };
         return (args || []).map(item => ({ ...item, range: convert.fromRange(item.range) }));        
@@ -140,25 +144,25 @@ export default {
     return monaco.languages.registerReferenceProvider(id, {
       provideReferences: async (model, position, context, token) => {
         const textDocument = uriToDocument.get(model.uri);
-        const args = await provider.provideReferences(textDocument, convert.toPosition(position), context, token);
+        const args = await wireCancellationToken(token, provider.provideReferences(textDocument, convert.toPosition(position), context, token));
         return (args || []).map(item => ({ ...item, range: convert.fromRange(item.range) }));        
       }
     });
   },
   registerDocumentSymbolProvider: (id, provider) => {
     return monaco.languages.registerReferenceProvider(id, {
-      registerDocumentSymbolProvider: async (model, token) => {
+      registerDocumentSymbolProvider: (model, token) => {
         const textDocument = uriToDocument.get(model.uri);
-        return await provider.provideDocumentSymbols(textDocument, token);
+        return wireCancellationToken(token, provider.provideDocumentSymbols(textDocument, token));
       }
     });
   },
-  registerSignatureHelpProvider: (id, provider) => {
+  registerSignatureHelpProvider: (id, provider, ...trigger) => {
     return monaco.languages.registerSignatureHelpProvider(id, {
-      signatureHelpTriggerCharacters: ['(', ','],      
-      provideSignatureHelp: async (model, position, token) => {
+      signatureHelpTriggerCharacters: trigger,      
+      provideSignatureHelp: (model, position, token) => {
         const textDocument = uriToDocument.get(model.uri);
-        return await provider.provideSignatureHelp(textDocument, convert.toPosition(position), token);
+        return wireCancellationToken(token, provider.provideSignatureHelp(textDocument, convert.toPosition(position), token));
       }
     });
   },
@@ -175,9 +179,8 @@ export default {
   },
   registerCodeActionsProvider: (selector, provider) => {
     return monaco.languages.registerCodeActionProvider(selector, {
-      provideCodeActions: async (model, range, context, token) => {
-        const args = await provider.provideCodeActions(model, convert.toRange(range), context, token);
-        return args;
+      provideCodeActions: (model, range, context, token) => {
+        return wireCancellationToken(token, provider.provideCodeActions(model, convert.toRange(range), context, token))
       }
     });
   },
@@ -188,7 +191,7 @@ export default {
     return monaco.languages.registerTypeDefinitionProvider(id, {
       provideTypeDefinition: async (model, position, token) => {
         const textDocument = uriToDocument.get(model.uri);
-        const args = await provider.provideTypeDefinition(textDocument, convert.toPosition(position), token);
+        const args = await wireCancellationToken(token, provider.provideTypeDefinition(textDocument, convert.toPosition(position), token));
         return (args || []).map(item => ({ ...item, range: convert.fromRange(item.range) }));        
       }
     });
@@ -197,7 +200,7 @@ export default {
     return monaco.languages.registerCodeLensProvider(id, {
       provideCodeLenses: async (model, token) => {
         const textDocument = uriToDocument.get(model.uri);
-        const args = await provider.provideCodeLenses(textDocument, token);
+        const args = await wireCancellationToken(token, provider.provideCodeLenses(textDocument, token));
         return (args || []).map(item => ({ ...item, range: convert.fromRange(item.range) }));        
       }
     });

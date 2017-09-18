@@ -6,6 +6,8 @@ import { addTextDocument } from '../ant/workspace';
 import { Event } from '../ant/Event';
 import * as convert from '../ant/convert';
 
+global.Promise = Promise;
+
 let registry;
 global.uriToDocument = new Map();
 
@@ -22,7 +24,11 @@ function registerEditorEvent(editor) {
    * Hook the creatModel and convert path to file uri.
    */
   window.monaco.editor.createModel = (value, language, path) => {
-    const uri = new Uri('file', '', path);
+    let uri;
+    if (typeof path === 'string')
+      uri = new Uri('file', '', path);
+    else
+      uri = path;
     if (!registry) {
       GrammarRegistry.setMode('dark');
       window.monaco.editor.defineTheme('tiny', {

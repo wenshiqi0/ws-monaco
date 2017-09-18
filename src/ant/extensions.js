@@ -6,7 +6,7 @@ export function addExtension (id, ext) {
   allExtensions = extensions.values();
 }
 
-export function getExtension (id) {
+   function getExtension (id) {
   return extensions.get(id);
 }
 

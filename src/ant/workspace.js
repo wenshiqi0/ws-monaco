@@ -8,9 +8,16 @@ import Uri from '../editor/uri';
 const emitter = new EventEmitter();
 
 export const textDocuments = [];
+export const uriMap = new Map();
+
+window.textDocument = textDocuments;
 
 export let rootPath = '';
 export const workspaceFolders = [];
+
+export function getMainWorkspace() {
+  return workspaceFolders[0];
+}
 
 export function onDidChangeConfiguration(callback, client, disposes) {
   Event.addGlobalListenerEvent('onDidChangeConfiguration', callback.bind(client));
@@ -22,7 +29,13 @@ export function onDidChangeConfiguration(callback, client, disposes) {
 }
 
 export function addTextDocument(textDocument) {
-  textDocuments.push(textDocument);  
+  textDocuments.push(textDocument);
+  uriMap.set(textDocument.uri.toString(), textDocument);
+}
+
+export function openTextDocument(uri) {
+  const textDocument = uriMap.get(uri.toString());
+  return Promise.resolve(textDocument);
 }
 
 export function onDidOpenTextDocument(callback, params, disposes) {
@@ -31,7 +44,7 @@ export function onDidOpenTextDocument(callback, params, disposes) {
     window.activeTextEditor = {
       document: textDocument,
     }
-    const callbackRet = callback.bind(params)(textDocument);
+    return callback.bind(params)(textDocument);
   };
 
   Event.addGlobalListenerEvent('onDidOpenTextDocument', realCallback);

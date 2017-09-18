@@ -12,9 +12,45 @@ function lookUp(tree, key) {
 const configure = {
   valueTree: {
     typescript: {
-      tsserver: {
-        trace: 'off'
-      }
+      disableAutomaticTypeAcquisition: false,
+      npm: null,
+      check: {
+        npmIsInstalled: false,
+      },
+      format: {
+        enable: true,
+        placeOpenBraceOnNewLineForFunctions: false,
+        placeOpenBraceOnNewLineForFunctions: false,
+        insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces: false,
+        insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces: false,
+        insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets: false,
+        insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis: false,
+        insertSpaceBeforeFunctionParenthesis: false,
+        insertSpaceAfterFunctionKeywordForAnonymousFunctions: true,
+        insertSpaceAfterKeywordsInControlFlowStatements: true,
+        insertSpaceBeforeAndAfterBinaryOperators: true,
+        insertSpaceAfterSemicolonInForStatements: true,
+        insertSpaceAfterConstructor: false,
+        insertSpaceAfterCommaDelimiter: true,
+      },
+    },
+    javascript: {
+      format: {
+        enable: true,
+        placeOpenBraceOnNewLineForFunctions: false,
+        placeOpenBraceOnNewLineForFunctions: false,
+        insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces: false,
+        insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces: false,
+        insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets: false,
+        insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis: false,
+        insertSpaceBeforeFunctionParenthesis: false,
+        insertSpaceAfterFunctionKeywordForAnonymousFunctions: true,
+        insertSpaceAfterKeywordsInControlFlowStatements: true,
+        insertSpaceBeforeAndAfterBinaryOperators: true,
+        insertSpaceAfterSemicolonInForStatements: true,
+        insertSpaceAfterConstructor: false,
+        insertSpaceAfterCommaDelimiter: true,
+      },
     },
     tsdk_version: '2.4.0',
     css: {
@@ -22,6 +58,10 @@ const configure = {
       trace: {
         server: 'off',
       }
+    },
+    tslint: {
+      enable: false,
+      jsEnable: false,
     },
     eslint: {
       enable: true,

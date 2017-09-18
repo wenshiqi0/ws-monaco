@@ -4,7 +4,7 @@ import Promise from 'bluebird';
 import * as theme from './theme';
 
 // Editor theme.
-let mode = 'light';
+let mode = 'dark';
 
 /**
  * Prepare the html style string from the token color map.
@@ -138,6 +138,15 @@ export default class GrammarRegistry {
    */
   static setMode(themeMode) {
     mode = themeMode;
+  }
+
+  /**
+   * get theme mode.
+   * 
+   * @return {"dark" | "light"} themeMode 
+   */
+  static getMode() {
+    return mode;
   }
 
   /**

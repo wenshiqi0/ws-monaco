@@ -111,9 +111,8 @@ export class DiagnosticCollection {
         }
   
         entries.push([uri, marker]);
-      }
+      }     
 
-      // Global Event.
       Event.dispatchGlobalEvent('setEntriesMarkers', entries);              
     }
   

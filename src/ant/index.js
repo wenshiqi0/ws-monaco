@@ -5,30 +5,14 @@ import window from './window';
 import languages from './languages';
 import { EventEmitter } from './Event';
 import { IndentAction } from './const.d';
-import { Range, Position, SignatureHelp, SignatureInformation, ParameterInformation, WorkspaceEdit, Location, Diagnostic, DiagnosticSeverity, Disposable, SnippetString, CompletionItem, CompletionList, CodeLens, SymbolKind, StatusBarAlignment, CompletionItemKind, TextEdit, Hover, Uri } from './types';
+import Promise from 'bluebird';
+import * as types from './types';
 
 export default {
   env: {
     APPINSIGHTS_INSTRUMENTATIONKEY: 'antmonacoown'
   },
-  Disposable,
-  SymbolKind,
-  CompletionItem,
-  CompletionList,
-  CodeLens,
-  Range,
-  Position,
-  TextEdit,
-  Hover,
-  SnippetString,
-  Diagnostic,
-  DiagnosticSeverity,
-  Location,
-  WorkspaceEdit,
-  SignatureHelp,
-  SignatureInformation,
-  ParameterInformation,
-  Uri,
+  ...types,
 
   // features
   extensions,
@@ -41,7 +25,5 @@ export default {
   EventEmitter,
 
   // const
-  StatusBarAlignment,
   IndentAction,
-  CompletionItemKind
 }

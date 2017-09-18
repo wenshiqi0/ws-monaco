@@ -1,4 +1,6 @@
 import { platform } from 'os';
+import { join } from 'path';
+import { getMainWorkspace } from '../ant/workspace';
 
 /**
  * schema regex
@@ -64,6 +66,19 @@ export default class Uri {
    */
   static file(path) {
     return new Uri('file', '', path);
+  }
+
+  /**
+   * Create an URI from a relative file system path. The [scheme](#Uri.scheme)
+   * will be `file`.
+   * 
+   * @param {string}  path A file system or UNC relative path.
+   * @return A new Uri instance. 
+   */
+  static relativeFile(path) {
+    const { uri } = getMainWorkspace() || {};
+    if (!uri) return null;
+    return new Uri('file', '', join(uri.fsPath, path));
   }
 
   /**
