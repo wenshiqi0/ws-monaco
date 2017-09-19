@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import hook from './hook';
 import editorOptions from './editorOptions';
 import GrammarRegistry from './GrammarRegistry';
@@ -9,9 +9,12 @@ import Memento from '../ant/memento';
 import Telemetry from '../ant/Telemetry';
 import * as workspace from '../ant/workspace';
 import Uri from './uri';
+import registerSnippets from '../ant/snippets';
 import '../ant/promise';
 
 const { addExtension } = extensions;
+
+let originalRequire;
 
 global.languagesConfigure = {};
 global.languagesMap = new Map();
@@ -19,7 +22,7 @@ global.subscriptions = [];
 
 (function hookOriginalRequire() {
   const Module = require('module');
-  const originalRequire = Module.prototype.require;
+  originalRequire = Module.prototype.require;
   Module.prototype.require = function() {
     if (arguments[0] === 'vscode') {
       return antMonaco;
@@ -31,18 +34,19 @@ global.subscriptions = [];
   };
 })()
 
-function scanExtensionsDir() {
+function buildInExtensionsDir() {
   return [
-    '/Users/munong/Documents/github/vscode/extensions/typescript',    
-    '/Users/munong/Documents/github/vscode/extensions/javascript',
-    '/Users/munong/Documents/github/vscode/extensions/css',
-    '/Users/munong/Documents/github/vscode/extensions/less',
-    '/Users/munong/Documents/github/vscode/extensions/scss',
-    '/Users/munong/Documents/github/vscode/extensions/json',
-    '/Users/munong/Documents/github/vscode/extensions/html',
-    '/Users/munong/Documents/github/ant-monaco/extensions/schema',
-    '/Users/munong/Documents/github/ant-monaco/extensions/nunjucks',
-    '/Users/munong/Documents/github/ant-monaco/extensions/eslint'
+    join(__dirname, './buildIn/typescript'),
+    join(__dirname, './buildIn/javascript'),
+    join(__dirname, './buildIn/css'),
+    join(__dirname, './buildIn/less'),
+    join(__dirname, './buildIn/scss'),
+    join(__dirname, './buildIn/json'),
+    join(__dirname, './buildIn/html'),
+    join(__dirname, './buildIn/axml'),
+    join(__dirname, './buildIn/schema'),
+    join(__dirname, './buildIn/nunjucks'),
+    join(__dirname, './buildIn/eslint'),
   ];
 }
 
@@ -61,7 +65,7 @@ function initEditorTheme() {
 
 function registerLanguageConf(extPath, extension) {
   Object.keys(extension).forEach(key => {
-    const { grammars, languages } = extension[key];
+    const { grammars, languages, snippets } = extension[key];
 
     if (grammars && languages) {
       grammars.forEach((grammar, i) => {
@@ -77,6 +81,8 @@ function registerLanguageConf(extPath, extension) {
         })
       })
     }
+
+    registerSnippets(extPath, snippets);
   })
 }
 
@@ -96,7 +102,7 @@ function start() {
   // 注册编辑器的皮肤
   globalEditor.setTheme('tiny');
 
-  const extensions = scanExtensionsDir();
+  const extensions = buildInExtensionsDir();
   const scripts = [];
 
   extensions.forEach((ext, index) => {
@@ -112,7 +118,10 @@ function start() {
   })
 
   scripts.forEach(({ main, index }) => {
-    const extMain = require(main);
+    const extMain = originalRequire(main);
+
+    console.log(extensions[index]);
+    
     extMain.activate({
       subscriptions: global.subscriptions,
       extensionPath: extensions[index],

@@ -1,4 +1,3 @@
-import { Disposable } from './class.d';
 import { Event, EventEmitter } from './Event';
 import Watcher from './watcher'; 
 import { getConfiguration as getConf } from './configure';

@@ -2,10 +2,10 @@ const { join } = require('path');
 
 module.exports = {
   entry: {
-    index: './src/editor/index.js',
+    editor: './src/editor/index.js',
   },
   output: {
-    path: join(__dirname, 'lib'),
+    path: join(__dirname, './lib'),
     filename: '[name].js',
     libraryTarget: "umd",
     library: "tools"
@@ -16,18 +16,16 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-      },
-      {
-        test: /\.spec.ts$/,
-        exclude: /node_modules/,
-        loader: 'raw-loader',
-      },
+      }
     ],
   },
+  devtool: "cheap-source-map",
   externals(context, request, callback) {
     let isExternals = false;
 
-    if (request === 'vscode-textmate' || request === 'electron' ) {
+    const vendor = ['vscode-textmate', 'vscode-extension-telemetry', 'eslint', 'vscode', 'micromatch'];
+
+    if (vendor.indexOf(request) > -1) {
       isExternals = request;
     }
     callback(null, isExternals);

@@ -39,7 +39,9 @@ export default {
   },
   createDiagnosticCollection: (id) => {
     if (id === 'javascript') {
-      return null;
+      return {
+        set: () => {}
+      };
     }
     const result = new class extends DiagnosticCollection {
       constructor() {
@@ -57,12 +59,13 @@ export default {
     return result;
   },
   registerCompletionItemProvider: (id, provider, ...trigger) => {
+    console.log(id, provider, trigger);
     monaco.languages.registerCompletionItemProvider(id, {
       triggerCharacters: trigger,
       provideCompletionItems: async (model, position, token) => {
         // For bufferSupport to sync textDocuments (typescript & javascript).
         await delay();
-        const pos = convert.toPosition(position);        
+        const pos = convert.toPosition(position);
         const textDocument = uriToDocument.get(model.uri);
         const args = await wireCancellationToken(token, provider.provideCompletionItems(textDocument, pos, token));
         return {
