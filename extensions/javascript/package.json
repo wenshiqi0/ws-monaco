@@ -128,8 +128,5 @@
         "url": "./schemas/jsconfig.schema.json"
       }
     ]
-  },
-  "devDependencies": {
-    "@types/node": "^7.0.4"
   }
 }
