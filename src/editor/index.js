@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { readFileSync, readdirSync, statSync } from 'fs';
 import { join, resolve } from 'path';
 import hook from './hook';
 import editorOptions from './editorOptions';
@@ -35,19 +35,14 @@ global.subscriptions = [];
 })()
 
 function buildInExtensionsDir() {
-  return [
-    join(__dirname, '../out-extensions/typescript'),
-    join(__dirname, '../out-extensions/eslint'),    
-    join(__dirname, '../out-extensions/javascript'),
-    join(__dirname, '../out-extensions/css'),
-    join(__dirname, '../out-extensions/less'),
-    join(__dirname, '../out-extensions/scss'),
-    join(__dirname, '../out-extensions/json'),
-    join(__dirname, '../out-extensions/html'),
-    join(__dirname, '../out-extensions/axml'),
-    // join(__dirname, '../out-extensions/schema'),
-    join(__dirname, '../out-extensions/nunjucks'),
-  ];
+  const ret = [];
+  const extensions = readdirSync(join(__dirname, '../extensions/'));
+  extensions.forEach(ext => {
+    const dict = join(__dirname, '../extensions/', ext);
+    if (statSync(dict).isDirectory())
+      ret.push(dict);
+  })
+  return ret;
 }
 
 function readJson(path) {
