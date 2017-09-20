@@ -16,7 +16,8 @@
     "js": "node scripts/javascript.js && npm run js-extra",
     "js-extra": "node scripts/js-extra.js",
     "api": "node scripts/completions.js $site",
-    "sync": "node scripts/lark-sdk.js"
+    "sync": "node scripts/lark-sdk.js",
+    "postinstall": "node scripts/postinstall.js"
   },
   "keywords": [
     "monaco",

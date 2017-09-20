@@ -4,6 +4,18 @@
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
+    "@types/mocha": {
+      "version": "2.2.43",
+      "resolved": "https://registry.npmjs.org/@types/mocha/-/mocha-2.2.43.tgz",
+      "integrity": "sha512-xNlAmH+lRJdUMXClMTI9Y0pRqIojdxfm7DHsIxoB2iTzu3fnPmSMEN8SsSx0cdwV36d02PWCWaDUoZPDSln+xw==",
+      "dev": true
+    },
+    "@types/node": {
+      "version": "6.0.88",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-6.0.88.tgz",
+      "integrity": "sha512-bYDPZTX0/s1aihdjLuAgogUAT5M+TpoWChEMea2p0yOcfn5bu3k6cJb9cp6nw268XeSNIGGr+4+/8V5K6BGzLQ==",
+      "dev": true
+    },
     "applicationinsights": {
       "version": "0.18.0",
       "resolved": "https://registry.npmjs.org/applicationinsights/-/applicationinsights-0.18.0.tgz",

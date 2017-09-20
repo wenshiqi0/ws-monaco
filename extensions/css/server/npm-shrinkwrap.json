@@ -4,6 +4,12 @@
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
+    "@types/node": {
+      "version": "6.0.88",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-6.0.88.tgz",
+      "integrity": "sha512-bYDPZTX0/s1aihdjLuAgogUAT5M+TpoWChEMea2p0yOcfn5bu3k6cJb9cp6nw268XeSNIGGr+4+/8V5K6BGzLQ==",
+      "dev": true
+    },
     "vscode-css-languageservice": {
       "version": "2.1.4",
       "resolved": "https://registry.npmjs.org/vscode-css-languageservice/-/vscode-css-languageservice-2.1.4.tgz",

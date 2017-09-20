@@ -7,7 +7,6 @@ tsconfig.json
 .vscode/
 tmp/
 example/
-extensions/
 out-extensions/
 gulpfile.js
 .babelrc

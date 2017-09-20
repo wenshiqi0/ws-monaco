@@ -49,9 +49,7 @@ class TypeScriptVersion {
             return undefined;
         }
         let p2 = p.slice(0, -2);
-        p2.pop();
         let modulePath = p2.join(path.sep);
-        console.log(modulePath);
         let fileName = path.join(modulePath, 'package.json');
         if (!fs.existsSync(fileName)) {
             return undefined;
@@ -114,7 +112,7 @@ class TypeScriptVersionProvider {
     }
     get bundledVersion() {
         try {
-            const bundledVersion = new TypeScriptVersion(path.dirname(require.resolve('/Users/munong/Documents/github/TypeScript/built/local/tsserver.js')), '');
+            const bundledVersion = new TypeScriptVersion(path.dirname(require.resolve('typescript/lib/tsserver.js')), '');
             if (bundledVersion.isValid) {
                 return bundledVersion;
             }

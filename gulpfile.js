@@ -74,7 +74,7 @@ const tasks = compilations.map(tsconfigFile => {
 gulp.task('compile-extensions', tasks.map(t => t.compile));
 
 gulp.task('upload-extensions', () => {
-  const filtered = filter(['**', '!**/*.ts', '!**/*.txt', '!**/*.map', '!**/*.md', '!**/src/**', '!**/test/**']);
+  const filtered = filter(['**', '!**/*.ts', '!**/*.txt', '!**/*.map', '!**/*.md', '!**/src/**', '!**/test/**', '!**/node_modules/**']);
   return gulp.src('extensions/**')
     .pipe(filtered)
     .pipe(gulp.dest('./out-extensions'))

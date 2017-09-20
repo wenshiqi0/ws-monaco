@@ -5,7 +5,7 @@ const container = document.getElementById('editor')
 const { start, openProject, editorOptions, GrammarRegistry } = require('../lib/editor');
 
 let editor;
-const language = 'css';
+const language = 'javascript';
 
 // 新的 vscode textmate 语法解析实现
 // const registry = getDefaultRegistry(join(__dirname, '../lib'));

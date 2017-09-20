@@ -4,6 +4,18 @@
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
+    "@types/node": {
+      "version": "7.0.43",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-7.0.43.tgz",
+      "integrity": "sha512-7scYwwfHNppXvH/9JzakbVxk0o0QUILVk1Lv64GRaxwPuGpnF1QBiwdvhDpLcymb8BpomQL3KYoWKq3wUdDMhQ==",
+      "dev": true
+    },
+    "@types/semver": {
+      "version": "5.4.0",
+      "resolved": "https://registry.npmjs.org/@types/semver/-/semver-5.4.0.tgz",
+      "integrity": "sha512-PBHCvO98hNec9A491vBbh0ZNDOVxccwKL1u2pm6fs9oDgm7SEnw0lEHqHfjsYryDxnE3zaf7LvERWEXjOp1hig==",
+      "dev": true
+    },
     "applicationinsights": {
       "version": "0.18.0",
       "resolved": "https://registry.npmjs.org/applicationinsights/-/applicationinsights-0.18.0.tgz",
@@ -15,9 +27,9 @@
       "integrity": "sha1-MAvG4OhjdPe6YQaLWx7NV/xlMto="
     },
     "vscode-extension-telemetry": {
-      "version": "0.0.8",
-      "resolved": "https://registry.npmjs.org/vscode-extension-telemetry/-/vscode-extension-telemetry-0.0.8.tgz",
-      "integrity": "sha1-ImG/+Ya2aQpvH3RqRaxb0fhdKeA=",
+      "version": "0.0.7",
+      "resolved": "https://registry.npmjs.org/vscode-extension-telemetry/-/vscode-extension-telemetry-0.0.7.tgz",
+      "integrity": "sha1-CS6VCuQaWHrUO8BCyHXkcoh9/fw=",
       "requires": {
         "applicationinsights": "0.18.0",
         "winreg": "1.2.3"

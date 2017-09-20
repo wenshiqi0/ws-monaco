@@ -211,6 +211,7 @@ export default {
   setLanguageConfiguration: (id, configure) => {
     let moreConfigure = {}
     if (unknownLanguages.indexOf(id) > -1) return;
+    if (id === 'jsx-tags') id = 'javascript';
     try {
       const { extPath, configuration: confPath } = languagesMap.get(id);      
       const absConfPath = join(extPath, confPath);
@@ -221,6 +222,7 @@ export default {
     } catch (e) {
       moreConfigure = {};
     }
+    console.log(id);
     monaco.languages.setLanguageConfiguration(id, { ...moreConfigure, ...configure });
   },
   registerWorkspaceSymbolProvider: () => {
