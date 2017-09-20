@@ -1,6 +1,6 @@
 {
   "name": "ant-editor",
-  "version": "0.0.12",
+  "version": "0.0.15",
   "description": "Ant monaco with vscode-textmate. This module can only run under node runtime",
   "main": "lib/editor.js",
   "scripts": {
@@ -24,9 +24,6 @@
     "vscode-textmate",
     "ant"
   ],
-  "engines": {
-    "vscode": "*"
-  },
   "author": "munong",
   "license": "MIT",
   "dependencies": {
@@ -67,7 +64,6 @@
     "shelljs": "^0.7.8",
     "typescript": "^2.3.4",
     "uglify-es": "^3.0.13",
-    "vscode": "^1.1.0",
     "webpack": "^3.6.0"
   }
 }
