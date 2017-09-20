@@ -154,7 +154,6 @@ export default class TextDocument extends MirrorModel {
       const lineText = this._lines[line];
       return new TextLine(line, lineText, new Range(line, 0, line, lineText.length - 1));
     } else {
-      console.log(line);
     }
   }
 

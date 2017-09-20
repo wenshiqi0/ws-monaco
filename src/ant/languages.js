@@ -222,7 +222,6 @@ export default {
     } catch (e) {
       moreConfigure = {};
     }
-    console.log(id);
     monaco.languages.setLanguageConfiguration(id, { ...moreConfigure, ...configure });
   },
   registerWorkspaceSymbolProvider: () => {

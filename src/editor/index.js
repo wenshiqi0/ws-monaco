@@ -36,15 +36,11 @@ global.subscriptions = [];
 
 function buildInExtensionsDir() {
   const ret = [];
-  const extensions = readdirSync(join(__dirname, '../extensions/'));
+  const extensions = readdirSync(join(__dirname, '../../extensions/'));
   extensions.forEach(ext => {
-    if (ext === 'typescript')
-      ret.push('/Users/munong/Documents/github/vscode/extensions/typescript')
-    else {
-      const dict = join(__dirname, '../extensions/', ext);
-      if (statSync(dict).isDirectory())
-        ret.push(dict);
-    }
+    const dict = join(__dirname, '../../extensions/', ext);
+    if (statSync(dict).isDirectory())
+      ret.push(dict);
   })
   return ret;
 }
@@ -69,9 +65,6 @@ function registerLanguageConf(extPath, extension) {
     if (grammars && languages) {
       grammars.forEach((grammar, i) => {
         const language = languages[i];
-
-        console.log(language);
-
         languagesConfigure[grammar.scopeName] = join(extPath, grammar.path);
         languagesMap.set(language.id, Object.assign({}, language, grammar, { extPath }));
 

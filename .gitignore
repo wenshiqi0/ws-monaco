@@ -3,3 +3,4 @@ lib/
 .vscode/
 tmp/
 out-extensions/
+package-lock.json
