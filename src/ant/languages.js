@@ -37,12 +37,13 @@ export default {
   match: (selector, document) => {
     return score(selector, document.uri, document.languageId);    
   },
-  createDiagnosticCollection: (id) => {
+  createDiagnosticCollection: (id) => {    
     if (id === 'javascript') {
       return {
         set: () => {}
       };
     }
+
     const result = new class extends DiagnosticCollection {
       constructor() {
         super(id);
@@ -59,7 +60,6 @@ export default {
     return result;
   },
   registerCompletionItemProvider: (id, provider, ...trigger) => {
-    console.log(id, provider, trigger);
     monaco.languages.registerCompletionItemProvider(id, {
       triggerCharacters: trigger,
       provideCompletionItems: async (model, position, token) => {

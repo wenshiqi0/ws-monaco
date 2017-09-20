@@ -13,49 +13,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 const vscode = require("vscode");
-class TsConfigProvider extends vscode.Disposable {
-    constructor() {
-        super(() => this.dispose());
-        this.tsconfigs = new Set();
-        this.activated = false;
-        this.disposables = [];
-    }
-    dispose() {
-        this.disposables.forEach(d => d.dispose());
-    }
+class TsConfigProvider {
     getConfigsForWorkspace() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!vscode.workspace.rootPath) {
+            if (!vscode.workspace.workspaceFolders) {
                 return [];
             }
-            yield this.ensureActivated();
-            return this.tsconfigs;
-        });
-    }
-    ensureActivated() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.activated) {
-                return this;
+            const configs = new Map();
+            for (const config of yield vscode.workspace.findFiles('**/tsconfig*.json', '**/node_modules/**')) {
+                const root = vscode.workspace.getWorkspaceFolder(config);
+                if (root) {
+                    configs.set(config.fsPath, {
+                        path: config.fsPath,
+                        workspaceFolder: root
+                    });
+                }
             }
-            this.activated = true;
-            for (const config of yield TsConfigProvider.loadWorkspaceTsconfigs()) {
-                this.tsconfigs.add(config.fsPath);
-            }
-            const configFileWatcher = vscode.workspace.createFileSystemWatcher('**/tsconfig*.json');
-            this.disposables.push(configFileWatcher);
-            configFileWatcher.onDidCreate(this.handleProjectCreate, this, this.disposables);
-            configFileWatcher.onDidDelete(this.handleProjectDelete, this, this.disposables);
-            return this;
+            return configs.values();
         });
-    }
-    static loadWorkspaceTsconfigs() {
-        return vscode.workspace.findFiles('**/tsconfig*.json', '**/node_modules/**');
-    }
-    handleProjectCreate(e) {
-        this.tsconfigs.add(e.fsPath);
-    }
-    handleProjectDelete(e) {
-        this.tsconfigs.delete(e.fsPath);
     }
 }
 exports.default = TsConfigProvider;

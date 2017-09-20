@@ -3,6 +3,14 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
 function getSymbolKind(item) {
@@ -22,42 +30,43 @@ class TypeScriptWorkspaceSymbolProvider {
         this.modeId = modeId;
     }
     provideWorkspaceSymbols(search, token) {
-        // typescript wants to have a resource even when asking
-        // general questions so we check the active editor. If this
-        // doesn't match we take the first TS document.
-        let uri = undefined;
-        const editor = vscode_1.window.activeTextEditor;
-        if (editor) {
-            const document = editor.document;
-            if (document && document.languageId === this.modeId) {
-                uri = document.uri;
-            }
-        }
-        if (!uri) {
-            const documents = vscode_1.workspace.textDocuments;
-            for (const document of documents) {
-                if (document.languageId === this.modeId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // typescript wants to have a resource even when asking
+            // general questions so we check the active editor. If this
+            // doesn't match we take the first TS document.
+            let uri = undefined;
+            const editor = vscode_1.window.activeTextEditor;
+            if (editor) {
+                const document = editor.document;
+                if (document && document.languageId === this.modeId) {
                     uri = document.uri;
-                    break;
                 }
             }
-        }
-        if (!uri) {
-            return Promise.resolve([]);
-        }
-        const filepath = this.client.normalizePath(uri);
-        if (!filepath) {
-            return Promise.resolve([]);
-        }
-        const args = {
-            file: filepath,
-            searchValue: search
-        };
-        return this.client.execute('navto', args, token).then((response) => {
+            if (!uri) {
+                const documents = vscode_1.workspace.textDocuments;
+                for (const document of documents) {
+                    if (document.languageId === this.modeId) {
+                        uri = document.uri;
+                        break;
+                    }
+                }
+            }
+            if (!uri) {
+                return [];
+            }
+            const filepath = this.client.normalizePath(uri);
+            if (!filepath) {
+                return [];
+            }
+            const args = {
+                file: filepath,
+                searchValue: search
+            };
+            const response = yield this.client.execute('navto', args, token);
             const result = [];
-            let data = response.body;
+            const data = response.body;
             if (data) {
-                for (let item of data) {
+                for (const item of data) {
                     if (!item.containerName && item.kind === 'alias') {
                         continue;
                     }
@@ -70,8 +79,6 @@ class TypeScriptWorkspaceSymbolProvider {
                 }
             }
             return result;
-        }, () => {
-            return [];
         });
     }
 }

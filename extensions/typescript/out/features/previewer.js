@@ -35,7 +35,8 @@ function tagsPlainPreview(tags) {
         .join('\n\ngit');
 }
 function plainDocumentation(documentation, tags) {
-    const parts = [plain(documentation), tagsPlainPreview(tags)];
+    const processedDocumentation = plain(documentation).replace(/\n([ \t]*\n)?/gm, (x) => x.length >= 2 ? '\n\n' : ' ');
+    const parts = [processedDocumentation, tagsPlainPreview(tags)];
     return parts.filter(x => x).join('\n\n');
 }
 exports.plainDocumentation = plainDocumentation;

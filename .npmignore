@@ -8,3 +8,7 @@ tsconfig.json
 tmp/
 example/
 extensions/
+out-extensions/
+gulpfile.js
+.babelrc
+INFO.CN.md

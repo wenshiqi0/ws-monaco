@@ -56,7 +56,7 @@ var PackageJSONContribution = (function () {
                                         var name = keys[0];
                                         var insertText = new vscode_1.SnippetString().appendText(JSON.stringify(name));
                                         if (addValue) {
-                                            insertText.appendText(': "').appendPlaceholder('').appendText('"');
+                                            insertText.appendText(': "').appendTabstop().appendText('"');
                                             if (!isLast) {
                                                 insertText.appendText(',');
                                             }
@@ -91,7 +91,7 @@ var PackageJSONContribution = (function () {
                 this.mostDependedOn.forEach(function (name) {
                     var insertText = new vscode_1.SnippetString().appendText(JSON.stringify(name));
                     if (addValue) {
-                        insertText.appendText(': "').appendPlaceholder('').appendText('"');
+                        insertText.appendText(': "').appendTabstop().appendText('"');
                         if (!isLast) {
                             insertText.appendText(',');
                         }

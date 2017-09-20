@@ -38,7 +38,7 @@ class DirectiveCommentCompletionProvider {
             return directives.map(directive => {
                 const item = new vscode_1.CompletionItem(directive.value, vscode_1.CompletionItemKind.Snippet);
                 item.detail = directive.description;
-                item.range = new vscode_1.Range(position.line, Math.max(0, position.character - match[1].length), position.line, position.character);
+                item.range = new vscode_1.Range(position.line, Math.max(0, position.character - (match[1] ? match[1].length : 0)), position.line, position.character);
                 return item;
             });
         }
@@ -48,5 +48,5 @@ class DirectiveCommentCompletionProvider {
         return item;
     }
 }
-exports.DirectiveCommentCompletionProvider = DirectiveCommentCompletionProvider;
+exports.default = DirectiveCommentCompletionProvider;
 //# sourceMappingURL=directiveCommentCompletionProvider.js.map

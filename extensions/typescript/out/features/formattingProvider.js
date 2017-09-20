@@ -19,6 +19,7 @@ var Configuration;
     Configuration.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces = 'insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces';
     Configuration.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces = 'insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces';
     Configuration.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces = 'insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces';
+    Configuration.insertSpaceAfterTypeAssertion = 'insertSpaceAfterTypeAssertion';
     Configuration.placeOpenBraceOnNewLineForFunctions = 'placeOpenBraceOnNewLineForFunctions';
     Configuration.placeOpenBraceOnNewLineForControlBlocks = 'placeOpenBraceOnNewLineForControlBlocks';
     function equals(a, b) {
@@ -47,6 +48,7 @@ var Configuration;
         result.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces = true;
         result.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces = false;
         result.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces = false;
+        result.insertSpaceAfterTypeAssertion = false;
         result.placeOpenBraceOnNewLineForFunctions = false;
         result.placeOpenBraceOnNewLineForControlBlocks = false;
         return result;
@@ -191,10 +193,36 @@ class TypeScriptFormattingProvider {
             insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces: this.config.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces,
             insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces: this.config.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces,
             insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces: this.config.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces,
+            insertSpaceAfterTypeAssertion: this.config.insertSpaceAfterTypeAssertion,
             placeOpenBraceOnNewLineForFunctions: this.config.placeOpenBraceOnNewLineForFunctions,
             placeOpenBraceOnNewLineForControlBlocks: this.config.placeOpenBraceOnNewLineForControlBlocks,
         };
     }
 }
-exports.default = TypeScriptFormattingProvider;
+exports.TypeScriptFormattingProvider = TypeScriptFormattingProvider;
+class FormattingProviderManager {
+    constructor(modeId, formattingProvider, selector) {
+        this.modeId = modeId;
+        this.formattingProvider = formattingProvider;
+        this.selector = selector;
+    }
+    dispose() {
+        if (this.formattingProviderRegistration) {
+            this.formattingProviderRegistration.dispose();
+            this.formattingProviderRegistration = undefined;
+        }
+    }
+    updateConfiguration() {
+        const config = vscode_1.workspace.getConfiguration(this.modeId);
+        this.formattingProvider.updateConfiguration(config);
+        if (!this.formattingProvider.isEnabled() && this.formattingProviderRegistration) {
+            this.formattingProviderRegistration.dispose();
+            this.formattingProviderRegistration = undefined;
+        }
+        else if (this.formattingProvider.isEnabled() && !this.formattingProviderRegistration) {
+            this.formattingProviderRegistration = vscode_1.languages.registerDocumentRangeFormattingEditProvider(this.selector, this.formattingProvider);
+        }
+    }
+}
+exports.FormattingProviderManager = FormattingProviderManager;
 //# sourceMappingURL=formattingProvider.js.map

@@ -23,7 +23,7 @@ module.exports = {
   externals(context, request, callback) {
     let isExternals = false;
 
-    const vendor = ['vscode-textmate', 'vscode-extension-telemetry', 'eslint', 'vscode', 'micromatch'];
+    const vendor = ['vscode-textmate', 'vscode-extension-telemetry', 'vscode-languageserver', 'eslint', 'vscode', 'micromatch'];
 
     if (vendor.indexOf(request) > -1) {
       isExternals = request;

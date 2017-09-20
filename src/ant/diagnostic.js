@@ -22,7 +22,7 @@ export class DiagnosticCollection {
     }
   
 
-    set(first, diagnostics) {  
+    set(first, diagnostics) {
       if (!first) {
         // this set-call is a clear-call
         this.clear();

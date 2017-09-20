@@ -23,27 +23,20 @@
     "vscode-textmate",
     "ant"
   ],
+  "engines": {
+    "vscode": "*"
+  },
   "author": "munong",
   "license": "MIT",
   "dependencies": {
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.3.1",
     "eslint-plugin-import": "^2.7.0",
-    "jsonc-parser": "^1.0.0",
     "micromatch": "^3.1.0",
-    "request-light": "^0.2.1",
-    "vscode-css-languageservice": "^2.1.6",
-    "vscode-html-languageservice": "^2.0.8",
-    "vscode-json-languageservice": "^2.0.18",
-    "vscode-languageclient": "3.4.0-next.17",
-    "vscode-languageserver": "^3.3.0",
-    "vscode-languageserver-protocol": "^3.3.0",
-    "vscode-languageserver-types": "^3.4.0",
-    "vscode-textmate": "^3.1.4",
-    "vscode-nls": "^2.0.2",
-    "vscode-uri": "^1.0.1"
+    "vscode-textmate": "^3.1.4"
   },
   "devDependencies": {
+    "@types/es6-promise": "0.0.33",
     "@types/node": "^7.0.22",
     "ant-csslint": "^1.0.5",
     "ant-monaco-editor": "0.0.1",
@@ -61,16 +54,19 @@
     "electron-rebuild-ln": "^0.0.7",
     "eslint-config-appx": "^0.1.4",
     "fs-extra": "^3.0.1",
+    "glob": "^7.1.2",
     "gulp": "^3.9.1",
     "gulp-filter": "^5.0.1",
+    "gulp-tsb": "^2.0.4",
     "jshint": "^2.9.4",
     "mark-twain": "^1.1.6",
     "raw-loader": "^0.5.1",
     "request": "^2.81.0",
+    "rimraf": "^2.6.2",
+    "shelljs": "^0.7.8",
     "typescript": "^2.3.4",
     "uglify-es": "^3.0.13",
     "vscode": "^1.1.0",
-    "vscode-jsonrpc": "^3.3.1",
     "webpack": "^3.6.0"
   }
 }

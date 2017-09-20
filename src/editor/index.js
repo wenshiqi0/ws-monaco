@@ -36,17 +36,17 @@ global.subscriptions = [];
 
 function buildInExtensionsDir() {
   return [
-    join(__dirname, './buildIn/typescript'),
-    join(__dirname, './buildIn/javascript'),
-    join(__dirname, './buildIn/css'),
-    join(__dirname, './buildIn/less'),
-    join(__dirname, './buildIn/scss'),
-    join(__dirname, './buildIn/json'),
-    join(__dirname, './buildIn/html'),
-    join(__dirname, './buildIn/axml'),
-    join(__dirname, './buildIn/schema'),
-    join(__dirname, './buildIn/nunjucks'),
-    join(__dirname, './buildIn/eslint'),
+    join(__dirname, '../out-extensions/typescript'),
+    join(__dirname, '../out-extensions/eslint'),    
+    join(__dirname, '../out-extensions/javascript'),
+    join(__dirname, '../out-extensions/css'),
+    join(__dirname, '../out-extensions/less'),
+    join(__dirname, '../out-extensions/scss'),
+    join(__dirname, '../out-extensions/json'),
+    join(__dirname, '../out-extensions/html'),
+    join(__dirname, '../out-extensions/axml'),
+    // join(__dirname, '../out-extensions/schema'),
+    join(__dirname, '../out-extensions/nunjucks'),
   ];
 }
 

@@ -194,8 +194,6 @@ export function activate(context: ExtensionContext) {
 
 export function realActivate(context: ExtensionContext) {
 
-	console.log('real activate');
-
 	let statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 0);
 	let eslintStatus: Status = Status.ok;
 	let serverRunning: boolean = false;
@@ -308,8 +306,9 @@ export function realActivate(context: ExtensionContext) {
 				if (eslintDiagnostics.length === 0) {
 					return [];
 				}
-				let newContext: CodeActionContext = Object.assign({}, context);
-				newContext.diagnostics = eslintDiagnostics;
+				const newContext: CodeActionContext = Object.assign({}, context, {
+					diagnostics: eslintDiagnostics
+				});
 				return next(document, range, newContext, token);
 			}
 		}

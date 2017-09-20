@@ -12,7 +12,7 @@ function makeRandomHexString(length) {
     let chars = ['0', '1', '2', '3', '4', '5', '6', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
     let result = '';
     for (let i = 0; i < length; i++) {
-        let idx = Math.floor(chars.length * Math.random());
+        const idx = Math.floor(chars.length * Math.random());
         result += chars[idx];
     }
     return result;
@@ -35,19 +35,18 @@ function getTempFile(name) {
 }
 exports.getTempFile = getTempFile;
 function generatePatchedEnv(env, stdInPipeName, stdOutPipeName, stdErrPipeName) {
+    const newEnv = Object.assign({}, env);
     // Set the two unique pipe names and the electron flag as process env
-    var newEnv = {};
-    for (var key in env) {
-        newEnv[key] = env[key];
-    }
     newEnv['STDIN_PIPE_NAME'] = stdInPipeName;
     newEnv['STDOUT_PIPE_NAME'] = stdOutPipeName;
     newEnv['STDERR_PIPE_NAME'] = stdErrPipeName;
     newEnv['ELECTRON_RUN_AS_NODE'] = '1';
+    // Ensure we always have a PATH set
+    newEnv['PATH'] = newEnv['PATH'] || process.env.PATH;
     return newEnv;
 }
 function fork(modulePath, args, options, logger, callback) {
-    var callbackCalled = false;
+    let callbackCalled = false;
     const resolve = (result) => {
         if (callbackCalled) {
             return;
@@ -67,7 +66,7 @@ function fork(modulePath, args, options, logger, callback) {
     const stdOutPipeName = generatePipeName();
     const stdErrPipeName = generatePipeName();
     const newEnv = generatePatchedEnv(process.env, stdInPipeName, stdOutPipeName, stdErrPipeName);
-    var childProcess;
+    let childProcess;
     // Begin listening to stderr pipe
     let stdErrServer = net.createServer((stdErrStream) => {
         // From now on the childProcess.stderr is available for reading
@@ -86,7 +85,7 @@ function fork(modulePath, args, options, logger, callback) {
         });
     });
     stdOutServer.listen(stdOutPipeName);
-    var serverClosed = false;
+    let serverClosed = false;
     const closeServer = () => {
         if (serverClosed) {
             return;
@@ -97,7 +96,7 @@ function fork(modulePath, args, options, logger, callback) {
     };
     // Create the process
     logger.info('Forking TSServer', `PATH: ${newEnv['PATH']}`);
-    const bootstrapperPath = path.join(__dirname, 'electronForkStart');
+    const bootstrapperPath = require.resolve('./electronForkStart');
     childProcess = cp.fork(bootstrapperPath, [modulePath].concat(args), {
         silent: true,
         cwd: options.cwd,

@@ -4,18 +4,6 @@
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
-    "@types/mocha": {
-      "version": "2.2.42",
-      "resolved": "https://registry.npmjs.org/@types/mocha/-/mocha-2.2.42.tgz",
-      "integrity": "sha512-b6gVDoxEbAQGwbV7gSzeFw/hy3/eEAokztktdzl4bHvGgb9K5zW4mVQDlVYch2w31m8t/J7L2iqhQvz3r5edCQ==",
-      "dev": true
-    },
-    "@types/node": {
-      "version": "6.0.88",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-6.0.88.tgz",
-      "integrity": "sha512-bYDPZTX0/s1aihdjLuAgogUAT5M+TpoWChEMea2p0yOcfn5bu3k6cJb9cp6nw268XeSNIGGr+4+/8V5K6BGzLQ==",
-      "dev": true
-    },
     "vscode-css-languageservice": {
       "version": "2.1.4",
       "resolved": "https://registry.npmjs.org/vscode-css-languageservice/-/vscode-css-languageservice-2.1.4.tgz",

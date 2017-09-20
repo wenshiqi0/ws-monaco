@@ -106,7 +106,18 @@ class TypeScriptRefactorProvider {
                 return false;
             }
             const edit = this.toWorkspaceEdit(response.body.edits);
-            return vscode_1.workspace.applyEdit(edit);
+            if (!(yield vscode_1.workspace.applyEdit(edit))) {
+                return false;
+            }
+            const renameLocation = response.body.renameLocation;
+            if (renameLocation) {
+                if (vscode_1.window.activeTextEditor && vscode_1.window.activeTextEditor.document.uri.fsPath === file) {
+                    const pos = new vscode_1.Position(renameLocation.line - 1, renameLocation.offset - 1);
+                    vscode_1.window.activeTextEditor.selection = new vscode_1.Selection(pos, pos);
+                    yield vscode_1.commands.executeCommand('editor.action.rename');
+                }
+            }
+            return true;
         });
     }
 }

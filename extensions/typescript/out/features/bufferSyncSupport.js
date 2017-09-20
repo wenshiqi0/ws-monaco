@@ -4,12 +4,9 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 Object.defineProperty(exports, "__esModule", { value: true });
-const cp = require("child_process");
 const fs = require("fs");
 const vscode_1 = require("vscode");
 const async_1 = require("../utils/async");
-const nls = require("vscode-nls");
-let localize = nls.loadMessageBundle();
 function mode2ScriptKind(mode) {
     switch (mode) {
         case 'typescript': return 'TS';
@@ -37,8 +34,18 @@ class SyncedBuffer {
                 args.scriptKindName = scriptKind;
             }
         }
-        if (vscode_1.workspace.rootPath && this.client.apiVersion.has230Features()) {
-            args.projectRootPath = vscode_1.workspace.rootPath;
+        if (this.client.apiVersion.has230Features()) {
+            const root = this.client.getWorkspaceRootForResource(this.document.uri);
+            if (root) {
+                args.projectRootPath = root;
+            }
+        }
+        if (this.client.apiVersion.has240Features()) {
+            const tsPluginsForDocument = this.client.plugins
+                .filter(x => x.languages.indexOf(this.document.languageId) >= 0);
+            if (tsPluginsForDocument.length) {
+                args.plugins = tsPluginsForDocument.map(plugin => plugin.name);
+            }
         }
         this.client.execute('open', args, false);
     }
@@ -72,9 +79,8 @@ class SyncedBuffer {
         this.diagnosticRequestor.requestDiagnostic(filePath);
     }
 }
-const checkTscVersionSettingKey = 'check.tscVersion';
 class BufferSyncSupport {
-    constructor(client, modeIds, diagnostics, validate = true) {
+    constructor(client, modeIds, diagnostics, validate) {
         this.disposables = [];
         this.pendingDiagnostics = new Map();
         this.client = client;
@@ -83,17 +89,12 @@ class BufferSyncSupport {
         this._validate = validate;
         this.diagnosticDelayer = new async_1.Delayer(300);
         this.syncedBuffers = new Map();
-        const tsConfig = vscode_1.workspace.getConfiguration('typescript');
-        this.checkGlobalTSCVersion = client.checkGlobalTSCVersion && this.modeIds.has('typescript') && tsConfig.get(checkTscVersionSettingKey, true);
     }
     listen() {
         vscode_1.workspace.onDidOpenTextDocument(this.onDidOpenTextDocument, this, this.disposables);
         vscode_1.workspace.onDidCloseTextDocument(this.onDidCloseTextDocument, this, this.disposables);
         vscode_1.workspace.onDidChangeTextDocument(this.onDidChangeTextDocument, this, this.disposables);
         vscode_1.workspace.textDocuments.forEach(this.onDidOpenTextDocument, this);
-    }
-    get validate() {
-        return this._validate;
     }
     set validate(value) {
         this._validate = value;
@@ -127,12 +128,9 @@ class BufferSyncSupport {
         this.syncedBuffers.set(filepath, syncedBuffer);
         syncedBuffer.open();
         this.requestDiagnostic(filepath);
-        if (document.languageId === 'typescript' || document.languageId === 'typescriptreact') {
-            this.checkTSCVersion();
-        }
     }
     onDidCloseTextDocument(document) {
-        let filepath = this.client.normalizePath(document.uri);
+        const filepath = this.client.normalizePath(document.uri);
         if (!filepath) {
             return;
         }
@@ -148,7 +146,7 @@ class BufferSyncSupport {
         }
     }
     onDidChangeTextDocument(e) {
-        let filepath = this.client.normalizePath(e.document.uri);
+        const filepath = this.client.normalizePath(e.document.uri);
         if (!filepath) {
             return;
         }
@@ -212,51 +210,6 @@ class BufferSyncSupport {
             this.client.execute('geterr', args, false);
         }
         this.pendingDiagnostics.clear();
-    }
-    checkTSCVersion() {
-        if (!this.checkGlobalTSCVersion) {
-            return;
-        }
-        this.checkGlobalTSCVersion = false;
-        let tscVersion = undefined;
-        try {
-            let out = cp.execSync('tsc --version', { encoding: 'utf8' });
-            if (out) {
-                let matches = out.trim().match(/Version\s*(.*)$/);
-                if (matches && matches.length === 2) {
-                    tscVersion = matches[1];
-                }
-            }
-        }
-        catch (error) {
-        }
-        if (tscVersion && tscVersion !== this.client.apiVersion.versionString) {
-            vscode_1.window.showInformationMessage(localize('versionMismatch', 'Using TypeScript ({1}) for editor features. TypeScript ({0}) is installed globally on your machine. Errors in VS Code  may differ from TSC errors', tscVersion, this.client.apiVersion.versionString), {
-                title: localize('moreInformation', 'More Information'),
-                id: 1
-            }, {
-                title: localize('doNotCheckAgain', 'Don\'t Check Again'),
-                id: 2
-            }, {
-                title: localize('close', 'Close'),
-                id: 3,
-                isCloseAffordance: true
-            }).then((selected) => {
-                if (!selected || selected.id === 3) {
-                    return;
-                }
-                switch (selected.id) {
-                    case 1:
-                        vscode_1.commands.executeCommand('vscode.open', vscode_1.Uri.parse('http://go.microsoft.com/fwlink/?LinkId=826239'));
-                        break;
-                    case 2:
-                        const tsConfig = vscode_1.workspace.getConfiguration('typescript');
-                        tsConfig.update(checkTscVersionSettingKey, false, true);
-                        vscode_1.window.showInformationMessage(localize('updateTscCheck', 'Updated user setting \'typescript.check.tscVersion\' to false'));
-                        break;
-                }
-            });
-        }
     }
 }
 exports.default = BufferSyncSupport;
