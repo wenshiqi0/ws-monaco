@@ -161,10 +161,11 @@ export default class GrammarRegistry {
       else if (!language) resolve({ languageId: 'plaintext' });
       else {
         // Id index map to language. vscode-textmate does not use index 0.
-        const id = registry.pushLanguageEmbedded(languageId);
+        registry.pushLanguageEmbedded(languageId);
+        const { index } = languagesMap.get(languageId);
         registry.getRegistry().loadGrammarWithEmbeddedLanguages(
           language.scopeName,
-          id,
+          index + 1,
           null,
           (err, grammar) => {
             if (err) {

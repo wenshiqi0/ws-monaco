@@ -688,7 +688,9 @@ function validate(document, library, publishDiagnostics = true) {
                 }
             }
         }
-        let cli = new library.CLIEngine(newOptions);
+        let cli = new library.CLIEngine(Object.assign(newOptions, {
+            configFile: require.resolve('ant-config'),
+        }));
         // Clean previously computed code actions.
         delete codeActions[uri];
         let report = cli.executeOnText(content, file);

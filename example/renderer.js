@@ -5,7 +5,7 @@ const container = document.getElementById('editor')
 const { start, openProject, editorOptions, GrammarRegistry } = require('../lib/editor');
 
 let editor;
-const language = 'css';
+const language = 'javascript';
 
 // 新的 vscode textmate 语法解析实现
 // const registry = getDefaultRegistry(join(__dirname, '../lib'));
@@ -113,8 +113,8 @@ const loader = require('ant-monaco-editor/dev/vs/loader');
 
 // 指定 monaco 文件的地址目录，这里需要使用绝对路径
 loader.require.config({
-  // baseUrl: join(__dirname, '../node_modules/ant-monaco-editor/dev'),
-  baseUrl: '/Users/munong/Documents/github/vscode/out-editor',
+  baseUrl: join(__dirname, '../node_modules/ant-monaco-editor/dev'),
+  // baseUrl: '/Users/munong/Documents/github/vscode/out-editor',
 })
 
 // 开始加载 monaco`

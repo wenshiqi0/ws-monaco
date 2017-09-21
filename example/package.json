@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^4.6.1"
+    "eslint": "^4.6.1",
+    "@types/node": "*"
   }
 }

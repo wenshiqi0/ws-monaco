@@ -19,6 +19,7 @@ let originalRequire;
 global.languagesConfigure = {};
 global.languagesMap = new Map();
 global.subscriptions = [];
+global.idePath = "";
 
 (function hookOriginalRequire() {
   const Module = require('module');
@@ -36,9 +37,9 @@ global.subscriptions = [];
 
 function buildInExtensionsDir() {
   const ret = [];
-  const extensions = readdirSync(join(__dirname, '../../extensions/'));
+  const extensions = readdirSync(join(__dirname, '../extensions/'));
   extensions.forEach(ext => {
-    const dict = join(__dirname, '../../extensions/', ext);
+    const dict = join(__dirname, '../extensions/', ext);
     if (statSync(dict).isDirectory())
       ret.push(dict);
   })
@@ -59,20 +60,21 @@ function initEditorTheme() {
 }
 
 function registerLanguageConf(extPath, extension) {
-  Object.keys(extension).forEach(key => {
+  Object.keys(extension).forEach((key) => {
     const { grammars, languages, snippets } = extension[key];
 
     if (grammars && languages) {
       grammars.forEach((grammar, i) => {
         const language = languages[i];
         languagesConfigure[grammar.scopeName] = join(extPath, grammar.path);
-        languagesMap.set(language.id, Object.assign({}, language, grammar, { extPath }));
+        languagesMap.set(language.id, Object.assign({}, language, grammar, { extPath, index: countLanguage }));
 
         addExtension(language.id, Object.assign({}, language, grammar));
         monaco.languages.register({
           id: language.id,
           extensions: Object.assign({}, language, grammar),
         })
+        countLanguage++;
       })
     }
 
@@ -80,7 +82,11 @@ function registerLanguageConf(extPath, extension) {
   })
 }
 
-function start() {
+let countLanguage = 1;
+
+function start(idePath) {
+  global.idePath = idePath;
+
   hook();
 
   const globalEditor = window.monaco.editor;

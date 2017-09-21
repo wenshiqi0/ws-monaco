@@ -213,12 +213,12 @@ dest2.forEach((component) => {
     }
 
     for (let j = 0; j < realContent.length; ++j) {
-      if (realContent[j][0] === 'h2' && realContent[j][1].match(componentNameReg)) {
+      if (realContent[j][0] === 'h2' && realContent[j][1] && realContent[j][1].match(componentNameReg)) {
         newComponent = new Component(meta.close, realContent[j][1], meta.require);
         j += 1;
         newComponent.setDesc(realContent[j][1]);
       }
-      if (realContent[j][0] === 'h3' && realContent[j][1].match(componentAPIReg)) {
+      if (realContent[j][0] === 'h3' && realContent[j][1] && realContent[j][1].match(componentAPIReg)) {
         const retArray = componentAPIWithModeReg.exec(realContent[j][1]);
         if (retArray) {
           newComponent = new Component(meta.close, meta.title.replace(' ', '-').toLowerCase(), meta.require);
@@ -227,23 +227,32 @@ dest2.forEach((component) => {
         }
         j += 1;
 
-        realContent[j][2].forEach((item, k) => {
+        if (!Array.isArray(realContent[j][2])) {
+          realContent[j][2] = null;
+        }
+        (realContent[j][2] || []).forEach((item, k) => {
           if (k === 0) return;
           if (!newComponent) {
             newComponent = new Component(meta.close, meta.title.replace(' ', '-').toLowerCase(), meta.require);
             newComponent.setDesc(realContent[1][1]);
           }
-          newComponent.setAttributions({
-            label: item[1][1],
-            type: item[2][1],
-            default: (item[3] && item[3][1]) || '',
-            insertText: { value: `${item[1][1]}="$1"` },
-            documentation: (item[5] && item[5][1]) || (item[4] && item[4][1]) || null,
-          });
+          try {
+            newComponent.setAttributions({
+              label: item[1][1],
+              type: item[2][1],
+              default: (item[3] && item[3][1]) || '',
+              insertText: { value: `${item[1][1]}="$1"` },
+              documentation: (item[5] && item[5][1]) || (item[4] && item[4][1]) || null,
+            });
+          } catch (e) {
+            newComponent = null
+          }
         });
-        components.push(newComponent.fit());
-        componentsMap[newComponent.tag] = newComponent;
-        newComponent = null;
+        if (newComponent) {
+          components.push(newComponent.fit());
+          componentsMap[newComponent.tag] = newComponent;
+          newComponent = null;
+        }
       }
     }
   });
@@ -355,23 +364,15 @@ declare var abridge: Abridge;
 declare var my: Abridge;
 `;
 
-// 清理文件夹
-fsExtra.removeSync('./plugins/api');
-
-// 创建文件
-fs.mkdirSync('./plugins/api');
-fs.mkdirSync('./plugins/api/javascript/');
-fs.mkdirSync('./plugins/api/html/');
-
 // 写入到文件
-fsExtra.outputJson('./plugins/api/javascript/abridge.json', apisObejct, { spaces: 2 });
-fs.writeFileSync('./plugins/api/javascript/lib.abridge.spec.ts', defineString);
-fsExtra.outputJson('./plugins/api/html/axml.json', components, { spaces: 2 });
+// fsExtra.outputJson('./plugins/api/javascript/abridge.json', apisObejct, { spaces: 2 });
+fs.writeFileSync('./extensions/javascript/out/typings/lib.abridge.d.ts', defineString);
+fsExtra.outputJson('./extensions/axml/out/completions/axml.json', components, { spaces: 2 });
 
 
 // 组件处理流程
 
-fs.mkdirSync('./plugins/api/axml/');
+// fs.mkdirSync('./plugins/api/axml/');
 
-fsExtra.outputJson('./plugins/api/axml/components.json', components, { spaces: 2 });
-fsExtra.outputJson('./plugins/api/axml/componentsMap.json', componentsMap, { spaces: 2 });
+// fsExtra.outputJson('./plugins/api/axml/components.json', components, { spaces: 2 });
+// fsExtra.outputJson('./plugins/api/axml/componentsMap.json', componentsMap, { spaces: 2 });
