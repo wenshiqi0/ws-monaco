@@ -117,12 +117,12 @@
   },
   "audio": {
     "prefix": "audio",
-    "body": "<audio src=\"$1\" ${2:controls} ${3:loop}></audio>$2",
+    "body": "<audio src=\"$1\" ${2:controls} ${3:loop}></audio>$4",
     "description": "音频"
   },
   "image": {
     "prefix": "image",
-    "body": "<image src=\"$1\" mode=\"$2\" />$2",
+    "body": "<image src=\"$1\" mode=\"$2\" />$3",
     "description": "图片"
   },
   "video": {

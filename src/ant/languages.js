@@ -8,6 +8,7 @@ import { Event } from './Event';
 import { getContentChangePromise } from '../editor/hook';
 import { Location } from './types';
 import { wireCancellationToken } from './promise';
+import abridge from '../completions/abridge';
 
 async function delay(ms) {
   return new Promise(resolve => {
@@ -77,6 +78,12 @@ export default {
         };
       },
       resolveCompletionItem: (item, token) => {
+        // FIX ME
+        if (id.indexOf('javascript' > -1)) {
+          const extra = abridge[item.label];
+          if (extra)
+            return { ...item, ...extra };
+        }
         if (!provider.resolveCompletionItem) return item;
         return provider.resolveCompletionItem(item, token);
       }

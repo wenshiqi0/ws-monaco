@@ -1,6 +1,6 @@
 {
   "name": "ant-editor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Ant monaco with vscode-textmate. This module can only run under node runtime",
   "main": "lib/editor",
   "scripts": {
@@ -29,6 +29,7 @@
   "dependencies": {
     "ant-config": "^0.0.1",
     "eslint": "^3.19.0",
+    "typescript": "^2.5.2",
     "micromatch": "^3.1.0",
     "vscode-textmate": "^3.1.4"
   },
@@ -36,6 +37,7 @@
     "@types/es6-promise": "0.0.33",
     "@types/node": "^7.0.22",
     "ant-monaco-editor": "0.0.1",
+    "antbridge": "0.0.1",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
@@ -59,7 +61,6 @@
     "request": "^2.81.0",
     "rimraf": "^2.6.2",
     "shelljs": "^0.7.8",
-    "typescript": "^2.3.4",
     "uglify-es": "^3.0.13",
     "webpack": "^3.6.0"
   }
