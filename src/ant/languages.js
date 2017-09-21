@@ -79,7 +79,7 @@ export default {
       },
       resolveCompletionItem: (item, token) => {
         // FIX ME
-        if (id.indexOf('javascript' > -1)) {
+        if (Array.isArray(id) && id.indexOf('javascript' > -1)) {
           const extra = abridge[item.label];
           if (extra)
             return { ...item, ...extra };
