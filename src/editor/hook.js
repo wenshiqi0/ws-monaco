@@ -1,4 +1,5 @@
 import Promise from 'bluebird';
+import os from 'os';
 import TextDocument from './TextDocument';
 import Uri from './Uri';
 import GrammarRegistry from './GrammarRegistry';
@@ -66,7 +67,7 @@ function registerEditorEvent(editor) {
     const filename = splited[splited.length - 1];
     const value = model.getValue();
     const language = model.getModeId();
-    const eol = '\n';
+    const eol = os.platform() === 'win32' ? '\r\n' : '\n';
 
     const textDocument = new TextDocument(uri, value.split(eol), eol, language, 0, filename);
 

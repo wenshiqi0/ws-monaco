@@ -1,4 +1,5 @@
 import Promise from 'bluebird';
+import os from 'os';
 import { writeFileSync } from 'fs';
 import TextLine from './textLine';
 import MirrorModel from './MirrorModel';
@@ -48,7 +49,7 @@ export default class TextDocument extends MirrorModel {
 		 * The [end of line](#EndOfLine) sequence that is predominately
 		 * used in this document.
 		 */
-    this._eol = eol || '\n';
+    this._eol = eol || os.platform() === 'win32' ? '\r\n' : '\n';
 
     /**
      * Mutiple lines content.
