@@ -1,6 +1,6 @@
 {
   "name": "ant-editor",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Ant monaco with vscode-textmate. This module can only run under node runtime",
   "main": "lib/editor",
   "scripts": {
@@ -27,7 +27,7 @@
   "author": "munong",
   "license": "MIT",
   "dependencies": {
-    "ant-config": "^0.0.2",
+    "ant-config": "^0.0.4",
     "eslint": "^4.6.0",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-config-appx": "0.1.x",
