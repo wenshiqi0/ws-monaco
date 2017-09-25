@@ -11,14 +11,14 @@
   },
   "canvas": {
     "prefix": "canvas",
-    "body": "<canvas id=\"{{$1:canvasId}}\">$3</canvas>$4",
+    "body": "<canvas id=\"{{${1:canvasId}}}\">$3</canvas>$4",
     "description": "画布"
   },
   "swiper": {
     "prefix": "swiper",
     "body": [
       "<swiper indicator-dots=\"{{${1:indicatorDots}}}\" autoplay=\"{{${2:autoplay}}}\" interval=\"{{${3:interval}}}\" duration=\"{{${4:duration}}}\">",
-      "\t<block ax:for=\"{{${5:imgUrls}}}\">",
+      "\t<block a:for=\"{{${5:imgUrls}}}\">",
       "\t\t<swiper-item>",
       "\t\t\t<image src=\"{{${6:item}}}\" class=\"slide-image\" />",
       "\t\t</swiper-item>",
@@ -55,7 +55,7 @@
     "prefix": "checkboxGroup",
     "body": [
       "<checkbox-group>",
-      "\t<label ax:for=\"{{${1:item}}}\">",
+      "\t<label a:for=\"{{${1:item}}}\">",
       "\t\t<checkbox value=\"${1:item}.${3:name}\" />{{${1:item}.${4:value}}}",
       "\t</label>",
       "</checkbox-group>$5"
@@ -66,7 +66,7 @@
     "prefix": "radioGroup",
     "body": [
       "<radio-group>",
-      "\t<label class=\"$1\" ax:for=\"{{${2:item}}}\">",
+      "\t<label class=\"$1\" a:for=\"{{${2:item}}}\">",
       "\t\t<radio value=\"${2:item}.${3:name}\" />{{${2:item}.${4:value}}}",
       "\t</label>",
       "</radio-group>$5"
@@ -135,19 +135,19 @@
     "body": "<map longitude=\"$1\" latitude=\"$2\"></map>$3",
     "description": "地图"
   },
-  "ax:for": {
-    "prefix": "axfor",
-    "body": "ax:for=\"{{item in ${1:items}}}\"",
+  "a:for": {
+    "prefix": "afor",
+    "body": "a:for=\"{{item in ${1:items}}}\"",
     "description": "列表渲染"
   },
-  "ax:if": {
-    "prefix": "axif",
-    "body": "ax:if=\"{{condition}}\"",
+  "a:if": {
+    "prefix": "aif",
+    "body": "a:if=\"{{condition}}\"",
     "description": "条件渲染if"
   },
-  "ax:elif": {
-    "prefix": "axelif",
-    "body": "ax:elif=\"{{condition}}\"",
+  "a:elif": {
+    "prefix": "aelif",
+    "body": "a:elif=\"{{condition}}\"",
     "description": "条件渲染else if"
   },
   "onTap": {
