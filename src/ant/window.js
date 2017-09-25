@@ -1,13 +1,22 @@
 import { Event } from './Event';
 
+class StatusBarItem {
+  constructor (level) {
+    this.level = level;
+    this.text = '';
+    this.color = '';
+    this.tooltip = '';
+    this.command = '';
+  }
+  hide() {}
+  show() {
+    console.log(`[${this.color}] ${this.tooltip}`);
+  }
+}
+
 class Window {
-  createStatusBarItem() {
-    return {
-      text: '',
-      tooltip: '',
-      command: '',
-      hide: () => {},
-    }
+  createStatusBarItem(level) {
+    return new StatusBarItem(level);
   }
 
   createOutputChannel() {

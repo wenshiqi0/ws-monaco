@@ -151,6 +151,7 @@ export default {
     */
   },
   registerReferenceProvider: (id, provider) => {
+    if (!provider.provideReferences) return;
     return monaco.languages.registerReferenceProvider(id, {
       provideReferences: async (model, position, context, token) => {
         const textDocument = uriToDocument.get(model.uri);
@@ -160,10 +161,12 @@ export default {
     });
   },
   registerDocumentSymbolProvider: (id, provider) => {
-    return monaco.languages.registerReferenceProvider(id, {
-      registerDocumentSymbolProvider: (model, token) => {
+    if (!provider.provideDocumentSymbols) return;
+    return monaco.languages.registerDocumentSymbolProvider(id, {
+      provideDocumentSymbols: async (model, token) => {
         const textDocument = uriToDocument.get(model.uri);
-        return wireCancellationToken(token, provider.provideDocumentSymbols(textDocument, token));
+        const args = await wireCancellationToken(token, provider.provideDocumentSymbols(textDocument, token));
+        return (args || []).map(item => ({ ...item, location: { ...item.location, range: convert.fromRange(item.location.range) } }));        
       }
     });
   },

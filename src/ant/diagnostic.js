@@ -8,19 +8,19 @@ export class DiagnosticCollection {
       this._data = new Map();
       this._isDisposed = false;
     }
-  
+
     dispose() {
       if (!this._isDisposed) {
         this._data = undefined;
         this._isDisposed = true;
       }
     }
-  
+
     get name() {
       this._checkDisposed();
       return this._name;
     }
-  
+
 
     set(first, diagnostics) {
       if (!first) {
@@ -73,7 +73,7 @@ export class DiagnosticCollection {
           }
         }
       }
-  
+
       // compute change and send to main side
       const entries = [];
       for (let uri of toSync) {
@@ -111,7 +111,7 @@ export class DiagnosticCollection {
         }
   
         entries.push([uri, marker]);
-      }     
+      }
 
       Event.dispatchGlobalEvent('setEntriesMarkers', entries);              
     }

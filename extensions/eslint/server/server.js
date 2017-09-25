@@ -310,23 +310,7 @@ documents.onDidOpen((event) => {
         return;
     }
     if (!document2Library[event.document.uri]) {
-        let uri = vscode_uri_1.default.parse(event.document.uri);
-        let promise;
-        if (uri.scheme === 'file') {
-            let file = uri.fsPath;
-            let directory = path.dirname(file);
-            if (nodePath) {
-                promise = vscode_languageserver_1.Files.resolve('eslint', nodePath, nodePath, trace).then(undefined, () => {
-                    return vscode_languageserver_1.Files.resolve('eslint', globalNodePath, directory, trace);
-                });
-            }
-            else {
-                promise = vscode_languageserver_1.Files.resolve('eslint', globalNodePath, directory, trace);
-            }
-        }
-        else {
-            promise = vscode_languageserver_1.Files.resolve('eslint', globalNodePath, workspaceRoot, trace);
-        }
+        let promise = Promise.resolve(require.resolve('eslint/lib/api.js'));
         document2Library[event.document.uri] = promise.then((path) => {
             let library = path2Library[path];
             if (!library) {
@@ -401,9 +385,11 @@ documents.onDidClose((event) => {
     delete codeActions[event.document.uri];
     connection.sendDiagnostics({ uri: event.document.uri, diagnostics: [] });
 });
-function trace(message, verbose) {
+/*
+function trace(message: string, verbose?: string): void {
     connection.tracer.log(message, verbose);
 }
+*/
 connection.onInitialize((params) => {
     let initOptions = params.initializationOptions;
     workspaceRoot = params.rootPath;
@@ -688,8 +674,14 @@ function validate(document, library, publishDiagnostics = true) {
                 }
             }
         }
+        let localEslintConfig;
+        try {
+            localEslintConfig = path.resolve(workspaceRoot, '.eslintrc');
+        } catch (e) {
+            localEslintConfig = null;
+        }
         let cli = new library.CLIEngine(Object.assign(newOptions, {
-            configFile: require.resolve('ant-config'),
+            configFile: localEslintConfig || require('ant-config').tiny,
         }));
         // Clean previously computed code actions.
         delete codeActions[uri];
