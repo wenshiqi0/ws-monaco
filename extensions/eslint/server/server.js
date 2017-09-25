@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_languageserver_1 = require("vscode-languageserver");
 const vscode_uri_1 = require("vscode-uri");
 const path = require("path");
+const fs = require('fs');
 var Is;
 (function (Is) {
     const toString = Object.prototype.toString;
@@ -680,6 +681,8 @@ function validate(document, library, publishDiagnostics = true) {
         } catch (e) {
             localEslintConfig = null;
         }
+        if (localEslintConfig && !fs.existsSync(localEslintConfig))
+            localEslintConfig = null;
         let cli = new library.CLIEngine(Object.assign(newOptions, {
             configFile: localEslintConfig || require('ant-config').tiny,
         }));
