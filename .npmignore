@@ -5,3 +5,10 @@ plugins/
 webpack.config.js
 tsconfig.json
 .vscode/
+tmp/
+example/
+out-extensions/
+gulpfile.js
+.babelrc
+INFO.CN.md
+package-lock.json

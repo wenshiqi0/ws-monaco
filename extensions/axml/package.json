@@ -1,0 +1,42 @@
+{
+    "name": "vscode-axml",
+    "version": "0.0.1",
+    "description": "axml plugin for vscode",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "engines": {
+        "vscode": "^1.5.0"
+    },
+    "keywords": [
+        "ant",
+        "alipay",
+        "支付宝",
+        "antapp"
+    ],
+    "main": "out/main.js",
+    "contributes": {
+        "languages": [
+            {
+                "id": "axml",
+                "aliases": [
+                    "axml",
+                    "AXML"
+                ],
+                "extensions": [
+                    ".axml"
+                ],
+                "configuration": "./language.configure.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "axml",
+                "scopeName": "text.html.axml",
+                "path": "./syntaxes/axml.tmLanguage"
+            }
+        ]
+    },
+    "author": "munong",
+    "license": "MIT"
+}

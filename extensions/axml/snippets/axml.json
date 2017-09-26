@@ -1,0 +1,168 @@
+{
+  "view": {
+    "prefix": "view",
+    "body": "<view>$2</view>$3",
+    "description": "视图容器"
+  },
+  "scroll-view": {
+    "prefix": "scroll-view",
+    "body": "<scroll-view>$3</scroll-view>$4",
+    "description": "可滚动视图区域"
+  },
+  "canvas": {
+    "prefix": "canvas",
+    "body": "<canvas id=\"{{${1:canvasId}}}\">$3</canvas>$4",
+    "description": "画布"
+  },
+  "swiper": {
+    "prefix": "swiper",
+    "body": [
+      "<swiper indicator-dots=\"{{${1:indicatorDots}}}\" autoplay=\"{{${2:autoplay}}}\" interval=\"{{${3:interval}}}\" duration=\"{{${4:duration}}}\">",
+      "\t<block a:for=\"{{${5:imgUrls}}}\">",
+      "\t\t<swiper-item>",
+      "\t\t\t<image src=\"{{${6:item}}}\" class=\"slide-image\" />",
+      "\t\t</swiper-item>",
+      "\t</block>",
+      "</swiper>$7"
+    ],
+    "description": "滑块视图容器"
+  },
+  "icon": {
+    "prefix": "icon",
+    "body": "<icon type=\"$1\" size=\"$2\" color=\"$3\" />$4",
+    "description": "图标"
+  },
+  "text": {
+    "prefix": "text",
+    "body": "<text>$1</text>$2",
+    "description": "文本"
+  },
+  "textarea": {
+    "prefix": "textarea",
+    "body": "<textarea placeholder=\"${1:placeholder}\" />"
+  },
+  "progress": {
+    "prefix": "progress",
+    "body": "<progress percent=\"$1\" color=\"$2\" stroke-width=\"${3:6}\" ${4:active} ${5:show-info} />$6",
+    "description": "进度条"
+  },
+  "button": {
+    "prefix": "button",
+    "body": "<button type=\"${1:default}\" size=\"${2:defaultSize}\" loading=\"${3:loading}\" plain=\"${4:plain}}\" disabled=\"${5:disabled}\" onTap=\"${6:defaultTap}\" hover-class=\"${6:other-button-hover}\"> Button </button>",
+    "description": "按钮"
+  },
+  "checkbox-group": {
+    "prefix": "checkboxGroup",
+    "body": [
+      "<checkbox-group>",
+      "\t<label a:for=\"{{${1:item}}}\">",
+      "\t\t<checkbox value=\"${1:item}.${3:name}\" />{{${1:item}.${4:value}}}",
+      "\t</label>",
+      "</checkbox-group>$5"
+    ],
+    "description": "多项选择器"
+  },
+  "radio-group": {
+    "prefix": "radioGroup",
+    "body": [
+      "<radio-group>",
+      "\t<label class=\"$1\" a:for=\"{{${2:item}}}\">",
+      "\t\t<radio value=\"${2:item}.${3:name}\" />{{${2:item}.${4:value}}}",
+      "\t</label>",
+      "</radio-group>$5"
+    ],
+    "description": "多项选择器"
+  },
+  "form": {
+    "prefix": "form",
+    "body": "<form onSubmit=\"$1\" onReset=\"$2\">$3</form>$4",
+    "description": "表单"
+  },
+  "input": {
+    "prefix": "input",
+    "body": "<input type=\"$1\" placeholder=\"$2\" ${3:auto-focus} ${4:password} />$5",
+    "description": "自动聚焦的input"
+  },
+  "picker-view": {
+    "prefix": "picker-view",
+    "body": "<picker-view>$1</picker-view>",
+    "description": "嵌入页面的滚动选择器。"
+  },
+  "picker-date": {
+    "prefix": "pickerDate",
+    "body": [
+      "<picker>$3</picker>$4"
+    ],
+    "description": "日期选择器"
+  },
+  "slider": {
+    "prefix": "slider",
+    "body": "<slider min=\"$1\" max=\"$2\" step=\"$3\" />$4",
+    "description": "滑动选择器"
+  },
+  "switch": {
+    "prefix": "switch",
+    "body": "<switch checked=\"${1:false}\" />$2",
+    "description": "开关选择器"
+  },
+  "loading": {
+    "prefix": "loading",
+    "body": "<loading>$1</loading>$2",
+    "description": "加载提示"
+  },
+  "navigator": {
+    "prefix": "navigator",
+    "body": "<navigator url=\"$1\" ${2:redirect} hover-class=\"${3:className}\">$4</navigator>$5",
+    "description": "导航"
+  },
+  "audio": {
+    "prefix": "audio",
+    "body": "<audio src=\"$1\" ${2:controls} ${3:loop}></audio>$4",
+    "description": "音频"
+  },
+  "image": {
+    "prefix": "image",
+    "body": "<image src=\"$1\" mode=\"$2\" />$3",
+    "description": "图片"
+  },
+  "video": {
+    "prefix": "video",
+    "body": "<video src=\"$1\"></video>$2",
+    "description": "视频"
+  },
+  "map": {
+    "prefix": "map",
+    "body": "<map longitude=\"$1\" latitude=\"$2\"></map>$3",
+    "description": "地图"
+  },
+  "a:for": {
+    "prefix": "afor",
+    "body": "a:for=\"{{item in ${1:items}}}\"",
+    "description": "列表渲染"
+  },
+  "a:if": {
+    "prefix": "aif",
+    "body": "a:if=\"{{condition}}\"",
+    "description": "条件渲染if"
+  },
+  "a:elif": {
+    "prefix": "aelif",
+    "body": "a:elif=\"{{condition}}\"",
+    "description": "条件渲染else if"
+  },
+  "onTap": {
+    "prefix": "onTap",
+    "body": "onTap=\"${1:tapname}\"",
+    "description": "绑定事件"
+  },
+  "class": {
+    "prefix": "class",
+    "body": "class=\"${1:classname}\"",
+    "description": "class"
+  },
+  "hover": {
+    "prefix": "hover-class",
+    "body": "hover-class=\"${1:hoverclass}\"",
+    "description": "hover"
+  }
+}
