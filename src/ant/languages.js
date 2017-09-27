@@ -9,6 +9,7 @@ import { getContentChangePromise } from '../editor/hook';
 import { Location } from './types';
 import { wireCancellationToken } from './promise';
 import abridge from '../completions/abridge';
+import { configure } from './configure';
 
 async function delay(ms) {
   return new Promise(resolve => {
@@ -39,7 +40,7 @@ export default {
     return score(selector, document.uri, document.languageId);    
   },
   createDiagnosticCollection: (id) => {    
-    if (id === 'javascript') {
+    if (id !== configure.lintEnable) {
       return {
         set: () => {}
       };

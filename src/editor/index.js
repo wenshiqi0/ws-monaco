@@ -8,6 +8,7 @@ import antMonaco, { extensions } from '../ant';
 import Memento from '../ant/memento';
 import Telemetry from '../ant/Telemetry';
 import * as workspace from '../ant/workspace';
+import { updateConfiguration } from '../ant/configure';
 import Uri from './uri';
 import registerSnippets from '../ant/snippets';
 import '../ant/promise';
@@ -139,6 +140,7 @@ module.exports = {
   openProject,
   editorOptions,
   GrammarRegistry,
+  updateConfiguration,
 
   Uri,
 }

@@ -9,7 +9,7 @@ function lookUp(tree, key) {
   }
 }
 
-const configure = {
+export const configure = {
   valueTree: {
     typescript: {
       disableAutomaticTypeAcquisition: false,
@@ -108,7 +108,12 @@ const configure = {
       }
     }
   },
+  lintEnable: 'eslint', 
 };
+
+export function updateConfiguration(key, value) {
+  configure[key] = value;
+}
 
 export function getConfiguration(section) {
   const config = section
