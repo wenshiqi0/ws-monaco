@@ -1,6 +1,6 @@
 {
   "name": "ant-editor",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Ant monaco with vscode-textmate. This module can only run under node runtime",
   "main": "lib/editor",
   "scripts": {

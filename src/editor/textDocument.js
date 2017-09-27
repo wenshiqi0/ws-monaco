@@ -49,8 +49,8 @@ export default class TextDocument extends MirrorModel {
 		 * The [end of line](#EndOfLine) sequence that is predominately
 		 * used in this document.
 		 */
-    this._eol = eol || os.platform() === 'win32' ? '\r\n' : '\n';
-
+		this._eol = eol || (os.platform() === 'win32' ? '\r\n' : '\n');
+		
     /**
      * Mutiple lines content.
      */
