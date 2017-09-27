@@ -108,7 +108,7 @@ export const configure = {
       }
     }
   },
-  lintEnable: 'eslint', 
+  lintDisable: 'eslint',
 };
 
 export function updateConfiguration(key, value) {

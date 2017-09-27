@@ -40,7 +40,7 @@ export default {
     return score(selector, document.uri, document.languageId);    
   },
   createDiagnosticCollection: (id) => {    
-    if (id !== configure.lintEnable) {
+    if (id === configure.lintDisable) {
       return {
         set: () => {}
       };
