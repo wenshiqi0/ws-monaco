@@ -19,3 +19,7 @@ export function executeCommand() {
 export function getCommands() {
   return commandsMap.keys();
 }
+
+export function registerTextEditorCommand() {
+  // noop
+}

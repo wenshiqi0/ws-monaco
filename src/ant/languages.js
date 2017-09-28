@@ -20,6 +20,8 @@ async function delay(ms) {
 }
 
 function handleLanguageId(ids) {
+  if (typeof ids === 'string')
+    return ids;
   return ids.map((id) => {
     switch (typeof id) {
       case 'object':
@@ -62,7 +64,7 @@ export default {
     return result;
   },
   registerCompletionItemProvider: (id, provider, ...trigger) => {
-    monaco.languages.registerCompletionItemProvider(id, {
+    monaco.languages.registerCompletionItemProvider(handleLanguageId(id), {
       triggerCharacters: trigger,
       provideCompletionItems: async (model, position, token) => {
         // For bufferSupport to sync textDocuments (typescript & javascript).
@@ -103,7 +105,7 @@ export default {
     */
   },
   registerDocumentFormattingEditProvider: (id, provider) => {
-    return monaco.languages.registerDocumentFormattingEditProvider(id, {
+    return monaco.languages.registerDocumentFormattingEditProvider(handleLanguageId(id), {
       provideDocumentFormattingEdits: async (model, options, token) => {
         const textDocument = uriToDocument.get(model.uri);
         const args = await wireCancellationToken(token, provider.provideDocumentFormattingEdits(textDocument, options, token));        
@@ -112,7 +114,8 @@ export default {
     });
   },
   registerDocumentRangeFormattingEditProvider: (id, provider) => {
-    return monaco.languages.registerDocumentRangeFormattingEditProvider(id, {
+    console.log(id);
+    return monaco.languages.registerDocumentRangeFormattingEditProvider(handleLanguageId(id), {
       provideDocumentRangeFormattingEdits: async (model, range, options, token) => {
         const textDocument = uriToDocument.get(model.uri);
         const args = await wireCancellationToken(token, provider.provideDocumentRangeFormattingEdits(textDocument, convert.toRange(range), options, token));          
@@ -121,7 +124,7 @@ export default {
     });
   },
   registerHoverProvider: (id, provider) => {
-    return monaco.languages.registerHoverProvider(id, {
+    return monaco.languages.registerHoverProvider(handleLanguageId(id), {
       provideHover: async (model, position, token) => {
         const textDocument = uriToDocument.get(model.uri);
         const args = await wireCancellationToken(token, provider.provideHover(textDocument, convert.toPosition(position), token));
@@ -130,7 +133,7 @@ export default {
     });
   },
   registerDefinitionProvider: (id, provider) => {
-    return monaco.languages.registerDefinitionProvider(id, {
+    return monaco.languages.registerDefinitionProvider(handleLanguageId(id), {
       provideDefinition: async (model, position, token) => {
         const textDocument = uriToDocument.get(model.uri);
         const args = await wireCancellationToken(token, provider.provideDefinition(textDocument, convert.toPosition(position), token));
@@ -153,7 +156,7 @@ export default {
   },
   registerReferenceProvider: (id, provider) => {
     if (!provider.provideReferences) return;
-    return monaco.languages.registerReferenceProvider(id, {
+    return monaco.languages.registerReferenceProvider(handleLanguageId(id), {
       provideReferences: async (model, position, context, token) => {
         const textDocument = uriToDocument.get(model.uri);
         const args = await wireCancellationToken(token, provider.provideReferences(textDocument, convert.toPosition(position), context, token));
@@ -163,7 +166,7 @@ export default {
   },
   registerDocumentSymbolProvider: (id, provider) => {
     if (!provider.provideDocumentSymbols) return;
-    return monaco.languages.registerDocumentSymbolProvider(id, {
+    return monaco.languages.registerDocumentSymbolProvider(handleLanguageId(id), {
       provideDocumentSymbols: async (model, token) => {
         const textDocument = uriToDocument.get(model.uri);
         const args = await wireCancellationToken(token, provider.provideDocumentSymbols(textDocument, token));
@@ -172,7 +175,7 @@ export default {
     });
   },
   registerSignatureHelpProvider: (id, provider, ...trigger) => {
-    return monaco.languages.registerSignatureHelpProvider(id, {
+    return monaco.languages.registerSignatureHelpProvider(handleLanguageId(id), {
       signatureHelpTriggerCharacters: trigger,      
       provideSignatureHelp: (model, position, token) => {
         const textDocument = uriToDocument.get(model.uri);
@@ -202,7 +205,7 @@ export default {
     // return monaco.languages.registerImplementationProvider(id, provider);
   },
   registerTypeDefinitionProvider: (id, provider) => {
-    return monaco.languages.registerTypeDefinitionProvider(id, {
+    return monaco.languages.registerTypeDefinitionProvider(handleLanguageId(id), {
       provideTypeDefinition: async (model, position, token) => {
         const textDocument = uriToDocument.get(model.uri);
         const args = await wireCancellationToken(token, provider.provideTypeDefinition(textDocument, convert.toPosition(position), token));
@@ -211,7 +214,7 @@ export default {
     });
   },
   registerCodeLensProvider: (id, provider) => {
-    return monaco.languages.registerCodeLensProvider(id, {
+    return monaco.languages.registerCodeLensProvider(handleLanguageId(id), {
       provideCodeLenses: async (model, token) => {
         const textDocument = uriToDocument.get(model.uri);
         const args = await wireCancellationToken(token, provider.provideCodeLenses(textDocument, token));

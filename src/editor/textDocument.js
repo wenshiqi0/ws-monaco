@@ -50,7 +50,7 @@ export default class TextDocument extends MirrorModel {
 		 * used in this document.
 		 */
 		this._eol = eol || (os.platform() === 'win32' ? '\r\n' : '\n');
-		
+
     /**
      * Mutiple lines content.
      */
