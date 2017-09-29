@@ -58,7 +58,6 @@
     "gulp": "^3.9.1",
     "gulp-filter": "^5.0.1",
     "gulp-tsb": "^2.0.4",
-    "jshint": "^2.9.4",
     "mark-twain": "^1.1.6",
     "raw-loader": "^0.5.1",
     "request": "^2.81.0",

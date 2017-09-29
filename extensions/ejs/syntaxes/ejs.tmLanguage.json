@@ -1,0 +1,34 @@
+{
+  "fileTypes": [
+    "ejs"
+  ],
+  "foldingStartMarker": "(?x)\n\t\t(<(?i:head|body|table|thead|tbody|tfoot|tr|div|select|fieldset|style|script|ul|ol|form|dl)\\b.*?>\n\t\t|<!--(?!.*-->)\n\t\t|\\{\\s*($|\\?>\\s*$|\/\/|\/\\*(.*\\*\/\\s*$|(?!.*?\\*\/)))\n\t\t)",
+  "foldingStopMarker": "(?x)\n\t\t(<\/(?i:head|body|table|thead|tbody|tfoot|tr|div|select|fieldset|style|script|ul|ol|form|dl)>\n\t\t|^\\s*-->\n\t\t|(^|\\s)\\}\n\t\t)",
+  "name": "JavaScript Template",
+  "patterns": [
+    {
+      "begin": "(<%=?)",
+      "beginCaptures": [
+        {
+          "name": "punctuation.definition.tag.begin.html"
+        }
+      ],
+      "patterns": [
+        {
+          "include": "source.js"
+        }
+      ],
+      "end": "({?)(}?)(\\s)*(%>)",
+      "endCaptures": [
+        {
+            "name": "punctuation.definition.tag.end.html"
+        }
+      ]
+    },
+    {
+      "include": "text.html.basic"
+    }
+  ],
+  "scopeName": "text.html.js",
+  "uuid": "C50669E1-1DCE-44E4-BE12-57CEBEAD842A"
+}

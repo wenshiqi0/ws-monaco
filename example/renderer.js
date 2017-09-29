@@ -2,7 +2,7 @@ const { readFile } = require('fs');
 const { join, dirname } = require('path');
 const container = document.getElementById('editor')
 
-const { start, openProject, editorOptions, GrammarRegistry } = require('../lib/editor');
+const { start, openProject, editorOptions, GrammarRegistry, updateConfiguration } = require('../lib/editor');
 
 let editor;
 const language = 'javascript';
@@ -150,6 +150,9 @@ loader.require(['./vs/editor/editor.main'], async function () {
     tabSize: 2,
   }));
 
+  // 开启 eslint，关闭默认 lint
+  updateConfiguration('lintDisable', 'javascript')  
+
   // 设置编辑器为当前上下文
   // registry.setCurrentEditor(editor);
   // 启动语法插件
@@ -189,6 +192,7 @@ function handleDragFile(dom) {
       schema: 'schema',
       axml: 'html',
       json: 'json',
+      jsx: 'javascriptreact'
     }
 
     readFile(file.path, 'utf8', async (err, text) => {
