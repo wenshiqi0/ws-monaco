@@ -11,8 +11,6 @@ fs.readdirSync(absolute).forEach(dir => {
       cwd: path.join(__dirname, './extensions', dir)
     });
 
-    console.log(ret.stdout.toString('utf-8'));
-
     const server = path.join(__dirname, './extensions', dir, 'server');
     if (fs.existsSync(server)) {
       const ret = cp.spawnSync(`npm${os.platform() === 'win32' ? '.cmd' : ''}`, ['i'], {

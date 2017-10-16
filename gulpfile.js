@@ -36,6 +36,8 @@ initExtensions();
 
 const commonConfig = {
   output: {
+    library: "mudule",
+    libraryTarget: "umd",
   },
   module: {
     loaders: [
@@ -87,11 +89,7 @@ extensions.forEach((ext) => {
     if (client.indexOf('.js') === -1)
       client += '.js';
 
-    commonConfig.output = {
-      filename: basename(client),
-      library: "mudule",
-      libraryTarget: "umd"
-    }
+    commonConfig.output.filename = basename(client);
 
     return gulp.src(client)
       .pipe(webpack(commonConfig))
@@ -126,11 +124,7 @@ extensions.forEach((ext) => {
     if (entry.indexOf('.js') === -1)
       entry += '.js';
 
-    commonConfig.output = {
-      library: '',
-      libraryTarget: 'commonjs',
-      filename: basename(entry),
-    }
+    commonConfig.output.filename = basename(entry);
 
     return gulp.src(entry)
       .pipe(webpack(commonConfig))

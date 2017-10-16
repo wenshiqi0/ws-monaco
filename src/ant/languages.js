@@ -64,7 +64,6 @@ export default {
     return result;
   },
   registerCompletionItemProvider: (id, provider, ...trigger) => {
-    console.error(id, trigger);
     monaco.languages.registerCompletionItemProvider(handleLanguageId(id), {
       triggerCharacters: trigger,
       provideCompletionItems: async (model, position, token) => {
@@ -73,9 +72,6 @@ export default {
         const pos = convert.toPosition(position);
         const textDocument = uriToDocument.get(model.uri);
         const args = await wireCancellationToken(token, provider.provideCompletionItems(textDocument, pos, token));
-
-        console.error(id, args);
-
         if (!args)
           return { isIncomplete: false, items: [] };
         return {
@@ -99,7 +95,6 @@ export default {
     });
   },
   registerOnTypeFormattingEditProvider: (id, provider) => {
-    // console.log(provider);
     /*
     return monaco.languages.registerOnTypeFormattingEditProvider(id, {
       autoFormatTriggerCharacters: ';',
@@ -240,7 +235,6 @@ export default {
     } catch (e) {
       moreConfigure = {};
     }
-    console.log(id, configure);
     monaco.languages.setLanguageConfiguration(id, { ...moreConfigure, ...configure });
   },
   registerWorkspaceSymbolProvider: () => {
