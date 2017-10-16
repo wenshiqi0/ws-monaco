@@ -10,7 +10,7 @@ var vscode_languageclient_1 = require("vscode-languageclient");
 var htmlEmptyTagsShared_1 = require("./htmlEmptyTagsShared");
 var tagClosing_1 = require("./tagClosing");
 var vscode_extension_telemetry_1 = require("vscode-extension-telemetry");
-var proposed_1 = require("vscode-languageclient/lib/proposed");
+var configuration_proposed_1 = require("vscode-languageclient/lib/configuration.proposed");
 var protocol_colorProvider_proposed_1 = require("vscode-languageserver-protocol/lib/protocol.colorProvider.proposed");
 var nls = require("vscode-nls");
 var localize = nls.loadMessageBundle();
@@ -18,17 +18,6 @@ var TagCloseRequest;
 (function (TagCloseRequest) {
     TagCloseRequest.type = new vscode_languageclient_1.RequestType('html/tag');
 })(TagCloseRequest || (TagCloseRequest = {}));
-var CSSColorFormats = {
-    Hex: '#{red:X}{green:X}{blue:X}',
-    RGB: {
-        opaque: 'rgb({red:d[0-255]}, {green:d[0-255]}, {blue:d[0-255]})',
-        transparent: 'rgba({red:d[0-255]}, {green:d[0-255]}, {blue:d[0-255]}, {alpha})'
-    },
-    HSL: {
-        opaque: 'hsl({hue:d[0-360]}, {saturation:d[0-100]}%, {luminance:d[0-100]}%)',
-        transparent: 'hsla({hue:d[0-360]}, {saturation:d[0-100]}%, {luminance:d[0-100]}%, {alpha})'
-    }
-};
 function activate(context) {
     var toDispose = context.subscriptions;
     var packageInfo = getPackageInfo(context);
@@ -60,18 +49,34 @@ function activate(context) {
     };
     // Create the language client and start the client.
     var client = new vscode_languageclient_1.LanguageClient('html', localize('htmlserver.name', 'HTML Language Server'), serverOptions, clientOptions);
-    client.registerFeature(new proposed_1.ConfigurationFeature(client));
+    client.registerFeature(new configuration_proposed_1.ConfigurationFeature(client));
     var disposable = client.start();
     toDispose.push(disposable);
     client.onReady().then(function () {
         disposable = vscode_1.languages.registerColorProvider(documentSelector, {
             provideDocumentColors: function (document) {
-                var params = client.code2ProtocolConverter.asDocumentSymbolParams(document);
+                var params = {
+                    textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(document)
+                };
                 return client.sendRequest(protocol_colorProvider_proposed_1.DocumentColorRequest.type, params).then(function (symbols) {
                     return symbols.map(function (symbol) {
                         var range = client.protocol2CodeConverter.asRange(symbol.range);
-                        var color = new vscode_1.Color(symbol.color.red * 255, symbol.color.green * 255, symbol.color.blue * 255, symbol.color.alpha);
-                        return new vscode_1.ColorRange(range, color, [CSSColorFormats.Hex, CSSColorFormats.RGB, CSSColorFormats.HSL]);
+                        var color = new vscode_1.Color(symbol.color.red, symbol.color.green, symbol.color.blue, symbol.color.alpha);
+                        return new vscode_1.ColorInformation(range, color);
+                    });
+                });
+            },
+            provideColorPresentations: function (document, colorInfo) {
+                var params = {
+                    textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(document),
+                    colorInfo: { range: client.code2ProtocolConverter.asRange(colorInfo.range), color: colorInfo.color }
+                };
+                return client.sendRequest(protocol_colorProvider_proposed_1.ColorPresentationRequest.type, params).then(function (presentations) {
+                    return presentations.map(function (p) {
+                        var presentation = new vscode_1.ColorPresentation(p.label);
+                        presentation.textEdit = p.textEdit && client.protocol2CodeConverter.asTextEdit(p.textEdit);
+                        presentation.additionalTextEdits = p.additionalTextEdits && client.protocol2CodeConverter.asTextEdits(p.additionalTextEdits);
+                        return presentation;
                     });
                 });
             }
@@ -139,7 +144,8 @@ function activate(context) {
 }
 exports.activate = activate;
 function getPackageInfo(context) {
-    var extensionPackage = require(context.asAbsolutePath('./package.json'));
+    var extensionPackageFile = require('fs').readFileSync(context.asAbsolutePath('./package.json'));
+    var extensionPackage = JSON.stringify(extensionPackageFile);
     if (extensionPackage) {
         return {
             name: extensionPackage.name,

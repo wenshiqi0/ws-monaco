@@ -11,6 +11,7 @@ export const uriMap = new Map();
 
 window.textDocument = textDocuments;
 
+export let type = 'tiny';
 export let rootPath = '';
 export const workspaceFolders = [];
 
@@ -101,3 +102,7 @@ export function openProject(path) {
 }
 
 export const getConfiguration = getConf;
+
+export function setWorkspaceType (wtype) {
+  type = wtype;
+}

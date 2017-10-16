@@ -38,9 +38,14 @@ global.idePath = "";
 
 function buildInExtensionsDir() {
   const ret = [];
-  const extensions = readdirSync(join(__dirname, '../extensions/'));
+  const extensions = readdirSync(join(__dirname, '../out/'));
   extensions.forEach(ext => {
-    const dict = join(__dirname, '../extensions/', ext);
+    const dict = join(__dirname, '../out/', ext);
+    /*
+    if (ext === 'emmet')
+      ret.push('/Users/munong/Documents/github/vscode/extensions/emmet');
+    else if (statSync(dict).isDirectory())
+    */
     if (statSync(dict).isDirectory())
       ret.push(dict);
   })
@@ -141,6 +146,7 @@ module.exports = {
   editorOptions,
   GrammarRegistry,
   updateConfiguration,
+  setWorkspaceType: workspace.setWorkspaceType,
 
   Uri,
 }

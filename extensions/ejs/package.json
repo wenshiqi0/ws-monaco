@@ -12,22 +12,30 @@
         "Snippets"
     ],
     "contributes": {
-        "languages": [{
-            "id": "ejs",
-            "aliases": ["ejs"],
-            "extensions": [".ejs"],
-            "configuration": "./language-configuration.json"
-        }],
+        "languages": [
+            {
+                "id": "ejs",
+                "aliases": [
+                    "ejs"
+                ],
+                "extensions": [
+                    ".ejs"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
         "snippets": [
             {
                 "language": "ejs",
                 "path": "./snippets/ejs.json"
             }
         ],
-        "grammars": [{
-            "language": "ejs",
-            "scopeName": "text.html.js",
-            "path": "./syntaxes/ejs.tmLanguage.json"
-        }]
+        "grammars": [
+            {
+                "language": "ejs",
+                "scopeName": "text.html.js",
+                "path": "./syntaxes/ejs.tmLanguage.json"
+            }
+        ]
     }
 }

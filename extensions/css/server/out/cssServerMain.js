@@ -49,6 +49,7 @@ connection.onInitialize(function (params) {
         referencesProvider: true,
         definitionProvider: true,
         documentHighlightProvider: true,
+        documentRangeFormattingProvider: true,
         codeActionProvider: true,
         renameProvider: true,
         colorProvider: true
@@ -78,7 +79,7 @@ function getDocumentSettings(textDocument) {
         var promise = documentSettings[textDocument.uri];
         if (!promise) {
             var configRequestParam = { items: [{ scopeUri: textDocument.uri, section: textDocument.languageId }] };
-            promise = connection.sendRequest(protocol_configuration_proposed_1.GetConfigurationRequest.type, configRequestParam).then(function (s) { return s[0]; });
+            promise = connection.sendRequest(protocol_configuration_proposed_1.ConfigurationRequest.type, configRequestParam).then(function (s) { return s[0]; });
             documentSettings[textDocument.uri] = promise;
         }
         return promise;
@@ -163,6 +164,12 @@ connection.onReferences(function (referenceParams) {
     var stylesheet = stylesheets.get(document);
     return getLanguageService(document).findReferences(document, referenceParams.position, stylesheet);
 });
+connection.onDocumentRangeFormatting(function (formatParams, textEdit, token) {
+    var document = documents.get(formatParams.textDocument.uri);
+    require('fs').appendFileSync('/Users/munong/Downloads/edit.log', JSON.stringify(textEdit));
+    require('fs').appendFileSync('/Users/munong/Downloads/docs.log', JSON.stringify(document));
+    return {};
+});
 connection.onCodeAction(function (codeActionParams) {
     var document = documents.get(codeActionParams.textDocument.uri);
     var stylesheet = stylesheets.get(document);
@@ -173,6 +180,14 @@ connection.onRequest(protocol_colorProvider_proposed_1.DocumentColorRequest.type
     if (document) {
         var stylesheet = stylesheets.get(document);
         return getLanguageService(document).findDocumentColors(document, stylesheet);
+    }
+    return [];
+});
+connection.onRequest(protocol_colorProvider_proposed_1.ColorPresentationRequest.type, function (params) {
+    var document = documents.get(params.textDocument.uri);
+    if (document) {
+        var stylesheet = stylesheets.get(document);
+        return getLanguageService(document).getColorPresentations(document, stylesheet, params.colorInfo);
     }
     return [];
 });

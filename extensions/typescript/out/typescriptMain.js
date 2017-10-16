@@ -219,6 +219,7 @@ class LanguageProvider {
                 this.toUpdateOnConfigurationChanged.push(implementationCodeLensProvider);
                 this.disposables.push(vscode_1.languages.registerCodeLensProvider(selector, implementationCodeLensProvider));
                 if (!this.description.isExternal) {
+                    const EMPTY_ELEMENTS = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'];
                     this.disposables.push(vscode_1.languages.setLanguageConfiguration(modeId, {
                         indentationRules: {
                             // ^(.*\*/)?\s*\}.*$
@@ -228,6 +229,15 @@ class LanguageProvider {
                         },
                         wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
                         onEnterRules: [
+                            {
+                                beforeText: new RegExp(`<(?!(?:${EMPTY_ELEMENTS.join('|')}))([_:\\w][_:\\w-.\\d]*)([^/>]*(?!/)>)[^<]*$`, 'i'),
+                                afterText: /^<\/([_:\w][_:\w-.\d]*)\s*>$/i,
+                                action: { indentAction: vscode_1.IndentAction.IndentOutdent }
+                            },
+                            {
+                                beforeText: new RegExp(`<(?!(?:${EMPTY_ELEMENTS.join('|')}))(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$`, 'i'),
+                                action: { indentAction: vscode_1.IndentAction.Indent }
+                            },
                             {
                                 // e.g. /** | */
                                 beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,

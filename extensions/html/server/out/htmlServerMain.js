@@ -77,13 +77,12 @@ documents.onDidClose(function (e) {
     delete documentSettings[e.document.uri];
 });
 function getDocumentSettings(textDocument, needsDocumentSettings) {
-    console.log('scopedSettingsSupport ' + scopedSettingsSupport + 'needsSettings ' + needsDocumentSettings());
     if (scopedSettingsSupport && needsDocumentSettings()) {
         var promise = documentSettings[textDocument.uri];
         if (!promise) {
             var scopeUri = textDocument.uri;
             var configRequestParam = { items: [{ scopeUri: scopeUri, section: 'css' }, { scopeUri: scopeUri, section: 'html' }, { scopeUri: scopeUri, section: 'javascript' }] };
-            promise = connection.sendRequest(protocol_configuration_proposed_1.GetConfigurationRequest.type, configRequestParam).then(function (s) { return ({ css: s[0], html: s[1], javascript: s[2] }); });
+            promise = connection.sendRequest(protocol_configuration_proposed_1.ConfigurationRequest.type, configRequestParam).then(function (s) { return ({ css: s[0], html: s[1], javascript: s[2] }); });
             documentSettings[textDocument.uri] = promise;
         }
         return promise;
@@ -347,6 +346,16 @@ connection.onRequest(protocol_colorProvider_proposed_1.DocumentColorRequest.type
         });
     }
     return infos;
+});
+connection.onRequest(protocol_colorProvider_proposed_1.ColorPresentationRequest.type, function (params) {
+    var document = documents.get(params.textDocument.uri);
+    if (document) {
+        var mode = languageModes.getModeAtPosition(document, params.colorInfo.range.start);
+        if (mode && mode.getColorPresentations) {
+            return mode.getColorPresentations(document, params.colorInfo);
+        }
+    }
+    return [];
 });
 connection.onRequest(TagCloseRequest.type, function (params) {
     var document = documents.get(params.textDocument.uri);

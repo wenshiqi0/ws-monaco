@@ -1,81 +1,149 @@
-const { join, dirname } = require('path');
 const gulp = require('gulp');
-const tsb = require('gulp-tsb');
-const es = require('event-stream');
-const rimraf = require('rimraf');
-const filter = require('gulp-filter');
-const glob = require('glob');
+const gulpSequence = require('gulp-sequence');
+const webpack = require('webpack-stream');
+const { spawnSync } = require('child_process');
+const { readJSONSync } = require('fs-extra');
+const { join, dirname, basename } = require('path');
+const { readdirSync, mkdirSync, existsSync, rmdirSync, statSync } = require('fs');
 
-const extensionsPath = join(__dirname, './extensions');
+const extensions = [];
+const extPath = join(__dirname, './extensions');
+const distPath = join(__dirname, './out');
+const initTask = (ext) => `${ext}-init`;
+const clientTask = (ext) => `${ext}-client`;
+const serverTask = (ext) => `${ext}-server`;
+const installTask = (ext) => `${ext}-install`;
 
-const compilations = glob.sync('**/tsconfig.json', {
-	cwd: extensionsPath,
-	ignore: ['**/out/**', '**/node_modules/**']
+function mkdist() {
+  if (!existsSync(distPath)) {
+    mkdirSync(distPath);
+  } else {
+    spawnSync('rm', [ '-rf', distPath]);
+    mkdirSync(distPath);
+  }
+}
+
+function initExtensions () {
+  readdirSync('./extensions')
+    .forEach((ext) => {
+      const local = join(extPath, ext);
+      if (statSync(local).isDirectory())
+        extensions.push(ext);
+    })
+}
+
+initExtensions();
+
+const commonConfig = {
+  output: {
+  },
+  module: {
+    loaders: [
+      { test: /\.js$/, loader: 'babel-loader' },
+    ],
+  },
+  externals(context, request, callback) {
+    let isExternals = false;
+    const vendor = ['vscode-textmate', 'eslint', 'typescript', 'vscode', 'jsonc-parser'];
+    if (vendor.indexOf(request) > -1 || request.indexOf('typescript') > -1 || request.indexOf('vscode') > -1 || request.indexOf('eslint') > -1) {
+      isExternals = request;
+    }
+    callback(null, isExternals);
+  },
+  resolve: {
+    extensions: ['.js', '.json'],
+  },
+  target: 'electron',
+}
+
+// init
+extensions.forEach((ext) => {
+  mkdist();
+  gulp.task(initTask(ext), () => {
+    const local = join(extPath, ext);
+    const localTo = join(distPath, ext);
+    const package = join(local, 'package.json');
+
+    return gulp.src(['./extensions/**/*.json', './extensions/**/*.tmLanguage', '!**/node_modules/**'])
+      .pipe(gulp.dest(distPath))
+  })
+})
+
+// client compile
+extensions.forEach((ext) => {
+  gulp.task(clientTask(ext), [initTask(ext)], () => {
+    const local = join(extPath, ext);
+    const packageJson = readJSONSync(join(local, 'package.json'));
+
+    if (!packageJson.main) {
+      return gulp.src(local)
+        gulp.dest(distPath)
+    }
+
+    // client entry
+    let client = join(local, packageJson.main);
+    const localDist = join(distPath, ext, packageJson.main);
+
+    if (client.indexOf('.js') === -1)
+      client += '.js';
+
+    commonConfig.output = {
+      filename: basename(client),
+      library: "mudule",
+      libraryTarget: "umd"
+    }
+
+    return gulp.src(client)
+      .pipe(webpack(commonConfig))
+      .pipe(gulp.dest(dirname(client.replace('extensions', 'out'))))
+  })
 });
 
-const tasks = compilations.map(tsconfigFile => {
-  const absolutePath = join(extensionsPath, tsconfigFile);
-  const relativeDirname = dirname(tsconfigFile);
-  const tsOptions = require(absolutePath).compilerOptions;
-	tsOptions.verbose = false;
-  tsOptions.sourceMap = false;
-  
-  const name = relativeDirname.replace(/\//g, '-');
-  
-  // Tasks
-	const clean = 'clean-extension:' + name;
-	const compile = 'compile-extension:' + name;
-	const watch = 'watch-extension:' + name;
+// server compile
+extensions.forEach((ext) => {
+  gulp.task(serverTask(ext), [clientTask(ext)], () => {
+    let entry = '';
+    const local = join(extPath, ext);
+    const packageJson = readJSONSync(join(local, 'package.json'));
 
-	// Build Tasks
-	const cleanBuild = 'clean-extension-build:' + name;
-	const compileBuild = 'compile-extension-build:' + name;
-  const watchBuild = 'watch-extension-build:' + name;
-  
-  const root = join(__dirname, 'extensions', relativeDirname);
-	const srcBase = join(root, 'src');
-	const src = join(srcBase, '**');
-  const out = join(root, 'out');
-    
-  function createPipeline(build, emitError) {
-    const compilation = tsb.create(tsOptions, null, null, err => console.error(err));
-    
-    return function () {
-      const input = es.through();
-      const tsFilter = filter(['**/*.ts', '!**/lib/lib*.d.ts', '!**/node_modules/**'], { restore: true });
-      const output = input
-      .pipe(tsFilter)
-      .pipe(compilation())
-      .pipe(tsFilter.restore)
-
-      return es.duplex(input, output);            
+    // server entry
+    const serverRoot = join(local, 'server');
+    if (existsSync(serverRoot) && statSync(serverRoot).isDirectory()) {
+      let serverScript = join(serverRoot, 'server.js');
+      if (existsSync(serverScript) && statSync(serverScript).isFile()) {
+        entry = serverScript;
+      } else {
+        const serverScript = join(serverRoot, 'out', `${ext}ServerMain.js`);
+        if (existsSync(serverScript) && statSync(serverScript).isFile())
+          entry = serverScript;
+      }
     }
-  }
 
-  const srcOpts = { cwd: dirname(__dirname), base: srcBase };  
+    if (!packageJson.main || !entry) {
+      return gulp.src(local)
+        gulp.dest(distPath)
+    }
+    if (entry.indexOf('.js') === -1)
+      entry += '.js';
 
-  gulp.task(compile, [clean], () => {
-		const pipeline = createPipeline(false, true);
-		const input = gulp.src(src, srcOpts);
+    commonConfig.output = {
+      library: '',
+      libraryTarget: 'commonjs',
+      filename: basename(entry),
+    }
 
-		return input
-			.pipe(pipeline())
-			.pipe(gulp.dest(out));
-  });
-  
-  gulp.task(clean, cb => rimraf(out, cb));
-  
-  return {
-		clean: clean,
-		compile: compile
-	};
-})
+    return gulp.src(entry)
+      .pipe(webpack(commonConfig))
+      .pipe(gulp.dest(dirname(entry.replace('extensions', 'out'))))
+  })
+});
 
-gulp.task('compile-extensions', tasks.map(t => t.compile));
+// install deps
+extensions.forEach((ext) => {
+  gulp.task(installTask(ext), () => {
+    return gulp.src(join(extPath, ext))
+      .pipe(gulp.dest(join(distPath)));
+  })
+});
 
-gulp.task('upload-extensions', () => {
-  const filtered = filter(['**', '!**/*.ts', '!**/*.txt', '!**/*.map', '!**/*.md', '!**/src/**', '!**/test/**', '!**/node_modules/**']);
-  return gulp.src('extensions/**')
-    .pipe(filtered)
-    .pipe(gulp.dest('./out-extensions'))
-})
+gulp.task('build-extensions', gulpSequence(...extensions.map(serverTask)));

@@ -119,7 +119,14 @@ export default class TextDocument extends MirrorModel {
    */
   get lines() {
     return this._lines;
-  }
+	}
+	
+	/**
+	 * get fileName
+	 */
+	get fileName() {
+		return this._filename;
+	}
 
   /**
    * get line count from textDocument.

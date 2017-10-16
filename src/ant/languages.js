@@ -64,6 +64,7 @@ export default {
     return result;
   },
   registerCompletionItemProvider: (id, provider, ...trigger) => {
+    console.error(id, trigger);
     monaco.languages.registerCompletionItemProvider(handleLanguageId(id), {
       triggerCharacters: trigger,
       provideCompletionItems: async (model, position, token) => {
@@ -72,6 +73,11 @@ export default {
         const pos = convert.toPosition(position);
         const textDocument = uriToDocument.get(model.uri);
         const args = await wireCancellationToken(token, provider.provideCompletionItems(textDocument, pos, token));
+
+        console.error(id, args);
+
+        if (!args)
+          return { isIncomplete: false, items: [] };
         return {
           isIncomplete: Array.isArray(args) ? false : args.isIncomplete,
           items: (Array.isArray(args) ? args : args.items).map(item => {
@@ -114,7 +120,6 @@ export default {
     });
   },
   registerDocumentRangeFormattingEditProvider: (id, provider) => {
-    console.log(id);
     return monaco.languages.registerDocumentRangeFormattingEditProvider(handleLanguageId(id), {
       provideDocumentRangeFormattingEdits: async (model, range, options, token) => {
         const textDocument = uriToDocument.get(model.uri);
@@ -225,7 +230,6 @@ export default {
   setLanguageConfiguration: (id, configure) => {
     let moreConfigure = {}
     if (unknownLanguages.indexOf(id) > -1) return;
-    if (id === 'jsx-tags') id = 'javascript';
     try {
       const { extPath, configuration: confPath } = languagesMap.get(id);      
       const absConfPath = join(extPath, confPath);
@@ -236,6 +240,7 @@ export default {
     } catch (e) {
       moreConfigure = {};
     }
+    console.log(id, configure);
     monaco.languages.setLanguageConfiguration(id, { ...moreConfigure, ...configure });
   },
   registerWorkspaceSymbolProvider: () => {
