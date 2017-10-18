@@ -1,6 +1,6 @@
 {
   "name": "ant-editor",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Ant monaco with vscode-textmate. This module can only run under node runtime",
   "main": "lib/editor",
   "scripts": {
@@ -16,7 +16,8 @@
     "js": "node scripts/javascript.js && npm run js-extra",
     "js-extra": "node scripts/js-extra.js",
     "api": "node scripts/completions.js $site",
-    "sync": "node scripts/lark-sdk.js"
+    "sync": "node scripts/lark-sdk.js",
+    "postinstall": "node postinstall.js"
   },
   "keywords": [
     "monaco",
