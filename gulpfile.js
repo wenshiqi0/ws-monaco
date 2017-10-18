@@ -3,7 +3,7 @@ const gulpSequence = require('gulp-sequence');
 const webpack = require('webpack-stream');
 const { spawnSync } = require('child_process');
 const { readJSONSync } = require('fs-extra');
-const { join, dirname, basename } = require('path');
+const { join, dirname, basename, relative } = require('path');
 const { readdirSync, mkdirSync, existsSync, rmdirSync, statSync } = require('fs');
 
 const extensions = [];
@@ -36,7 +36,6 @@ initExtensions();
 
 const commonConfig = {
   output: {
-    library: "mudule",
     libraryTarget: "umd",
   },
   module: {
@@ -90,10 +89,20 @@ extensions.forEach((ext) => {
       client += '.js';
 
     commonConfig.output.filename = basename(client);
+    commonConfig.output.path = dirname(client);
 
-    return gulp.src(client)
-      .pipe(webpack(commonConfig))
-      .pipe(gulp.dest(dirname(client.replace('extensions', 'out'))))
+    // FIX ME for eslint and ts
+    if (ext === 'typescript') {
+      return gulp.src(`${dirname(client)}/**`)
+        .pipe(gulp.dest(dirname(client.replace('extensions', 'out'))))
+    } else if (ext === 'eslint') {
+      return gulp.src(relative(__dirname, client))
+        .pipe(gulp.dest(dirname(client.replace('extensions', 'out'))))
+    } else {
+      return gulp.src(relative(__dirname, client))
+        .pipe(webpack(commonConfig))
+        .pipe(gulp.dest(dirname(client.replace('extensions', 'out'))))
+    }
   })
 });
 
@@ -125,10 +134,16 @@ extensions.forEach((ext) => {
       entry += '.js';
 
     commonConfig.output.filename = basename(entry);
+    commonConfig.output.path = dirname(entry);
 
-    return gulp.src(entry)
-      .pipe(webpack(commonConfig))
-      .pipe(gulp.dest(dirname(entry.replace('extensions', 'out'))))
+    if (ext === 'eslint') {
+      return gulp.src(relative(__dirname, entry))
+        .pipe(gulp.dest(dirname(entry.replace('extensions', 'out'))))
+    } else {
+      return gulp.src(relative(__dirname, entry))
+        .pipe(webpack(commonConfig))
+        .pipe(gulp.dest(dirname(entry.replace('extensions', 'out'))))
+    }
   })
 });
 

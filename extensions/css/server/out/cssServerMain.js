@@ -166,8 +166,6 @@ connection.onReferences(function (referenceParams) {
 });
 connection.onDocumentRangeFormatting(function (formatParams, textEdit, token) {
     var document = documents.get(formatParams.textDocument.uri);
-    require('fs').appendFileSync('/Users/munong/Downloads/edit.log', JSON.stringify(textEdit));
-    require('fs').appendFileSync('/Users/munong/Downloads/docs.log', JSON.stringify(document));
     return {};
 });
 connection.onCodeAction(function (codeActionParams) {
