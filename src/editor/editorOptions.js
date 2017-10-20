@@ -14,7 +14,7 @@ export default {
   },
   renderIndentGuides: true,
   insertSpaces: true,
-  detectIndentation: true,
+  detectIndentation: false,
   quickSuggestionsDelay: 10,
   minimap: {
     enabled: false,
