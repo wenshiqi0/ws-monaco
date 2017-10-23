@@ -124,15 +124,17 @@ function start(idePath) {
   })
 
   scripts.forEach(({ main, index }) => {
-    const extMain = originalRequire(main);    
-    extMain.activate({
-      subscriptions: global.subscriptions,
-      extensionPath: extensions[index],
-      workspaceState: new Memento(),
-      globalState: new Memento(),
-      storagePath: '',
-      asAbsolutePath: (relative) => join(extensions[index], relative),
-    });
+    try {
+      const extMain = originalRequire(main);    
+      extMain.activate({
+        subscriptions: global.subscriptions,
+        extensionPath: extensions[index],
+        workspaceState: new Memento(),
+        globalState: new Memento(),
+        storagePath: '',
+        asAbsolutePath: (relative) => join(extensions[index], relative),
+      }); 
+    } catch (e) { /* noob */ }
   })
 }
 
