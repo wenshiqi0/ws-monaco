@@ -66,7 +66,6 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
 		referencesProvider: true,
 		definitionProvider: true,
 		documentHighlightProvider: true,
-		documentRangeFormattingProvider: true,
 		codeActionProvider: true,
 		renameProvider: true,
 		colorProvider: true
@@ -197,13 +196,6 @@ connection.onReferences(referenceParams => {
 	let document = documents.get(referenceParams.textDocument.uri);
 	let stylesheet = stylesheets.get(document);
 	return getLanguageService(document).findReferences(document, referenceParams.position, stylesheet);
-});
-
-connection.onDocumentRangeFormatting((formatParams, textEdit, token) => {
-	let document = documents.get(formatParams.textDocument.uri);
-	require('fs').appendFileSync('/Users/munong/Downloads/edit.log', JSON.stringify(textEdit));
-	require('fs').appendFileSync('/Users/munong/Downloads/docs.log', JSON.stringify(document));
-	return {};
 });
 
 connection.onCodeAction(codeActionParams => {

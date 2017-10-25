@@ -49,7 +49,6 @@ connection.onInitialize(function (params) {
         referencesProvider: true,
         definitionProvider: true,
         documentHighlightProvider: true,
-        documentRangeFormattingProvider: true,
         codeActionProvider: true,
         renameProvider: true,
         colorProvider: true
@@ -163,10 +162,6 @@ connection.onReferences(function (referenceParams) {
     var document = documents.get(referenceParams.textDocument.uri);
     var stylesheet = stylesheets.get(document);
     return getLanguageService(document).findReferences(document, referenceParams.position, stylesheet);
-});
-connection.onDocumentRangeFormatting(function (formatParams, textEdit, token) {
-    var document = documents.get(formatParams.textDocument.uri);
-    return {};
 });
 connection.onCodeAction(function (codeActionParams) {
     var document = documents.get(codeActionParams.textDocument.uri);
