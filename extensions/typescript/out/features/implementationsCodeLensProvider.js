@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
 const PConst = require("../protocol.const");
 const baseCodeLensProvider_1 = require("./baseCodeLensProvider");
+const convert_1 = require("../utils/convert");
 const nls = require("vscode-nls");
 const localize = nls.loadMessageBundle();
 class TypeScriptImplementationsCodeLensProvider extends baseCodeLensProvider_1.TypeScriptBaseCodeLensProvider {
@@ -26,11 +27,7 @@ class TypeScriptImplementationsCodeLensProvider extends baseCodeLensProvider_1.T
     }
     resolveCodeLens(inputCodeLens, token) {
         const codeLens = inputCodeLens;
-        const args = {
-            file: codeLens.file,
-            line: codeLens.range.start.line + 1,
-            offset: codeLens.range.start.character + 1
-        };
+        const args = convert_1.vsPositionToTsFileLocation(codeLens.file, codeLens.range.start);
         return this.client.execute('implementation', args, token).then(response => {
             if (!response || !response.body) {
                 throw codeLens;
@@ -39,9 +36,9 @@ class TypeScriptImplementationsCodeLensProvider extends baseCodeLensProvider_1.T
                 .map(reference => 
             // Only take first line on implementation: https://github.com/Microsoft/vscode/issues/23924
             new vscode_1.Location(this.client.asUrl(reference.file), reference.start.line === reference.end.line
-                ? new vscode_1.Range(reference.start.line - 1, reference.start.offset - 1, reference.end.line - 1, reference.end.offset - 1)
+                ? convert_1.tsTextSpanToVsRange(reference)
                 : new vscode_1.Range(reference.start.line - 1, reference.start.offset - 1, reference.start.line, 0)))
-                .filter(location => !(location.uri.fsPath === codeLens.document.fsPath &&
+                .filter(location => !(location.uri.toString() === codeLens.document.toString() &&
                 location.range.start.line === codeLens.range.start.line &&
                 location.range.start.character === codeLens.range.start.character));
             codeLens.command = {
@@ -78,4 +75,3 @@ class TypeScriptImplementationsCodeLensProvider extends baseCodeLensProvider_1.T
     }
 }
 exports.default = TypeScriptImplementationsCodeLensProvider;
-//# sourceMappingURL=implementationsCodeLensProvider.js.map

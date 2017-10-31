@@ -54,4 +54,3 @@ class TelemetryReporter extends vscode_1.Disposable {
     }
 }
 exports.default = TelemetryReporter;
-//# sourceMappingURL=telemetry.js.map

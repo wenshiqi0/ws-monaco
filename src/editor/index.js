@@ -8,6 +8,7 @@ import antMonaco, { extensions } from '../ant';
 import Memento from '../ant/memento';
 import Telemetry from '../ant/Telemetry';
 import * as workspace from '../ant/workspace';
+import { updateConfiguration } from '../ant/configure';
 import Uri from './uri';
 import registerSnippets from '../ant/snippets';
 import '../ant/promise';
@@ -37,9 +38,14 @@ global.idePath = "";
 
 function buildInExtensionsDir() {
   const ret = [];
-  const extensions = readdirSync(join(__dirname, '../extensions/'));
+  const extensions = readdirSync(join(__dirname, '../out/'));
   extensions.forEach(ext => {
-    const dict = join(__dirname, '../extensions/', ext);
+    const dict = join(__dirname, '../out/', ext);
+    /*
+    if (ext === 'emmet')
+      ret.push('/Users/munong/Documents/github/vscode/extensions/emmet');
+    else if (statSync(dict).isDirectory())
+    */
     if (statSync(dict).isDirectory())
       ret.push(dict);
   })
@@ -118,15 +124,17 @@ function start(idePath) {
   })
 
   scripts.forEach(({ main, index }) => {
-    const extMain = originalRequire(main);    
-    extMain.activate({
-      subscriptions: global.subscriptions,
-      extensionPath: extensions[index],
-      workspaceState: new Memento(),
-      globalState: new Memento(),
-      storagePath: '',
-      asAbsolutePath: (relative) => join(extensions[index], relative),
-    });
+    try {
+      const extMain = originalRequire(main);    
+      extMain.activate({
+        subscriptions: global.subscriptions,
+        extensionPath: extensions[index],
+        workspaceState: new Memento(),
+        globalState: new Memento(),
+        storagePath: '',
+        asAbsolutePath: (relative) => join(extensions[index], relative),
+      }); 
+    } catch (e) { /* noob */ }
   })
 }
 
@@ -139,6 +147,8 @@ module.exports = {
   openProject,
   editorOptions,
   GrammarRegistry,
+  updateConfiguration,
+  setWorkspaceType: workspace.setWorkspaceType,
 
   Uri,
 }

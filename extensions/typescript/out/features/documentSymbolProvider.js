@@ -14,6 +14,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
 const PConst = require("../protocol.const");
+const convert_1 = require("../utils/convert");
 const outlineTypeTable = Object.create(null);
 outlineTypeTable[PConst.Kind.module] = vscode_1.SymbolKind.Module;
 outlineTypeTable[PConst.Kind.class] = vscode_1.SymbolKind.Class;
@@ -29,9 +30,6 @@ outlineTypeTable[PConst.Kind.localVariable] = vscode_1.SymbolKind.Variable;
 outlineTypeTable[PConst.Kind.variable] = vscode_1.SymbolKind.Variable;
 outlineTypeTable[PConst.Kind.function] = vscode_1.SymbolKind.Function;
 outlineTypeTable[PConst.Kind.localFunction] = vscode_1.SymbolKind.Function;
-function textSpan2Range(value) {
-    return new vscode_1.Range(value.start.line - 1, value.start.offset - 1, value.end.line - 1, value.end.offset - 1);
-}
 class TypeScriptDocumentSymbolProvider {
     constructor(client) {
         this.client = client;
@@ -75,7 +73,7 @@ class TypeScriptDocumentSymbolProvider {
         let realIndent = indent + item.indent;
         let key = `${realIndent}|${item.text}`;
         if (realIndent !== 0 && !foldingMap[key] && TypeScriptDocumentSymbolProvider.shouldInclueEntry(item.text)) {
-            let result = new vscode_1.SymbolInformation(item.text, outlineTypeTable[item.kind] || vscode_1.SymbolKind.Variable, containerLabel ? containerLabel : '', new vscode_1.Location(resource, textSpan2Range(item.spans[0])));
+            let result = new vscode_1.SymbolInformation(item.text, outlineTypeTable[item.kind] || vscode_1.SymbolKind.Variable, containerLabel ? containerLabel : '', new vscode_1.Location(resource, convert_1.tsTextSpanToVsRange(item.spans[0])));
             foldingMap[key] = result;
             bucket.push(result);
         }
@@ -86,7 +84,7 @@ class TypeScriptDocumentSymbolProvider {
         }
     }
     static convertNavTree(resource, bucket, item, containerLabel) {
-        const result = new vscode_1.SymbolInformation(item.text, outlineTypeTable[item.kind] || vscode_1.SymbolKind.Variable, containerLabel ? containerLabel : '', new vscode_1.Location(resource, textSpan2Range(item.spans[0])));
+        const result = new vscode_1.SymbolInformation(item.text, outlineTypeTable[item.kind] || vscode_1.SymbolKind.Variable, containerLabel ? containerLabel : '', new vscode_1.Location(resource, convert_1.tsTextSpanToVsRange(item.spans[0])));
         if (item.childItems && item.childItems.length > 0) {
             for (const child of item.childItems) {
                 TypeScriptDocumentSymbolProvider.convertNavTree(resource, bucket, child, result.name);
@@ -101,4 +99,3 @@ class TypeScriptDocumentSymbolProvider {
     }
 }
 exports.default = TypeScriptDocumentSymbolProvider;
-//# sourceMappingURL=documentSymbolProvider.js.map

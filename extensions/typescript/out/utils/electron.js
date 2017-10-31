@@ -113,4 +113,3 @@ function fork(modulePath, args, options, logger, callback) {
     });
 }
 exports.fork = fork;
-//# sourceMappingURL=electron.js.map

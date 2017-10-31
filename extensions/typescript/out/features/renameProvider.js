@@ -13,6 +13,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
+const convert_1 = require("../utils/convert");
 class TypeScriptRenameProvider {
     constructor(client) {
         this.client = client;
@@ -23,13 +24,7 @@ class TypeScriptRenameProvider {
             if (!filepath) {
                 return null;
             }
-            const args = {
-                file: filepath,
-                line: position.line + 1,
-                offset: position.character + 1,
-                findInStrings: false,
-                findInComments: false
-            };
+            const args = Object.assign({}, convert_1.vsPositionToTsFileLocation(filepath, position), { findInStrings: false, findInComments: false });
             try {
                 const response = yield this.client.execute('rename', args, token);
                 const renameResponse = response.body;
@@ -47,7 +42,7 @@ class TypeScriptRenameProvider {
                         continue;
                     }
                     for (const textSpan of spanGroup.locs) {
-                        result.replace(resource, new vscode_1.Range(textSpan.start.line - 1, textSpan.start.offset - 1, textSpan.end.line - 1, textSpan.end.offset - 1), newName);
+                        result.replace(resource, convert_1.tsTextSpanToVsRange(textSpan), newName);
                     }
                 }
                 return result;
@@ -60,4 +55,3 @@ class TypeScriptRenameProvider {
     }
 }
 exports.default = TypeScriptRenameProvider;
-//# sourceMappingURL=renameProvider.js.map

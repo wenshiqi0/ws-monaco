@@ -69,7 +69,9 @@ function registerEditorEvent(editor) {
     const language = model.getModeId();
     const eol = os.platform() === 'win32' ? '\r\n' : '\n';
 
-    const textDocument = new TextDocument(uri, value.split(eol), eol, language, 0, filename);
+    // 有的 windows 上的项目文件是以 \n 为换行符的，
+    // 为了兼容这部分文件，在分割文件内容的时候做一个处理。
+    const textDocument = new TextDocument(uri, value.replace(/\r/g, '').split('\n'), eol, language, 0, filename);
 
     uriToDocument.set(uri.toString(), textDocument);
     addTextDocument(textDocument);

@@ -7,9 +7,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var vscode_languageserver_1 = require("vscode-languageserver");
 var protocol_colorProvider_proposed_1 = require("vscode-languageserver-protocol/lib/protocol.colorProvider.proposed");
 var request_light_1 = require("request-light");
-var path = require("path");
 var fs = require("fs");
-var uri_1 = require("./utils/uri");
+var vscode_uri_1 = require("vscode-uri");
 var URL = require("url");
 var Strings = require("./utils/strings");
 var vscode_json_languageservice_1 = require("vscode-json-languageservice");
@@ -38,9 +37,7 @@ var clientSnippetSupport = false;
 var clientDynamicRegisterSupport = false;
 // After the server has started the client sends an initilize request. The server receives
 // in the passed params the rootPath of the workspace plus the client capabilities.
-var workspaceRoot;
 connection.onInitialize(function (params) {
-    workspaceRoot = uri_1.default.parse(params.rootPath);
     function hasClientCapability() {
         var keys = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -72,7 +69,7 @@ var workspaceContext = {
 };
 var schemaRequestService = function (uri) {
     if (Strings.startsWith(uri, 'file://')) {
-        var fsPath_1 = uri_1.default.parse(uri).fsPath;
+        var fsPath_1 = vscode_uri_1.default.parse(uri).fsPath;
         return new Promise(function (c, e) {
             fs.readFile(fsPath_1, 'UTF-8', function (err, result) {
                 err ? e('') : c(result.toString());
@@ -152,19 +149,12 @@ function updateConfiguration() {
         }
     }
     if (jsonConfigurationSettings) {
-        jsonConfigurationSettings.forEach(function (schema) {
+        jsonConfigurationSettings.forEach(function (schema, index) {
             var uri = schema.url;
             if (!uri && schema.schema) {
-                uri = schema.schema.id;
-            }
-            if (!uri && schema.fileMatch) {
-                uri = 'vscode://schemas/custom/' + encodeURIComponent(schema.fileMatch.join('&'));
+                uri = schema.schema.id || "vscode://schemas/custom/" + index;
             }
             if (uri) {
-                if (uri[0] === '.' && workspaceRoot) {
-                    // workspace relative path
-                    uri = uri_1.default.file(path.normalize(path.join(workspaceRoot.fsPath, uri))).toString();
-                }
                 languageSettings.schemas.push({ uri: uri, fileMatch: schema.fileMatch, schema: schema.schema });
             }
         });
@@ -260,6 +250,14 @@ connection.onRequest(protocol_colorProvider_proposed_1.DocumentColorRequest.type
     if (document) {
         var jsonDocument = getJSONDocument(document);
         return languageService.findDocumentColors(document, jsonDocument);
+    }
+    return [];
+});
+connection.onRequest(protocol_colorProvider_proposed_1.ColorPresentationRequest.type, function (params) {
+    var document = documents.get(params.textDocument.uri);
+    if (document) {
+        var jsonDocument = getJSONDocument(document);
+        return languageService.getColorPresentations(document, jsonDocument, params.colorInfo);
     }
     return [];
 });

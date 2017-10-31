@@ -51,4 +51,3 @@ class Logger {
     }
 }
 exports.default = Logger;
-//# sourceMappingURL=logger.js.map

@@ -13,9 +13,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
+const convert_1 = require("../utils/convert");
 class TypeScriptCodeActionProvider {
-    constructor(client, mode) {
+    constructor(client, formattingConfigurationManager, mode) {
         this.client = client;
+        this.formattingConfigurationManager = formattingConfigurationManager;
         this.commandId = `_typescript.applyCodeAction.${mode}`;
         vscode_1.commands.registerCommand(this.commandId, this.onCodeAction, this);
     }
@@ -32,29 +34,10 @@ class TypeScriptCodeActionProvider {
             if (!supportedActions.size) {
                 return [];
             }
-            let formattingOptions = undefined;
-            for (const editor of vscode_1.window.visibleTextEditors) {
-                if (editor.document.fileName === document.fileName) {
-                    formattingOptions = { tabSize: editor.options.tabSize, insertSpaces: editor.options.insertSpaces };
-                    break;
-                }
-            }
-            const source = {
-                uri: document.uri,
-                version: document.version,
-                range: range,
-                formattingOptions: formattingOptions
-            };
-            const args = {
-                file: file,
-                startLine: range.start.line + 1,
-                endLine: range.end.line + 1,
-                startOffset: range.start.character + 1,
-                endOffset: range.end.character + 1,
-                errorCodes: Array.from(supportedActions)
-            };
+            yield this.formattingConfigurationManager.ensureFormatOptionsForDocument(document, token);
+            const args = Object.assign({}, convert_1.vsRangeToTsFileRange(file, range), { errorCodes: Array.from(supportedActions) });
             const response = yield this.client.execute('getCodeFixes', args, token);
-            return (response.body || []).map(action => this.getCommandForAction(source, action));
+            return (response.body || []).map(action => this.getCommandForAction(action));
         });
     }
     get supportedCodeActions() {
@@ -74,48 +57,23 @@ class TypeScriptCodeActionProvider {
             .map(diagnostic => +diagnostic.code)
             .filter(code => supportedActions[code])));
     }
-    getCommandForAction(source, action) {
+    getCommandForAction(action) {
         return {
             title: action.description,
             command: this.commandId,
-            arguments: [source, action]
+            arguments: [action]
         };
     }
-    onCodeAction(source, action) {
+    onCodeAction(action) {
         return __awaiter(this, void 0, void 0, function* () {
             const workspaceEdit = new vscode_1.WorkspaceEdit();
             for (const change of action.changes) {
                 for (const textChange of change.textChanges) {
-                    workspaceEdit.replace(this.client.asUrl(change.fileName), new vscode_1.Range(textChange.start.line - 1, textChange.start.offset - 1, textChange.end.line - 1, textChange.end.offset - 1), textChange.newText);
+                    workspaceEdit.replace(this.client.asUrl(change.fileName), convert_1.tsTextSpanToVsRange(textChange), textChange.newText);
                 }
             }
-            const success = vscode_1.workspace.applyEdit(workspaceEdit);
-            if (!success) {
-                return false;
-            }
-            let firstEdit = undefined;
-            for (const [uri, edits] of workspaceEdit.entries()) {
-                if (uri.fsPath === source.uri.fsPath) {
-                    firstEdit = edits[0];
-                    break;
-                }
-            }
-            if (!firstEdit) {
-                return true;
-            }
-            const newLines = firstEdit.newText.match(/\n/g);
-            const editedRange = new vscode_1.Range(firstEdit.range.start.line, 0, firstEdit.range.end.line + 1 + (newLines ? newLines.length : 0), 0);
-            // TODO: Workaround for https://github.com/Microsoft/TypeScript/issues/12249
-            // apply formatting to the source range until TS returns formatted results
-            const edits = (yield vscode_1.commands.executeCommand('vscode.executeFormatRangeProvider', source.uri, editedRange, source.formattingOptions || {}));
-            if (!edits || !edits.length) {
-                return false;
-            }
-            const formattingEdit = new vscode_1.WorkspaceEdit();
-            formattingEdit.set(source.uri, edits);
-            return vscode_1.workspace.applyEdit(formattingEdit);
+            return vscode_1.workspace.applyEdit(workspaceEdit);
         });
     }
 }
 exports.default = TypeScriptCodeActionProvider;
-//# sourceMappingURL=codeActionProvider.js.map

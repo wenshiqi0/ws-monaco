@@ -5,6 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
+const convert_1 = require("../utils/convert");
 class TypeScriptDocumentHighlightProvider {
     constructor(client) {
         this.client = client;
@@ -14,11 +15,7 @@ class TypeScriptDocumentHighlightProvider {
         if (!filepath) {
             return Promise.resolve([]);
         }
-        const args = {
-            file: filepath,
-            line: position.line + 1,
-            offset: position.character + 1
-        };
+        const args = convert_1.vsPositionToTsFileLocation(filepath, position);
         return this.client.execute('occurrences', args, token).then((response) => {
             let data = response.body;
             if (data && data.length) {
@@ -33,9 +30,7 @@ class TypeScriptDocumentHighlightProvider {
                         return [];
                     }
                 }
-                return data.map((item) => {
-                    return new vscode_1.DocumentHighlight(new vscode_1.Range(item.start.line - 1, item.start.offset - 1, item.end.line - 1, item.end.offset - 1), item.isWriteAccess ? vscode_1.DocumentHighlightKind.Write : vscode_1.DocumentHighlightKind.Read);
-                });
+                return data.map(item => new vscode_1.DocumentHighlight(convert_1.tsTextSpanToVsRange(item), item.isWriteAccess ? vscode_1.DocumentHighlightKind.Write : vscode_1.DocumentHighlightKind.Read));
             }
             return [];
         }, () => {
@@ -44,4 +39,3 @@ class TypeScriptDocumentHighlightProvider {
     }
 }
 exports.default = TypeScriptDocumentHighlightProvider;
-//# sourceMappingURL=documentHighlightProvider.js.map

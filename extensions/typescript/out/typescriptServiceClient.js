@@ -678,4 +678,3 @@ class TypeScriptServiceClient {
 TypeScriptServiceClient.WALK_THROUGH_SNIPPET_SCHEME = 'walkThroughSnippet';
 TypeScriptServiceClient.WALK_THROUGH_SNIPPET_SCHEME_COLON = `${TypeScriptServiceClient.WALK_THROUGH_SNIPPET_SCHEME}:`;
 exports.default = TypeScriptServiceClient;
-//# sourceMappingURL=typescriptServiceClient.js.map

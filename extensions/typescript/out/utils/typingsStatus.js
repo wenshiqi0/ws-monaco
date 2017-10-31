@@ -102,4 +102,3 @@ class AtaProgressReporter {
     }
 }
 exports.AtaProgressReporter = AtaProgressReporter;
-//# sourceMappingURL=typingsStatus.js.map

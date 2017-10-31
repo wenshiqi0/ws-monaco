@@ -6,6 +6,7 @@ import languages from './languages';
 import { EventEmitter } from './Event';
 import { IndentAction } from './const.d';
 import Promise from 'bluebird';
+import { MarkdownString } from './htmlContent';
 import * as types from './types';
 
 export default {
@@ -20,6 +21,9 @@ export default {
   workspace,
   window,
   languages,
+
+  // unknow
+  MarkdownString,
 
   // event
   EventEmitter,

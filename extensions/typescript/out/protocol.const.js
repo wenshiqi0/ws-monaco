@@ -39,4 +39,3 @@ class DiagnosticCategory {
 DiagnosticCategory.error = 'error';
 DiagnosticCategory.warning = 'warning';
 exports.DiagnosticCategory = DiagnosticCategory;
-//# sourceMappingURL=protocol.const.js.map

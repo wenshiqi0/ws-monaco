@@ -78,7 +78,7 @@ function getDocumentSettings(textDocument) {
         var promise = documentSettings[textDocument.uri];
         if (!promise) {
             var configRequestParam = { items: [{ scopeUri: textDocument.uri, section: textDocument.languageId }] };
-            promise = connection.sendRequest(protocol_configuration_proposed_1.GetConfigurationRequest.type, configRequestParam).then(function (s) { return s[0]; });
+            promise = connection.sendRequest(protocol_configuration_proposed_1.ConfigurationRequest.type, configRequestParam).then(function (s) { return s[0]; });
             documentSettings[textDocument.uri] = promise;
         }
         return promise;
@@ -173,6 +173,14 @@ connection.onRequest(protocol_colorProvider_proposed_1.DocumentColorRequest.type
     if (document) {
         var stylesheet = stylesheets.get(document);
         return getLanguageService(document).findDocumentColors(document, stylesheet);
+    }
+    return [];
+});
+connection.onRequest(protocol_colorProvider_proposed_1.ColorPresentationRequest.type, function (params) {
+    var document = documents.get(params.textDocument.uri);
+    if (document) {
+        var stylesheet = stylesheets.get(document);
+        return getLanguageService(document).getColorPresentations(document, stylesheet, params.colorInfo);
     }
     return [];
 });

@@ -634,5 +634,47 @@
       "value": "switchTab({\n  url: '$1', // 需要跳转的 tabBar 页面的路径（需在 app.json 的 tabBar 字段定义的页面），路径后不能带参数\n});"
     },
     "documentation": "跳转到 tabBar 页面，并关闭其他所有非 tabBar 页面。"
+  },
+  "saveFile": {
+    "insertText": {
+      "value": "saveFile({\n\ttempFilePath: $1,\n\tsuccess: (res) => {\n\t\t$2\n\t},\n});"      
+    },
+    "documentation": "保存文件到本地。"    
+  },
+  "removeSavedFile": {
+    "insertText": {
+      "value": "removeSavedFile({\n\tfilePath: $1,\n\tsuccess: (res) => {\n\t\t$2\n\t},\n});"      
+    },
+    "documentation": "删除本地已保存的文件。"    
+  },
+  "getSavedFileInfo": {
+    "insertText": {
+      "value": "getSavedFileInfo({\n\tfilePath: $1,\n\tsuccess: (res) => {\n\t\t$2\n\t},\n});"      
+    },
+    "documentation": "获取本地文件的文件信息。此接口只能用于获取已保存到本地的文件。"    
+  },
+  "getSavedFileList": {
+    "insertText": {
+      "value": "getSavedFileList({\n\tsuccess: (res) => {\n\t\t$1\n\t},\n});"      
+    },
+    "documentation": "获取本地已保存的文件列表。"    
+  },
+  "onUserCaptureScreen": {
+    "insertText": {
+      "value": "onUserCaptureScreen((res) => {\n\t$1\n})"
+    },
+    "documentation": "截屏事件。"
+  },
+  "offUserCaptureScreen": {
+    "insertText": {
+      "value": "offUserCaptureScreen((res) => {\n\t$1\n})"
+    },
+    "documentation": "截屏事件。"
+  },
+  "setKeepScreenOn": {
+    "insertText": {
+      "value": "setKeepScreenOn"
+    },
+    "documentation": "设置屏幕是否长亮。"
   }
 }

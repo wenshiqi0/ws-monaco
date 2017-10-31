@@ -39,12 +39,19 @@ function getHTMLMode(htmlLanguageService) {
         format: function (document, range, formatParams, settings) {
             if (settings === void 0) { settings = globalSettings; }
             var formatSettings = settings && settings.html && settings.html.format;
-            if (!formatSettings) {
-                formatSettings = formatParams;
+            if (formatSettings) {
+                formatSettings = merge(formatSettings, {});
             }
             else {
-                formatSettings = merge(formatParams, merge(formatSettings, {}));
+                formatSettings = {};
             }
+            if (formatSettings.contentUnformatted) {
+                formatSettings.contentUnformatted = formatSettings.contentUnformatted + ',script';
+            }
+            else {
+                formatSettings.contentUnformatted = 'script';
+            }
+            formatSettings = merge(formatParams, formatSettings);
             return htmlLanguageService.format(document, range, formatSettings);
         },
         doAutoClose: function (document, position) {

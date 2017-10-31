@@ -49,4 +49,3 @@ class DirectiveCommentCompletionProvider {
     }
 }
 exports.default = DirectiveCommentCompletionProvider;
-//# sourceMappingURL=directiveCommentCompletionProvider.js.map

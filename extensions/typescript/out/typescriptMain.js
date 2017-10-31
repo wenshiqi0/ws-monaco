@@ -33,6 +33,8 @@ const typingsStatus_1 = require("./utils/typingsStatus");
 const versionStatus_1 = require("./utils/versionStatus");
 const plugins_1 = require("./utils/plugins");
 const tsconfig_1 = require("./utils/tsconfig");
+const convert_1 = require("./utils/convert");
+const formattingConfigurationManager_1 = require("./features/formattingConfigurationManager");
 var ProjectConfigAction;
 (function (ProjectConfigAction) {
     ProjectConfigAction[ProjectConfigAction["None"] = 0] = "None";
@@ -143,6 +145,7 @@ class LanguageProvider {
         this._validate = true;
         this.disposables = [];
         this.versionDependentDisposables = [];
+        this.formattingOptionsManager = new formattingConfigurationManager_1.default(client);
         this.bufferSyncSupport = new bufferSyncSupport_1.default(client, description.modeIds, {
             delete: (file) => {
                 this.currentDiagnostics.delete(client.asUrl(file));
@@ -151,7 +154,7 @@ class LanguageProvider {
         this.syntaxDiagnostics = Object.create(null);
         this.currentDiagnostics = vscode_1.languages.createDiagnosticCollection(description.id);
         this.typingsStatus = new typingsStatus_1.default(client);
-        new typingsStatus_1.AtaProgressReporter(client);
+        this.ataProgressReporter = new typingsStatus_1.AtaProgressReporter(client);
         vscode_1.workspace.onDidChangeConfiguration(this.configurationChanged, this, this.disposables);
         this.configurationChanged();
         client.onReady().then(() => __awaiter(this, void 0, void 0, function* () {
@@ -175,6 +178,7 @@ class LanguageProvider {
             }
         }
         this.typingsStatus.dispose();
+        this.ataProgressReporter.dispose();
         this.currentDiagnostics.dispose();
         this.bufferSyncSupport.dispose();
     }
@@ -185,10 +189,10 @@ class LanguageProvider {
             const completionItemProvider = new (yield Promise.resolve().then(function () { return require('./features/completionItemProvider'); })).default(client, this.typingsStatus);
             completionItemProvider.updateConfiguration();
             this.toUpdateOnConfigurationChanged.push(completionItemProvider);
-            this.disposables.push(vscode_1.languages.registerCompletionItemProvider(selector, completionItemProvider, '.'));
+            this.disposables.push(vscode_1.languages.registerCompletionItemProvider(selector, completionItemProvider, '.', '"', '\'', '/'));
             this.disposables.push(vscode_1.languages.registerCompletionItemProvider(selector, new (yield Promise.resolve().then(function () { return require('./features/directiveCommentCompletionProvider'); })).default(client), '@'));
             const { TypeScriptFormattingProvider, FormattingProviderManager } = yield Promise.resolve().then(function () { return require('./features/formattingProvider'); });
-            const formattingProvider = new TypeScriptFormattingProvider(client);
+            const formattingProvider = new TypeScriptFormattingProvider(client, this.formattingOptionsManager);
             formattingProvider.updateConfiguration(config);
             this.disposables.push(vscode_1.languages.registerOnTypeFormattingEditProvider(selector, formattingProvider, ';', '}', '\n'));
             const formattingProviderManager = new FormattingProviderManager(this.description.id, formattingProvider, selector);
@@ -205,8 +209,8 @@ class LanguageProvider {
             this.disposables.push(vscode_1.languages.registerDocumentSymbolProvider(selector, new (yield Promise.resolve().then(function () { return require('./features/documentSymbolProvider'); })).default(client)));
             this.disposables.push(vscode_1.languages.registerSignatureHelpProvider(selector, new (yield Promise.resolve().then(function () { return require('./features/signatureHelpProvider'); })).default(client), '(', ','));
             this.disposables.push(vscode_1.languages.registerRenameProvider(selector, new (yield Promise.resolve().then(function () { return require('./features/renameProvider'); })).default(client)));
-            this.disposables.push(vscode_1.languages.registerCodeActionsProvider(selector, new (yield Promise.resolve().then(function () { return require('./features/codeActionProvider'); })).default(client, this.description.id)));
-            this.disposables.push(vscode_1.languages.registerCodeActionsProvider(selector, new (yield Promise.resolve().then(function () { return require('./features/refactorProvider'); })).default(client, this.description.id)));
+            this.disposables.push(vscode_1.languages.registerCodeActionsProvider(selector, new (yield Promise.resolve().then(function () { return require('./features/codeActionProvider'); })).default(client, this.formattingOptionsManager, this.description.id)));
+            this.disposables.push(vscode_1.languages.registerCodeActionsProvider(selector, new (yield Promise.resolve().then(function () { return require('./features/refactorProvider'); })).default(client, this.formattingOptionsManager, this.description.id)));
             this.registerVersionDependentProviders();
             for (const modeId of this.description.modeIds) {
                 this.disposables.push(vscode_1.languages.registerWorkspaceSymbolProvider(new (yield Promise.resolve().then(function () { return require('./features/workspaceSymbolProvider'); })).default(client, modeId)));
@@ -218,6 +222,8 @@ class LanguageProvider {
                 implementationCodeLensProvider.updateConfiguration();
                 this.toUpdateOnConfigurationChanged.push(implementationCodeLensProvider);
                 this.disposables.push(vscode_1.languages.registerCodeLensProvider(selector, implementationCodeLensProvider));
+                // FIX ME (munong)
+                const EMPTY_ELEMENTS = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'];
                 if (!this.description.isExternal) {
                     this.disposables.push(vscode_1.languages.setLanguageConfiguration(modeId, {
                         indentationRules: {
@@ -228,6 +234,15 @@ class LanguageProvider {
                         },
                         wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
                         onEnterRules: [
+                            {
+                                beforeText: new RegExp(`<(?!(?:${EMPTY_ELEMENTS.join('|')}))([_:\\w][_:\\w-.\\d]*)([^/>]*(?!/)>)[^<]*$`, 'i'),
+                                afterText: /^<\/([_:\w][_:\w-.\d]*)\s*>$/i,
+                                action: { indentAction: vscode_1.IndentAction.IndentOutdent }
+                            },
+                            {
+                                beforeText: new RegExp(`<(?!(?:${EMPTY_ELEMENTS.join('|')}))(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$`, 'i'),
+                                action: { indentAction: vscode_1.IndentAction.Indent }
+                            },
                             {
                                 // e.g. /** | */
                                 beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,
@@ -260,6 +275,7 @@ class LanguageProvider {
     configurationChanged() {
         const config = vscode_1.workspace.getConfiguration(this.id);
         this.updateValidate(config.get(validateSetting, true));
+        this.formattingOptionsManager.updateConfiguration(config);
         for (const toUpdate of this.toUpdateOnConfigurationChanged) {
             toUpdate.updateConfiguration();
         }
@@ -419,28 +435,30 @@ class TypeScriptServiceClientHost {
         return !!this.findLanguage(file);
     }
     goToProjectConfig(isTypeScriptProject, resource) {
-        const rootPath = this.client.getWorkspaceRootForResource(resource);
-        if (!rootPath) {
-            vscode_1.window.showInformationMessage(localize('typescript.projectConfigNoWorkspace', 'Please open a folder in VS Code to use a TypeScript or JavaScript project'));
-            return;
-        }
-        const file = this.client.normalizePath(resource);
-        // TSServer errors when 'projectInfo' is invoked on a non js/ts file
-        if (!file || !this.handles(file)) {
-            vscode_1.window.showWarningMessage(localize('typescript.projectConfigUnsupportedFile', 'Could not determine TypeScript or JavaScript project. Unsupported file type'));
-            return;
-        }
-        return this.client.execute('projectInfo', { file, needFileNameList: false }).then(res => {
+        return __awaiter(this, void 0, void 0, function* () {
+            const rootPath = this.client.getWorkspaceRootForResource(resource);
+            if (!rootPath) {
+                vscode_1.window.showInformationMessage(localize('typescript.projectConfigNoWorkspace', 'Please open a folder in VS Code to use a TypeScript or JavaScript project'));
+                return;
+            }
+            const file = this.client.normalizePath(resource);
+            // TSServer errors when 'projectInfo' is invoked on a non js/ts file
+            if (!file || !this.handles(file)) {
+                vscode_1.window.showWarningMessage(localize('typescript.projectConfigUnsupportedFile', 'Could not determine TypeScript or JavaScript project. Unsupported file type'));
+                return;
+            }
+            const res = yield this.client.execute('projectInfo', { file, needFileNameList: false });
             if (!res || !res.body) {
-                return vscode_1.window.showWarningMessage(localize('typescript.projectConfigCouldNotGetInfo', 'Could not determine TypeScript or JavaScript project'))
-                    .then(() => void 0);
+                vscode_1.window.showWarningMessage(localize('typescript.projectConfigCouldNotGetInfo', 'Could not determine TypeScript or JavaScript project'));
+                return;
             }
             const { configFileName } = res.body;
             if (configFileName && !tsconfig_1.isImplicitProjectConfigFile(configFileName)) {
-                return vscode_1.workspace.openTextDocument(configFileName)
-                    .then(doc => vscode_1.window.showTextDocument(doc, vscode_1.window.activeTextEditor ? vscode_1.window.activeTextEditor.viewColumn : undefined));
+                const doc = yield vscode_1.workspace.openTextDocument(configFileName);
+                vscode_1.window.showTextDocument(doc, vscode_1.window.activeTextEditor ? vscode_1.window.activeTextEditor.viewColumn : undefined);
+                return;
             }
-            return vscode_1.window.showInformationMessage((isTypeScriptProject
+            const selected = yield vscode_1.window.showInformationMessage((isTypeScriptProject
                 ? localize('typescript.noTypeScriptProjectConfig', 'File is not part of a TypeScript project')
                 : localize('typescript.noJavaScriptProjectConfig', 'File is not part of a JavaScript project')), {
                 title: isTypeScriptProject
@@ -450,22 +468,20 @@ class TypeScriptServiceClientHost {
             }, {
                 title: localize('typescript.projectConfigLearnMore', 'Learn More'),
                 id: ProjectConfigAction.LearnMore
-            }).then(selected => {
-                switch (selected && selected.id) {
-                    case ProjectConfigAction.CreateConfig:
-                        return tsconfig_1.openOrCreateConfigFile(isTypeScriptProject, rootPath);
-                    case ProjectConfigAction.LearnMore:
-                        if (isTypeScriptProject) {
-                            vscode_1.commands.executeCommand('vscode.open', vscode_1.Uri.parse('https://go.microsoft.com/fwlink/?linkid=841896'));
-                        }
-                        else {
-                            vscode_1.commands.executeCommand('vscode.open', vscode_1.Uri.parse('https://go.microsoft.com/fwlink/?linkid=759670'));
-                        }
-                        return;
-                    default:
-                        return Promise.resolve(undefined);
-                }
             });
+            switch (selected && selected.id) {
+                case ProjectConfigAction.CreateConfig:
+                    tsconfig_1.openOrCreateConfigFile(isTypeScriptProject, rootPath);
+                    return;
+                case ProjectConfigAction.LearnMore:
+                    if (isTypeScriptProject) {
+                        vscode_1.commands.executeCommand('vscode.open', vscode_1.Uri.parse('https://go.microsoft.com/fwlink/?linkid=841896'));
+                    }
+                    else {
+                        vscode_1.commands.executeCommand('vscode.open', vscode_1.Uri.parse('https://go.microsoft.com/fwlink/?linkid=759670'));
+                    }
+                    return;
+            }
         });
     }
     findLanguage(file) {
@@ -517,8 +533,6 @@ class TypeScriptServiceClientHost {
         if (!body || !body.diagnostics || !body.configFile) {
             return;
         }
-        // TODO: restore opening trigger file?
-        //     body.triggerFile ? this.findLanguage(body.triggerFile)
         (this.findLanguage(body.configFile)).then(language => {
             if (!language) {
                 return;
@@ -569,7 +583,7 @@ class TypeScriptServiceClientHost {
         const result = [];
         for (let diagnostic of diagnostics) {
             const { start, end, text } = diagnostic;
-            const range = new vscode_1.Range(start.line - 1, start.offset - 1, end.line - 1, end.offset - 1);
+            const range = new vscode_1.Range(convert_1.tsLocationToVsPosition(start), convert_1.tsLocationToVsPosition(end));
             const converted = new vscode_1.Diagnostic(range, text);
             converted.severity = this.getDiagnosticSeverity(diagnostic);
             converted.source = diagnostic.source || source;
@@ -589,4 +603,3 @@ class TypeScriptServiceClientHost {
         }
     }
 }
-//# sourceMappingURL=typescriptMain.js.map

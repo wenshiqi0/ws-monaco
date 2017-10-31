@@ -9,12 +9,12 @@ const schemeReg = /^([a-zA-Z0-9\-]*)\:\/\//;
 /**
  * authority regex
  */
-const authorityReg = /\:\/\/([a-zA-Z0-9\.\-]*)\//;
+const authorityReg = /\:\/\/([a-zA-Z0-9\.\-\u4e00-\u9eff]*)\//;
 /**
  * path regex
  */
-const pathReg = platform() === 'win32' ? /([A-Z]\:[\/\\][a-zA-Z0-9\.\-\/\\]*)/ : /[a-zA-Z]\/([a-zA-Z0-9\/\-\.]*)\??/;
-const noAuthorityReg = platform() === 'win32' ? /([A-Z]\:[\/\\][a-zA-Z0-9\.\-\/\\]*)/ : /\:\/\/\/([a-zA-Z0-9\/\-\.]*)\??/;
+const pathReg = platform() === 'win32' ? /([A-Z]\:[\/\\][a-zA-Z0-9\.\-\/\\\u4e00-\u9eff]*)/ : /[a-zA-Z]\/([a-zA-Z0-9\/\-\.\u4e00-\u9eff]*)\??/;
+const noAuthorityReg = platform() === 'win32' ? /([A-Z]\:[\/\\][a-zA-Z0-9\.\-\/\\\u4e00-\u9eff]*)/ : /\:\/\/\/([a-zA-Z0-9\/\-\.\u4e00-\u9eff]*)\??/;
 
 /**
  * A universal resource identifier representing either a file on disk

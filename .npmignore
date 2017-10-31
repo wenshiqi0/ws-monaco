@@ -12,3 +12,5 @@ gulpfile.js
 .babelrc
 INFO.CN.md
 package-lock.json
+extensions/
+**/*.map

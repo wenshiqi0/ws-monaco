@@ -50,6 +50,10 @@ function getCSSMode(documentRegions) {
             var embedded = embeddedCSSDocuments.get(document);
             return cssLanguageService.findDocumentColors(embedded, cssStylesheets.get(embedded));
         },
+        getColorPresentations: function (document, colorInfo) {
+            var embedded = embeddedCSSDocuments.get(document);
+            return cssLanguageService.getColorPresentations(embedded, cssStylesheets.get(embedded), colorInfo);
+        },
         onDocumentRemoved: function (document) {
             embeddedCSSDocuments.onDocumentRemoved(document);
             cssStylesheets.onDocumentRemoved(document);

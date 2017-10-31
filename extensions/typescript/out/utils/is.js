@@ -17,4 +17,3 @@ function string(value) {
     return toString.call(value) === '[object String]';
 }
 exports.string = string;
-//# sourceMappingURL=is.js.map

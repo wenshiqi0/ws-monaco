@@ -1,4 +1,5 @@
-const { languages, SnippetString, Position, IndentAction } = require('vscode');
+const { languages, SnippetString, Position, IndentAction, TextEdit } = require('vscode');
+const Formatter = require('./format');
 const snippets = require('../snippets/axml');
 const completions = require('./completions/axml.json');
 
@@ -54,6 +55,7 @@ function activate(context) {
   })
 
   languages.registerCompletionItemProvider('axml', new CompletionsProvider(), '.', ':', '<', '"', '=', '/', '\s');
+  languages.registerDocumentRangeFormattingEditProvider('axml', new AxmlFormatter());
 }
 
 const tagRex = /<[a-zA-Z\-\:\"\'\=\{\}\s]*\/?>?/;
@@ -103,6 +105,32 @@ class CompletionsProvider {
     if (tag && item.insertText.value.charAt(0) === '<')
       item.insertText.value = item.insertText.value.slice(1);
     return item;
+  }
+}
+
+class AxmlFormatter {
+  provideDocumentFormattingEdits(document, options) {
+    let range = RangeUtil.getRangeForDocument(document);
+
+    return this._provideFormattingEdits(document, range, options);
+  }
+
+  provideDocumentRangeFormattingEdits(document, range, options) {
+    return this._provideFormattingEdits(document, range, options);
+  }
+
+  _provideFormattingEdits(document, range, options) {
+
+    let formatterOptions = {
+      preferSpaces: options.insertSpaces,
+      tabSize: options.tabSize,
+    };
+
+    let formatter = new Formatter(formatterOptions);
+    let xml = formatter.format(document.getText(range));
+
+    return [TextEdit.replace(range, xml)];
+
   }
 }
 

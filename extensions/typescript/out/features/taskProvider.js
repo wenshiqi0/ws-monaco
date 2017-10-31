@@ -208,4 +208,3 @@ class TypeScriptTaskProviderManager {
     }
 }
 exports.default = TypeScriptTaskProviderManager;
-//# sourceMappingURL=taskProvider.js.map

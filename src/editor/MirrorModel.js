@@ -1,4 +1,5 @@
 import { Uri, Range, Position } from '../ant/types';
+import { PrefixSumComputer } from './prefixSumComputer';
 
 export default class MirrorModel {
 	constructor(uri, lines, eol, language, versionId) {
