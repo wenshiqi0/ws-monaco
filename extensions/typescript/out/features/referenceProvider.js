@@ -5,6 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
+const convert_1 = require("../utils/convert");
 class TypeScriptReferenceSupport {
     constructor(client) {
         this.client = client;
@@ -14,11 +15,7 @@ class TypeScriptReferenceSupport {
         if (!filepath) {
             return Promise.resolve([]);
         }
-        const args = {
-            file: filepath,
-            line: position.line + 1,
-            offset: position.character + 1
-        };
+        const args = convert_1.vsPositionToTsFileLocation(filepath, position);
         const apiVersion = this.client.apiVersion;
         return this.client.execute('references', args, token).then((msg) => {
             const result = [];
@@ -32,7 +29,7 @@ class TypeScriptReferenceSupport {
                     continue;
                 }
                 const url = this.client.asUrl(ref.file);
-                const location = new vscode_1.Location(url, new vscode_1.Range(ref.start.line - 1, ref.start.offset - 1, ref.end.line - 1, ref.end.offset - 1));
+                const location = new vscode_1.Location(url, convert_1.tsTextSpanToVsRange(ref));
                 result.push(location);
             }
             return result;
@@ -42,4 +39,3 @@ class TypeScriptReferenceSupport {
     }
 }
 exports.default = TypeScriptReferenceSupport;
-//# sourceMappingURL=referenceProvider.js.map

@@ -12,10 +12,11 @@ export default {
     verticalScrollbarSize: 6,
     horizontalScrollbarSize: 6,
   },
+  suggestOnTriggerCharacters: true,
+  acceptSuggestionOnEnter: 'on',
   renderIndentGuides: true,
   insertSpaces: true,
   detectIndentation: false,
-  quickSuggestionsDelay: 10,
   minimap: {
     enabled: false,
   }

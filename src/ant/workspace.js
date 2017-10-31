@@ -38,6 +38,10 @@ export function openTextDocument(uri) {
   return Promise.resolve(textDocument);
 }
 
+export function registerTaskProvider() {
+  
+}
+
 export function onDidOpenTextDocument(callback, params, disposes) {
   const realCallback = (ret) => {
     const { textDocument } = ret;

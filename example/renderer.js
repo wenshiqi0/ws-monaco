@@ -115,6 +115,11 @@ const loader = require('ant-monaco-editor/dev/vs/loader');
 loader.require.config({
   baseUrl: join(__dirname, '../node_modules/ant-monaco-editor/dev'),
   // baseUrl: '/Users/munong/Documents/github/vscode/out-editor',
+  'vs/nls' : {  // eslint-disable-line
+    availableLanguages: {
+      '*': 'zh-cn',
+    },
+  }, 
 })
 
 // 开始加载 monaco`

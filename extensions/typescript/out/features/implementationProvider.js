@@ -14,4 +14,3 @@ class TypeScriptImplementationProvider extends definitionProviderBase_1.default 
     }
 }
 exports.default = TypeScriptImplementationProvider;
-//# sourceMappingURL=implementationProvider.js.map

@@ -13,9 +13,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
+const convert_1 = require("../utils/convert");
 class TypeScriptRefactorProvider {
-    constructor(client, mode) {
+    constructor(client, formattingOptionsManager, mode) {
         this.client = client;
+        this.formattingOptionsManager = formattingOptionsManager;
         this.doRefactorCommandId = `_typescript.applyRefactoring.${mode}`;
         this.selectRefactorCommandId = `_typescript.selectRefactoring.${mode}`;
         vscode_1.commands.registerCommand(this.doRefactorCommandId, this.doRefactoring, this);
@@ -30,13 +32,7 @@ class TypeScriptRefactorProvider {
             if (!file) {
                 return [];
             }
-            const args = {
-                file: file,
-                startLine: range.start.line + 1,
-                startOffset: range.start.character + 1,
-                endLine: range.end.line + 1,
-                endOffset: range.end.character + 1
-            };
+            const args = convert_1.vsRangeToTsFileRange(file, range);
             try {
                 const response = yield this.client.execute('getApplicableRefactors', args, token);
                 if (!response || !response.body) {
@@ -48,7 +44,7 @@ class TypeScriptRefactorProvider {
                         actions.push({
                             title: info.description,
                             command: this.selectRefactorCommandId,
-                            arguments: [file, info, range]
+                            arguments: [document, file, info, range]
                         });
                     }
                     else {
@@ -56,7 +52,7 @@ class TypeScriptRefactorProvider {
                             actions.push({
                                 title: action.description,
                                 command: this.doRefactorCommandId,
-                                arguments: [file, info.name, action.name, range]
+                                arguments: [document, file, info.name, action.name, range]
                             });
                         }
                     }
@@ -72,12 +68,12 @@ class TypeScriptRefactorProvider {
         const workspaceEdit = new vscode_1.WorkspaceEdit();
         for (const edit of edits) {
             for (const textChange of edit.textChanges) {
-                workspaceEdit.replace(this.client.asUrl(edit.fileName), new vscode_1.Range(textChange.start.line - 1, textChange.start.offset - 1, textChange.end.line - 1, textChange.end.offset - 1), textChange.newText);
+                workspaceEdit.replace(this.client.asUrl(edit.fileName), convert_1.tsTextSpanToVsRange(textChange), textChange.newText);
             }
         }
         return workspaceEdit;
     }
-    selectRefactoring(file, info, range) {
+    selectRefactoring(document, file, info, range) {
         return __awaiter(this, void 0, void 0, function* () {
             return vscode_1.window.showQuickPick(info.actions.map((action) => ({
                 label: action.name,
@@ -86,21 +82,15 @@ class TypeScriptRefactorProvider {
                 if (!selected) {
                     return false;
                 }
-                return this.doRefactoring(file, info.name, selected.label, range);
+                return this.doRefactoring(document, file, info.name, selected.label, range);
             });
         });
     }
-    doRefactoring(file, refactor, action, range) {
+    doRefactoring(document, file, refactor, action, range) {
         return __awaiter(this, void 0, void 0, function* () {
-            const args = {
-                file,
-                refactor,
-                action,
-                startLine: range.start.line + 1,
-                startOffset: range.start.character + 1,
-                endLine: range.end.line + 1,
-                endOffset: range.end.character + 1
-            };
+            yield this.formattingOptionsManager.ensureFormatOptionsForDocument(document, undefined);
+            const args = Object.assign({}, convert_1.vsRangeToTsFileRange(file, range), { refactor,
+                action });
             const response = yield this.client.execute('getEditsForRefactor', args);
             if (!response || !response.body || !response.body.edits.length) {
                 return false;
@@ -112,7 +102,7 @@ class TypeScriptRefactorProvider {
             const renameLocation = response.body.renameLocation;
             if (renameLocation) {
                 if (vscode_1.window.activeTextEditor && vscode_1.window.activeTextEditor.document.uri.fsPath === file) {
-                    const pos = new vscode_1.Position(renameLocation.line - 1, renameLocation.offset - 1);
+                    const pos = convert_1.tsLocationToVsPosition(renameLocation);
                     vscode_1.window.activeTextEditor.selection = new vscode_1.Selection(pos, pos);
                     yield vscode_1.commands.executeCommand('editor.action.rename');
                 }
@@ -122,4 +112,3 @@ class TypeScriptRefactorProvider {
     }
 }
 exports.default = TypeScriptRefactorProvider;
-//# sourceMappingURL=refactorProvider.js.map

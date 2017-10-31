@@ -5,6 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
+const convert_1 = require("../utils/convert");
 class ReferencesCodeLens extends vscode_1.CodeLens {
     constructor(document, file, range) {
         super(range);
@@ -72,7 +73,7 @@ class TypeScriptBaseCodeLensProvider {
         if (!span) {
             return null;
         }
-        const range = new vscode_1.Range(span.start.line - 1, span.start.offset - 1, span.end.line - 1, span.end.offset - 1);
+        const range = convert_1.tsTextSpanToVsRange(span);
         const text = document.getText(range);
         const identifierMatch = new RegExp(`^(.*?(\\b|\\W))${(item.text || '').replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}(\\b|\\W)`, 'gm');
         const match = identifierMatch.exec(text);
@@ -82,4 +83,3 @@ class TypeScriptBaseCodeLensProvider {
     }
 }
 exports.TypeScriptBaseCodeLensProvider = TypeScriptBaseCodeLensProvider;
-//# sourceMappingURL=baseCodeLensProvider.js.map

@@ -6,6 +6,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
 const Previewer = require("./previewer");
+const convert_1 = require("../utils/convert");
 class TypeScriptSignatureHelpProvider {
     constructor(client) {
         this.client = client;
@@ -15,11 +16,7 @@ class TypeScriptSignatureHelpProvider {
         if (!filepath) {
             return Promise.resolve(null);
         }
-        const args = {
-            file: filepath,
-            line: position.line + 1,
-            offset: position.character + 1
-        };
+        const args = convert_1.vsPositionToTsFileLocation(filepath, position);
         return this.client.execute('signatureHelp', args, token).then((response) => {
             const info = response.body;
             if (!info) {
@@ -47,7 +44,7 @@ class TypeScriptSignatureHelpProvider {
                     }
                 });
                 signature.label += Previewer.plain(item.suffixDisplayParts);
-                signature.documentation = Previewer.plainDocumentation(item.documentation, item.tags);
+                signature.documentation = Previewer.markdownDocumentation(item.documentation, item.tags);
                 result.signatures.push(signature);
             });
             return result;
@@ -57,4 +54,3 @@ class TypeScriptSignatureHelpProvider {
     }
 }
 exports.default = TypeScriptSignatureHelpProvider;
-//# sourceMappingURL=signatureHelpProvider.js.map

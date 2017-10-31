@@ -3,9 +3,18 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
 const nls = require("vscode-nls");
+const convert_1 = require("../utils/convert");
 const localize = nls.loadMessageBundle();
 const configurationNamespace = 'jsDocCompletion';
 var Configuration;
@@ -67,19 +76,19 @@ class TryCompleteJsDocCommand {
      * if possible, otherwise falling back to a default comment format.
      */
     tryCompleteJsDoc(resource, start, shouldGetJSDocFromTSServer) {
-        const file = this.lazyClient().normalizePath(resource);
-        if (!file) {
-            return Promise.resolve(false);
-        }
-        const editor = vscode_1.window.activeTextEditor;
-        if (!editor || editor.document.uri.fsPath !== resource.fsPath) {
-            return Promise.resolve(false);
-        }
-        if (!shouldGetJSDocFromTSServer) {
-            return this.tryInsertDefaultDoc(editor, start);
-        }
-        return this.tryInsertJsDocFromTemplate(editor, file, start)
-            .then((didInsertFromTemplate) => {
+        return __awaiter(this, void 0, void 0, function* () {
+            const file = this.lazyClient().normalizePath(resource);
+            if (!file) {
+                return false;
+            }
+            const editor = vscode_1.window.activeTextEditor;
+            if (!editor || editor.document.uri.fsPath !== resource.fsPath) {
+                return false;
+            }
+            if (!shouldGetJSDocFromTSServer) {
+                return this.tryInsertDefaultDoc(editor, start);
+            }
+            const didInsertFromTemplate = yield this.tryInsertJsDocFromTemplate(editor, file, start);
             if (didInsertFromTemplate) {
                 return true;
             }
@@ -87,11 +96,7 @@ class TryCompleteJsDocCommand {
         });
     }
     tryInsertJsDocFromTemplate(editor, file, position) {
-        const args = {
-            file: file,
-            line: position.line + 1,
-            offset: position.character + 1
-        };
+        const args = convert_1.vsPositionToTsFileLocation(file, position);
         return Promise.race([
             this.lazyClient().execute('docCommentTemplate', args),
             new Promise((_, reject) => setTimeout(reject, 250))
@@ -129,4 +134,3 @@ class TryCompleteJsDocCommand {
 }
 TryCompleteJsDocCommand.COMMAND_NAME = '_typeScript.tryCompleteJsDoc';
 exports.TryCompleteJsDocCommand = TryCompleteJsDocCommand;
-//# sourceMappingURL=jsDocCompletionProvider.js.map

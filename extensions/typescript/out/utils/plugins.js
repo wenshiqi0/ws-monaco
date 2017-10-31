@@ -22,4 +22,3 @@ function getContributedTypeScriptServerPlugins() {
     return plugins;
 }
 exports.getContributedTypeScriptServerPlugins = getContributedTypeScriptServerPlugins;
-//# sourceMappingURL=plugins.js.map

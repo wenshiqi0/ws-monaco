@@ -42,4 +42,3 @@ class VersionStatus extends vscode.Disposable {
     }
 }
 exports.default = VersionStatus;
-//# sourceMappingURL=versionStatus.js.map

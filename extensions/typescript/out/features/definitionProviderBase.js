@@ -5,6 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
+const convert_1 = require("../utils/convert");
 class TypeScriptDefinitionProviderBase {
     constructor(client) {
         this.client = client;
@@ -14,11 +15,7 @@ class TypeScriptDefinitionProviderBase {
         if (!filepath) {
             return Promise.resolve(null);
         }
-        const args = {
-            file: filepath,
-            line: position.line + 1,
-            offset: position.character + 1
-        };
+        const args = convert_1.vsPositionToTsFileLocation(filepath, position);
         return this.client.execute(definitionType, args, token).then(response => {
             const locations = (response && response.body) || [];
             if (!locations || locations.length === 0) {
@@ -30,7 +27,7 @@ class TypeScriptDefinitionProviderBase {
                     return null;
                 }
                 else {
-                    return new vscode_1.Location(resource, new vscode_1.Range(location.start.line - 1, location.start.offset - 1, location.end.line - 1, location.end.offset - 1));
+                    return new vscode_1.Location(resource, convert_1.tsTextSpanToVsRange(location));
                 }
             }).filter(x => x !== null);
         }, () => {
@@ -39,4 +36,3 @@ class TypeScriptDefinitionProviderBase {
     }
 }
 exports.default = TypeScriptDefinitionProviderBase;
-//# sourceMappingURL=definitionProviderBase.js.map

@@ -162,4 +162,3 @@ class TypeScriptVersionProvider {
     }
 }
 exports.TypeScriptVersionProvider = TypeScriptVersionProvider;
-//# sourceMappingURL=versionProvider.js.map

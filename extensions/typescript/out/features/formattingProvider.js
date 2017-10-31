@@ -3,144 +3,73 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
-var Configuration;
-(function (Configuration) {
-    Configuration.insertSpaceAfterCommaDelimiter = 'insertSpaceAfterCommaDelimiter';
-    Configuration.insertSpaceAfterConstructor = 'insertSpaceAfterConstructor';
-    Configuration.insertSpaceAfterSemicolonInForStatements = 'insertSpaceAfterSemicolonInForStatements';
-    Configuration.insertSpaceBeforeAndAfterBinaryOperators = 'insertSpaceBeforeAndAfterBinaryOperators';
-    Configuration.insertSpaceAfterKeywordsInControlFlowStatements = 'insertSpaceAfterKeywordsInControlFlowStatements';
-    Configuration.insertSpaceAfterFunctionKeywordForAnonymousFunctions = 'insertSpaceAfterFunctionKeywordForAnonymousFunctions';
-    Configuration.insertSpaceBeforeFunctionParenthesis = 'insertSpaceBeforeFunctionParenthesis';
-    Configuration.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis = 'insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis';
-    Configuration.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets = 'insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets';
-    Configuration.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces = 'insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces';
-    Configuration.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces = 'insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces';
-    Configuration.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces = 'insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces';
-    Configuration.insertSpaceAfterTypeAssertion = 'insertSpaceAfterTypeAssertion';
-    Configuration.placeOpenBraceOnNewLineForFunctions = 'placeOpenBraceOnNewLineForFunctions';
-    Configuration.placeOpenBraceOnNewLineForControlBlocks = 'placeOpenBraceOnNewLineForControlBlocks';
-    function equals(a, b) {
-        let keys = Object.keys(a);
-        for (let i = 0; i < keys.length; i++) {
-            let key = keys[i];
-            if (a[key] !== b[key]) {
-                return false;
-            }
-        }
-        return true;
-    }
-    Configuration.equals = equals;
-    function def() {
-        let result = Object.create(null);
-        result.enable = true;
-        result.insertSpaceAfterCommaDelimiter = true;
-        result.insertSpaceAfterConstructor = false;
-        result.insertSpaceAfterSemicolonInForStatements = true;
-        result.insertSpaceBeforeAndAfterBinaryOperators = true;
-        result.insertSpaceAfterKeywordsInControlFlowStatements = true;
-        result.insertSpaceAfterFunctionKeywordForAnonymousFunctions = false;
-        result.insertSpaceBeforeFunctionParenthesis = false;
-        result.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis = false;
-        result.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets = false;
-        result.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces = true;
-        result.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces = false;
-        result.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces = false;
-        result.insertSpaceAfterTypeAssertion = false;
-        result.placeOpenBraceOnNewLineForFunctions = false;
-        result.placeOpenBraceOnNewLineForControlBlocks = false;
-        return result;
-    }
-    Configuration.def = def;
-})(Configuration || (Configuration = {}));
+const convert_1 = require("../utils/convert");
 class TypeScriptFormattingProvider {
-    constructor(client) {
+    constructor(client, formattingOptionsManager) {
         this.client = client;
-        this.config = Configuration.def();
-        this.formatOptions = Object.create(null);
-        vscode_1.workspace.onDidCloseTextDocument((textDocument) => {
-            let key = textDocument.uri.toString();
-            // When a document gets closed delete the cached formatting options.
-            // This is necessary sine the tsserver now closed a project when its
-            // last file in it closes which drops the stored formatting options
-            // as well.
-            delete this.formatOptions[key];
-        });
+        this.formattingOptionsManager = formattingOptionsManager;
+        this.enabled = true;
     }
     updateConfiguration(config) {
-        let newConfig = config.get('format', Configuration.def());
-        if (!Configuration.equals(this.config, newConfig)) {
-            this.config = newConfig;
-            this.formatOptions = Object.create(null);
-        }
+        this.enabled = config.get('format.enable', true);
     }
     isEnabled() {
-        return this.config.enable;
-    }
-    ensureFormatOptions(document, options, token) {
-        const key = document.uri.toString();
-        const currentOptions = this.formatOptions[key];
-        if (currentOptions && currentOptions.tabSize === options.tabSize && currentOptions.indentSize === options.tabSize && currentOptions.convertTabsToSpaces === options.insertSpaces) {
-            return Promise.resolve(currentOptions);
-        }
-        else {
-            const absPath = this.client.normalizePath(document.uri);
-            if (!absPath) {
-                return Promise.resolve(Object.create(null));
-            }
-            const formatOptions = this.getFormatOptions(options);
-            const args = {
-                file: absPath,
-                formatOptions: formatOptions
-            };
-            return this.client.execute('configure', args, token).then(_ => {
-                this.formatOptions[key] = formatOptions;
-                return formatOptions;
-            });
-        }
+        return this.enabled;
     }
     doFormat(document, options, args, token) {
-        return this.ensureFormatOptions(document, options, token).then(() => {
-            return this.client.execute('format', args, token).then((response) => {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.formattingOptionsManager.ensureFormatOptions(document, options, token);
+            try {
+                const response = yield this.client.execute('format', args, token);
                 if (response.body) {
                     return response.body.map(this.codeEdit2SingleEditOperation);
                 }
-                else {
-                    return [];
-                }
-            }, () => {
-                return [];
-            });
+            }
+            catch (_a) {
+                // noop
+            }
+            return [];
         });
     }
     provideDocumentRangeFormattingEdits(document, range, options, token) {
-        const absPath = this.client.normalizePath(document.uri);
-        if (!absPath) {
-            return Promise.resolve([]);
-        }
-        const args = {
-            file: absPath,
-            line: range.start.line + 1,
-            offset: range.start.character + 1,
-            endLine: range.end.line + 1,
-            endOffset: range.end.character + 1
-        };
-        return this.doFormat(document, options, args, token);
+        return __awaiter(this, void 0, void 0, function* () {
+            const absPath = this.client.normalizePath(document.uri);
+            if (!absPath) {
+                return [];
+            }
+            const args = {
+                file: absPath,
+                line: range.start.line + 1,
+                offset: range.start.character + 1,
+                endLine: range.end.line + 1,
+                endOffset: range.end.character + 1
+            };
+            return this.doFormat(document, options, args, token);
+        });
     }
     provideOnTypeFormattingEdits(document, position, ch, options, token) {
-        const filepath = this.client.normalizePath(document.uri);
-        if (!filepath) {
-            return Promise.resolve([]);
-        }
-        let args = {
-            file: filepath,
-            line: position.line + 1,
-            offset: position.character + 1,
-            key: ch
-        };
-        return this.ensureFormatOptions(document, options, token).then(() => {
+        return __awaiter(this, void 0, void 0, function* () {
+            const filepath = this.client.normalizePath(document.uri);
+            if (!filepath) {
+                return [];
+            }
+            let args = {
+                file: filepath,
+                line: position.line + 1,
+                offset: position.character + 1,
+                key: ch
+            };
+            yield this.formattingOptionsManager.ensureFormatOptions(document, options, token);
             return this.client.execute('formatonkey', args, token).then((response) => {
                 let edits = response.body;
                 let result = [];
@@ -172,31 +101,7 @@ class TypeScriptFormattingProvider {
         });
     }
     codeEdit2SingleEditOperation(edit) {
-        return new vscode_1.TextEdit(new vscode_1.Range(edit.start.line - 1, edit.start.offset - 1, edit.end.line - 1, edit.end.offset - 1), edit.newText);
-    }
-    getFormatOptions(options) {
-        return {
-            tabSize: options.tabSize,
-            indentSize: options.tabSize,
-            convertTabsToSpaces: options.insertSpaces,
-            // We can use \n here since the editor normalizes later on to its line endings.
-            newLineCharacter: '\n',
-            insertSpaceAfterCommaDelimiter: this.config.insertSpaceAfterCommaDelimiter,
-            insertSpaceAfterConstructor: this.config.insertSpaceAfterConstructor,
-            insertSpaceAfterSemicolonInForStatements: this.config.insertSpaceAfterSemicolonInForStatements,
-            insertSpaceBeforeAndAfterBinaryOperators: this.config.insertSpaceBeforeAndAfterBinaryOperators,
-            insertSpaceAfterKeywordsInControlFlowStatements: this.config.insertSpaceAfterKeywordsInControlFlowStatements,
-            insertSpaceAfterFunctionKeywordForAnonymousFunctions: this.config.insertSpaceAfterFunctionKeywordForAnonymousFunctions,
-            insertSpaceBeforeFunctionParenthesis: this.config.insertSpaceBeforeFunctionParenthesis,
-            insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis: this.config.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis,
-            insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets: this.config.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets,
-            insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces: this.config.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces,
-            insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces: this.config.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces,
-            insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces: this.config.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces,
-            insertSpaceAfterTypeAssertion: this.config.insertSpaceAfterTypeAssertion,
-            placeOpenBraceOnNewLineForFunctions: this.config.placeOpenBraceOnNewLineForFunctions,
-            placeOpenBraceOnNewLineForControlBlocks: this.config.placeOpenBraceOnNewLineForControlBlocks,
-        };
+        return new vscode_1.TextEdit(convert_1.tsTextSpanToVsRange(edit), edit.newText);
     }
 }
 exports.TypeScriptFormattingProvider = TypeScriptFormattingProvider;
@@ -225,4 +130,3 @@ class FormattingProviderManager {
     }
 }
 exports.FormattingProviderManager = FormattingProviderManager;
-//# sourceMappingURL=formattingProvider.js.map

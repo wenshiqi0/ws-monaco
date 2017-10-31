@@ -174,4 +174,3 @@ function computeLargeRoots(configFileName, fileNames) {
     }
     return result;
 }
-//# sourceMappingURL=projectStatus.js.map
