@@ -135,10 +135,10 @@ function activate(context) {
                     });
                 });
             },
-            provideColorPresentations: function (document, colorInfo) {
+            provideColorPresentations: function (color, context) {
                 var params = {
-                    textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(document),
-                    colorInfo: { range: client.code2ProtocolConverter.asRange(colorInfo.range), color: colorInfo.color }
+                    textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(context.document),
+                    colorInfo: { range: client.code2ProtocolConverter.asRange(context.range), color: color }
                 };
                 return client.sendRequest(protocol_colorProvider_proposed_1.ColorPresentationRequest.type, params).then(function (presentations) {
                     return presentations.map(function (p) {

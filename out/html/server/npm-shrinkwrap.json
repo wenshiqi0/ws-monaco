@@ -5,15 +5,15 @@
   "requires": true,
   "dependencies": {
     "@types/mocha": {
-      "version": "2.2.43",
-      "resolved": "http://registry.npm.alibaba-inc.com/@types/mocha/download/@types/mocha-2.2.43.tgz",
-      "integrity": "sha1-A8VFicQ60EjLy/1jmZtV0EJO7Cc=",
+      "version": "2.2.44",
+      "resolved": "http://registry.npm.alibaba-inc.com/@types/mocha/download/@types/mocha-2.2.44.tgz",
+      "integrity": "sha1-HUp5jlPzUhL9WtTQQFBiAXHNW14=",
       "dev": true
     },
     "@types/node": {
-      "version": "6.0.89",
-      "resolved": "http://registry.npm.alibaba-inc.com/@types/node/download/@types/node-6.0.89.tgz",
-      "integrity": "sha1-FUvg5qgjdgzWCDqoxI+VLi5j4LA=",
+      "version": "6.0.90",
+      "resolved": "http://registry.npm.alibaba-inc.com/@types/node/download/@types/node-6.0.90.tgz",
+      "integrity": "sha1-DtdIM/obc9zblAncscl+wKixOwI=",
       "dev": true
     },
     "vscode-css-languageservice": {

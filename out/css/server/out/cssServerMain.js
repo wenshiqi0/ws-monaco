@@ -7,7 +7,7 @@
 		var a = typeof exports === 'object' ? factory(require("vscode-languageserver"), require("vscode-languageserver-protocol/lib/protocol.configuration.proposed"), require("vscode-languageserver-protocol/lib/protocol.colorProvider.proposed"), require("vscode-css-languageservice")) : factory(root["vscode-languageserver"], root["vscode-languageserver-protocol/lib/protocol.configuration.proposed"], root["vscode-languageserver-protocol/lib/protocol.colorProvider.proposed"], root["vscode-css-languageservice"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_5__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -70,11 +70,17 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports) {
+
+module.exports = require("fs");
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -85,11 +91,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var vscode_languageserver_1 = __webpack_require__(1);
-var protocol_configuration_proposed_1 = __webpack_require__(2);
-var protocol_colorProvider_proposed_1 = __webpack_require__(3);
-var vscode_css_languageservice_1 = __webpack_require__(4);
-var languageModelCache_1 = __webpack_require__(5);
+var vscode_languageserver_1 = __webpack_require__(2);
+var protocol_configuration_proposed_1 = __webpack_require__(3);
+var protocol_colorProvider_proposed_1 = __webpack_require__(4);
+var vscode_css_languageservice_1 = __webpack_require__(5);
+var languageModelCache_1 = __webpack_require__(6);
 // Create a connection for the server.
 var connection = vscode_languageserver_1.createConnection();
 console.log = connection.console.log.bind(connection.console);
@@ -132,6 +138,7 @@ connection.onInitialize(function (params) {
         referencesProvider: true,
         definitionProvider: true,
         documentHighlightProvider: true,
+        documentRangeFormattingProvider: true,
         codeActionProvider: true,
         renameProvider: true,
         colorProvider: true
@@ -248,6 +255,12 @@ connection.onReferences(function (referenceParams) {
     var stylesheet = stylesheets.get(document);
     return getLanguageService(document).findReferences(document, referenceParams.position, stylesheet);
 });
+connection.onDocumentRangeFormatting(function (formatParams, textEdit, token) {
+    var document = documents.get(formatParams.textDocument.uri);
+    __webpack_require__(0).appendFileSync('/Users/munong/Downloads/edit.log', JSON.stringify(textEdit));
+    __webpack_require__(0).appendFileSync('/Users/munong/Downloads/docs.log', JSON.stringify(document));
+    return {};
+});
 connection.onCodeAction(function (codeActionParams) {
     var document = documents.get(codeActionParams.textDocument.uri);
     var stylesheet = stylesheets.get(document);
@@ -279,12 +292,6 @@ connection.listen();
 //# sourceMappingURL=cssServerMain.js.map
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
-
-/***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
@@ -304,6 +311,12 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_5__;
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

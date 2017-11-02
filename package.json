@@ -24,6 +24,9 @@
     "vscode-textmate",
     "ant"
   ],
+  "vscode-plugins": [
+    "axml", "css", "ejs", "emmet", "eslint", "html", "javascript", "json", "less", "nunjucks", "scss", "typescript"
+  ],
   "author": "munong",
   "license": "MIT",
   "dependencies": {

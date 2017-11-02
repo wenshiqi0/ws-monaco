@@ -98,14 +98,19 @@ var VSCodeContentRequest;
 (function (VSCodeContentRequest) {
     VSCodeContentRequest.type = new vscode_languageclient_1.RequestType('vscode/content');
 })(VSCodeContentRequest || (VSCodeContentRequest = {}));
+var SchemaContentChangeNotification;
+(function (SchemaContentChangeNotification) {
+    SchemaContentChangeNotification.type = new vscode_languageclient_1.NotificationType('json/schemaContent');
+})(SchemaContentChangeNotification || (SchemaContentChangeNotification = {}));
 var SchemaAssociationNotification;
 (function (SchemaAssociationNotification) {
     SchemaAssociationNotification.type = new vscode_languageclient_1.NotificationType('json/schemaAssociations');
 })(SchemaAssociationNotification || (SchemaAssociationNotification = {}));
 function activate(context) {
+    var toDispose = context.subscriptions;
     var packageInfo = getPackageInfo(context);
     var telemetryReporter = packageInfo && new vscode_extension_telemetry_1.default(packageInfo.name, packageInfo.version, packageInfo.aiKey);
-    context.subscriptions.push(telemetryReporter);
+    toDispose.push(telemetryReporter);
     // The server is implemented in node
     var serverModule = context.asAbsolutePath(path.join('server', 'out', 'jsonServerMain.js'));
     // The debug options for the server
@@ -138,6 +143,7 @@ function activate(context) {
     var client = new vscode_languageclient_1.LanguageClient('json', localize('jsonserver.name', 'JSON Language Server'), serverOptions, clientOptions);
     client.registerFeature(new configuration_proposed_1.ConfigurationFeature(client));
     var disposable = client.start();
+    toDispose.push(disposable);
     client.onReady().then(function () {
         client.onTelemetry(function (e) {
             if (telemetryReporter) {
@@ -153,9 +159,20 @@ function activate(context) {
                 return Promise.reject(error);
             });
         });
+        var handleContentChange = function (uri) {
+            if (uri.scheme === 'vscode' && uri.authority === 'schemas') {
+                client.sendNotification(SchemaContentChangeNotification.type, uri.toString());
+            }
+        };
+        toDispose.push(vscode_1.workspace.onDidChangeTextDocument(function (e) {
+            return handleContentChange(e.document.uri);
+        }));
+        toDispose.push(vscode_1.workspace.onDidCloseTextDocument(function (d) {
+            return handleContentChange(d.uri);
+        }));
         client.sendNotification(SchemaAssociationNotification.type, getSchemaAssociation(context));
         // register color provider
-        context.subscriptions.push(vscode_1.languages.registerColorProvider(documentSelector, {
+        toDispose.push(vscode_1.languages.registerColorProvider(documentSelector, {
             provideDocumentColors: function (document) {
                 var params = {
                     textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(document)
@@ -168,10 +185,10 @@ function activate(context) {
                     });
                 });
             },
-            provideColorPresentations: function (document, colorInfo) {
+            provideColorPresentations: function (color, context) {
                 var params = {
-                    textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(document),
-                    colorInfo: { range: client.code2ProtocolConverter.asRange(colorInfo.range), color: colorInfo.color }
+                    textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(context.document),
+                    colorInfo: { range: client.code2ProtocolConverter.asRange(context.range), color: color }
                 };
                 return client.sendRequest(protocol_colorProvider_proposed_1.ColorPresentationRequest.type, params).then(function (presentations) {
                     return presentations.map(function (p) {
@@ -184,9 +201,6 @@ function activate(context) {
             }
         }));
     });
-    // Push the disposable to the context's subscriptions so that the
-    // client can be deactivated on extension deactivation
-    context.subscriptions.push(disposable);
     vscode_1.languages.setLanguageConfiguration('json', {
         wordPattern: /("(?:[^\\\"]*(?:\\.)?)*"?)|[^\s{}\[\],:]+/,
         indentationRules: {
@@ -307,8 +321,7 @@ function getSchemaId(schema, rootPath) {
     return url;
 }
 function getPackageInfo(context) {
-    var extensionPackageFile = __webpack_require__(9).readFileSync(context.asAbsolutePath('./package.json'));
-    var extensionPackage = JSON.stringify(extensionPackageFile);
+    var extensionPackage = !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }());
     if (extensionPackage) {
         return {
             name: extensionPackage.name,
@@ -434,7 +447,13 @@ function objectHash(obj, initialHashVal) {
 /* 9 */
 /***/ (function(module, exports) {
 
-module.exports = require("fs");
+function webpackEmptyContext(req) {
+	throw new Error("Cannot find module '" + req + "'.");
+}
+webpackEmptyContext.keys = function() { return []; };
+webpackEmptyContext.resolve = webpackEmptyContext;
+module.exports = webpackEmptyContext;
+webpackEmptyContext.id = 9;
 
 /***/ })
 /******/ ]);

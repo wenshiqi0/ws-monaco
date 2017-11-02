@@ -153,10 +153,10 @@ function activate(context) {
                     });
                 });
             },
-            provideColorPresentations: function (document, colorInfo) {
+            provideColorPresentations: function (color, context) {
                 var params = {
-                    textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(document),
-                    colorInfo: { range: client.code2ProtocolConverter.asRange(colorInfo.range), color: colorInfo.color }
+                    textDocument: client.code2ProtocolConverter.asTextDocumentIdentifier(context.document),
+                    colorInfo: { range: client.code2ProtocolConverter.asRange(context.range), color: color }
                 };
                 return client.sendRequest(protocol_colorProvider_proposed_1.ColorPresentationRequest.type, params).then(function (presentations) {
                     return presentations.map(function (p) {
@@ -222,8 +222,7 @@ function activate(context) {
 }
 exports.activate = activate;
 function getPackageInfo(context) {
-    var extensionPackageFile = __webpack_require__(10).readFileSync(context.asAbsolutePath('./package.json'));
-    var extensionPackage = JSON.stringify(extensionPackageFile);
+    var extensionPackage = !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }());
     if (extensionPackage) {
         return {
             name: extensionPackage.name,
@@ -373,7 +372,13 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_9__;
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = require("fs");
+function webpackEmptyContext(req) {
+	throw new Error("Cannot find module '" + req + "'.");
+}
+webpackEmptyContext.keys = function() { return []; };
+webpackEmptyContext.resolve = webpackEmptyContext;
+module.exports = webpackEmptyContext;
+webpackEmptyContext.id = 10;
 
 /***/ })
 /******/ ]);

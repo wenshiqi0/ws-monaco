@@ -548,6 +548,10 @@ var VSCodeContentRequest;
 (function (VSCodeContentRequest) {
     VSCodeContentRequest.type = new vscode_languageserver_1.RequestType('vscode/content');
 })(VSCodeContentRequest || (VSCodeContentRequest = {}));
+var SchemaContentChangeNotification;
+(function (SchemaContentChangeNotification) {
+    SchemaContentChangeNotification.type = new vscode_languageserver_1.NotificationType('json/schemaContent');
+})(SchemaContentChangeNotification || (SchemaContentChangeNotification = {}));
 // Create a connection for the server
 var connection = vscode_languageserver_1.createConnection();
 console.log = connection.console.log.bind(connection.console);
@@ -656,6 +660,10 @@ connection.onDidChangeConfiguration(function (change) {
 connection.onNotification(SchemaAssociationNotification.type, function (associations) {
     schemaAssociations = associations;
     updateConfiguration();
+});
+// A schema has changed
+connection.onNotification(SchemaContentChangeNotification.type, function (uri) {
+    languageService.resetSchema(uri);
 });
 function updateConfiguration() {
     var languageSettings = {

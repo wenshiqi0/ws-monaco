@@ -284,7 +284,6 @@ class TypeScriptServiceClient {
                         args.push('--npmLocation', `"${this.configuration.npmLocation}"`);
                     }
                 }
-                debugger;
                 electron.fork(currentVersion.tsServerPath, args, options, this.logger, (err, childProcess) => {
                     if (err) {
                         this.lastError = err;
