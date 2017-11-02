@@ -67,10 +67,7 @@ export default {
     monaco.languages.registerCompletionItemProvider(handleLanguageId(id), {
       triggerCharacters: trigger,
       provideCompletionItems: async (model, position, token, context) => {
-        // For bufferSupport to sync textDocuments (typescript & javascript).
-        
-        console.log(context);
-        
+        // For bufferSupport to sync textDocuments (typescript & javascript).        
         await delay();
         const pos = convert.toPosition(position);
         const textDocument = uriToDocument.get(model.uri);

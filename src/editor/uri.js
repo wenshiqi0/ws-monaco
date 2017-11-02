@@ -128,7 +128,7 @@ export default class Uri {
     return `${this._scheme}://${platform() === 'win32' ? '/' : ''}${this._authority}${this._path}`.replace(/\\/g, '/');
   }
 
-  /**
+/**
  * Returns a JSON representation of this Uri.
  *
  * @return An object.
