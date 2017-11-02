@@ -125,7 +125,7 @@ function start(idePath) {
 
   scripts.forEach(({ main, index }) => {
     try {
-      const extMain = originalRequire(main);    
+      const extMain = originalRequire(main);
       extMain.activate({
         subscriptions: global.subscriptions,
         extensionPath: extensions[index],
@@ -134,7 +134,7 @@ function start(idePath) {
         storagePath: '',
         asAbsolutePath: (relative) => join(extensions[index], relative),
       }); 
-    } catch (e) { /* noob */ }
+    } catch (e) { console.error(e) }
   })
 }
 

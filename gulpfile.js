@@ -3,6 +3,7 @@ const gulpSequence = require('gulp-sequence');
 const webpack = require('webpack-stream');
 const { spawnSync } = require('child_process');
 const { readJSONSync } = require('fs-extra');
+const { platform } = require('os');
 const { join, dirname, basename, relative } = require('path');
 const { readdirSync, mkdirSync, existsSync, rmdirSync, statSync } = require('fs');
 
@@ -150,9 +151,17 @@ extensions.forEach((ext) => {
 // install deps
 extensions.forEach((ext) => {
   gulp.task(installTask(ext), () => {
-    return gulp.src(join(extPath, ext))
-      .pipe(gulp.dest(join(distPath)));
+    const ret = spawnSync((platform() === 'win32') ? 'npm.cmd' : 'tnpm', ['i'], {
+      cwd: `./extensions/${ext}`,
+    })
+    if (existsSync(`./extensions/${ext}/server`)) {
+      const ret = spawnSync((platform() === 'win32') ? 'npm.cmd' : 'tnpm', ['i'], {
+        cwd: `./extensions/${ext}/server`,
+      })
+    }
+    return gulp.src(join(extPath, ext));
   })
 });
 
-gulp.task('build-extensions', gulpSequence(...extensions.map(serverTask)));
+gulp.task('build', gulpSequence(...extensions.map(serverTask)));
+gulp.task('install', gulpSequence(...extensions.map(installTask)));

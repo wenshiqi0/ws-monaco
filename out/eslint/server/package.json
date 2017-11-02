@@ -1,0 +1,24 @@
+{
+	"name": "eslint-server",
+	"version": "1.2.1",
+	"author": "Microsoft Corporation",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Microsoft/vscode-eslint.git"
+	},
+	"bugs": {
+		"url": "https://github.com/Microsoft/vscode-eslint/issues"
+	},
+	"engines": {
+		"node": "*"
+	},
+	"dependencies": {
+		"vscode-uri": "^1.0.1",
+		"vscode-languageserver": "^3.3.0"
+	},
+	"scripts": {
+		"compile": "installServerIntoExtension ../eslint ./package.json ./src/tsconfig.json && tsc -p ./src",
+		"watch": "installServerIntoExtension ../eslint ./package.json ./src/tsconfig.json && tsc --watch -p ./src"
+	}
+}
