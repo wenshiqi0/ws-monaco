@@ -1,1 +1,0 @@
-{"version":3,"file":"definitionProvider.js","sourceRoot":"../../src","sources":["features/definitionProvider.ts"],"names":[],"mappings":";AAAA;;;gGAGgG;;AAIhG,qEAA8D;AAE9D,kCAAkD,SAAQ,gCAAsB;IACxE,iBAAiB,CAAC,QAAsB,EAAE,QAAkB,EAAE,KAAkC;QACtG,MAAM,CAAC,IAAI,CAAC,kBAAkB,CAAC,YAAY,EAAE,QAAQ,EAAE,QAAQ,EAAE,KAAK,CAAC,CAAC;IACzE,CAAC;CACD;AAJD,+CAIC"}

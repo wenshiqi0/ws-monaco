@@ -1,1 +1,0 @@
-{"version":3,"file":"typeDefinitionProvider.js","sourceRoot":"../../src","sources":["features/typeDefinitionProvider.ts"],"names":[],"mappings":";AAAA;;;gGAGgG;;AAIhG,qEAA8D;AAE9D,sCAAsD,SAAQ,gCAAsB;IAC5E,qBAAqB,CAAC,QAAsB,EAAE,QAAkB,EAAE,KAAkC;QAC1G,MAAM,CAAC,IAAI,CAAC,kBAAkB,CAAC,gBAAgB,EAAE,QAAQ,EAAE,QAAQ,EAAE,KAAK,CAAC,CAAC;IAC7E,CAAC;CACD;AAJD,mDAIC"}

@@ -2,5 +2,5 @@ node_modules/
 lib/
 .vscode/
 tmp/
-out-extensions/
+extensions/
 package-lock.json
