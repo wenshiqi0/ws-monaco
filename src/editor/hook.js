@@ -31,13 +31,6 @@ function registerEditorEvent(editor) {
     else
       uri = path;
     if (!registry) {
-      GrammarRegistry.setMode('dark');
-      window.monaco.editor.defineTheme('tiny', {
-        base: 'vs-dark',
-        inherit: true,
-        rules: [], // 之后实际要复写这些rules的，所以干脆就传个空数组进去
-        colors: GrammarRegistry.getDefaultColors(),
-      });
       registry = new GrammarRegistry();
       registry.reloadTheme('tiny');
     }

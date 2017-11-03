@@ -2,7 +2,7 @@ const { readFile } = require('fs');
 const { join, dirname, resolve } = require('path');
 const container = document.getElementById('editor')
 
-const { start, openProject, editorOptions, GrammarRegistry, updateConfiguration } = require('../lib/editor');
+const { start, openProject, editorOptions, updateConfiguration } = require('../lib/editor');
 
 let editor;
 const language = 'javascript';
@@ -10,9 +10,6 @@ const language = 'javascript';
 // 新的 vscode textmate 语法解析实现
 // const registry = getDefaultRegistry(join(__dirname, '../lib'));
 const body = document.body;
-
-// theme 注册为黑色的 token
-GrammarRegistry.setMode('dark');
 
 // 初始内容
 const initText = `
@@ -126,17 +123,6 @@ loader.require.config({
 loader.require(['./vs/editor/editor.main'], async function () {
   const globalEditor = window.monaco.editor;
 
-  // 定义编辑器的外观皮肤，目前实现有 dark 和 light
-  globalEditor.defineTheme('tiny', {
-    base: 'vs-dark',
-    inherit: true,
-    rules: [], // 之后实际要复写这些rules的，所以干脆就传个空数组进去
-    colors: GrammarRegistry.getDefaultColors(),
-  });
-
-  // 注册编辑器的皮肤
-  globalEditor.setTheme('tiny');
-
   // monaco 编辑器的 dom 容器
   const container = document.createElement('div');
   container.setAttribute('style', `height: ${window.innerHeight}px; width: ${window.innerWidth}px;`);
@@ -158,22 +144,13 @@ loader.require(['./vs/editor/editor.main'], async function () {
   // 开启 eslint，关闭默认 lint
   updateConfiguration('lintDisable', 'javascript')  
 
-  // 设置编辑器为当前上下文
-  // registry.setCurrentEditor(editor);
   // 启动语法插件
-  start();
+  start(join(__dirname, '../'), 'light');
   const testPath = resolve('./example/test');  
-  openProject(testPath);
-
-  // monaco 根据 token rules 解析出来的 css rules 和 vscode-textmate 有差异
-  // 所以这个地方直接复写掉这一部分的 css 样式，用 vscode-textmate 的解析结果来代替
-  // registry.reloadTheme('tiny');
-  
+  openProject(testPath);  
 
   // 异步注册语言，并创建 textModel，将当前 model 装载进 editor 中
   await Promise.resolve({ languageId: language })
-    // .then((res) => { if (language) return GrammarRegistry.loadGrammar(res); })
-    // .then((res) => { if (language) return GrammarRegistry.registerLanguage(res); })
     .then(() => {
       return window.monaco.editor.createModel(textMap[language], language, join(testPath, `/test.${language === 'javascript' ? 'js' : language}`));
     })
@@ -203,8 +180,6 @@ function handleDragFile(dom) {
 
     readFile(file.path, 'utf8', async (err, text) => {
       await Promise.resolve({ languageId: extMap[extension] || extension })
-        // .then((res) => { if (language) return GrammarRegistry.loadGrammar(res); })
-        // .then((res) => { if (language) return GrammarRegistry.registerLanguage(res); })
         .then(() => {
           openProject(dirname(file.path));
           return window.monaco.editor.createModel(text, extMap[extension] || extension, file.path);

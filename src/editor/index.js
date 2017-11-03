@@ -90,16 +90,16 @@ function registerLanguageConf(extPath, extension) {
 
 let countLanguage = 1;
 
-function start(idePath) {
+function start(idePath, theme) {
   global.idePath = idePath;
 
   hook();
 
-  const globalEditor = window.monaco.editor;
-
+  const globalEditor = window.monaco.editor;  
   // 定义编辑器的外观皮肤，目前实现有 dark 和 light
+  GrammarRegistry.setMode(theme || 'dark');    
   globalEditor.defineTheme('tiny', {
-    base: GrammarRegistry.getMode() === 'dark' ? 'vs-dark' : 'vs',
+    base: theme === 'dark' ? 'vs-dark' : 'vs',
     inherit: true,
     rules: [], // 之后实际要复写这些rules的，所以干脆就传个空数组进去
     colors: GrammarRegistry.getDefaultColors(),

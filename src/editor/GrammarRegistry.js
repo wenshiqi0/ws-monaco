@@ -43,7 +43,7 @@ export default class GrammarRegistry {
   constructor(scopeRegistry) {
     this.scopeRegistry = scopeRegistry || global.languagesConfigure;
     this.injections = {};
-    this.embeddedLanguages = [];
+    this.embeddedLanguages = [];    
     this.registry = new Registry({
       getFilePath: (scopeName) => {
         return this.scopeRegistry[scopeName];
@@ -60,6 +60,13 @@ export default class GrammarRegistry {
    */
   getRegistry() {
     return this.registry;
+  }
+  
+  /**
+   * @return get theme rules
+   */
+  static getRules() {
+    return theme.parseTheme(theme[mode]);
   }
 
   /**
@@ -92,7 +99,7 @@ export default class GrammarRegistry {
    * @param {string} name 
    */
   updateTheme(name) {
-    this.registry.setTheme({ name, settings: theme[mode].tokens });
+    this.registry.setTheme(theme[mode]);
   }
 
   /**
@@ -104,7 +111,7 @@ export default class GrammarRegistry {
    */
   reloadTheme(name) {
     this.updateTheme(name);
-    const cssRules = generateTokensCSSForColorMap(this.registry.getColorMap());
+    const cssRules = generateTokensCSSForColorMap(this.registry.getColorMap());    
     rebuildMtkColors(cssRules);
   }
 
@@ -197,7 +204,7 @@ export default class GrammarRegistry {
           return INITIAL;
         },
         tokenize2: (line, state) => {
-          const rule = grammar.tokenizeLine2(line, state);
+          const rule = grammar.tokenizeLine2(line, state);          
           const ruleStack = rule.ruleStack;
           return {
             tokens: rule.tokens,
