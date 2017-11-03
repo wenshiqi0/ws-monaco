@@ -222,7 +222,7 @@ function activate(context) {
 }
 exports.activate = activate;
 function getPackageInfo(context) {
-    var extensionPackage = !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+    var extensionPackage = JSON.parse(__webpack_require__(10).readFileSync(context.asAbsolutePath('./package.json'), 'utf-8'));
     if (extensionPackage) {
         return {
             name: extensionPackage.name,
@@ -372,13 +372,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_9__;
 /* 10 */
 /***/ (function(module, exports) {
 
-function webpackEmptyContext(req) {
-	throw new Error("Cannot find module '" + req + "'.");
-}
-webpackEmptyContext.keys = function() { return []; };
-webpackEmptyContext.resolve = webpackEmptyContext;
-module.exports = webpackEmptyContext;
-webpackEmptyContext.id = 10;
+module.exports = require("fs");
 
 /***/ })
 /******/ ]);

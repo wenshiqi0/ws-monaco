@@ -93,7 +93,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode = __webpack_require__(0);
 const html_matcher_1 = __webpack_require__(23);
-const css_parser_1 = __webpack_require__(5);
+const css_parser_1 = __webpack_require__(7);
 const bufferStream_1 = __webpack_require__(4);
 const vscode_emmet_helper_1 = __webpack_require__(2);
 exports.LANGUAGE_MODES = {
@@ -576,13 +576,327 @@ exports.DocumentStreamReader = DocumentStreamReader;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+/**
+ * A streaming, character code-based string reader
+ */
+class StreamReader {
+	constructor(string, start, end) {
+		if (end == null && typeof string === 'string') {
+			end = string.length;
+		}
+
+		this.string = string;
+		this.pos = this.start = start || 0;
+		this.end = end;
+	}
+
+	/**
+  * Returns true only if the stream is at the end of the file.
+  * @returns {Boolean}
+  */
+	eof() {
+		return this.pos >= this.end;
+	}
+
+	/**
+  * Creates a new stream instance which is limited to given `start` and `end`
+  * range. E.g. its `eof()` method will look at `end` property, not actual
+  * stream end
+  * @param  {Point} start
+  * @param  {Point} end
+  * @return {StreamReader}
+  */
+	limit(start, end) {
+		return new this.constructor(this.string, start, end);
+	}
+
+	/**
+  * Returns the next character code in the stream without advancing it.
+  * Will return NaN at the end of the file.
+  * @returns {Number}
+  */
+	peek() {
+		return this.string.charCodeAt(this.pos);
+	}
+
+	/**
+  * Returns the next character in the stream and advances it.
+  * Also returns <code>undefined</code> when no more characters are available.
+  * @returns {Number}
+  */
+	next() {
+		if (this.pos < this.string.length) {
+			return this.string.charCodeAt(this.pos++);
+		}
+	}
+
+	/**
+  * `match` can be a character code or a function that takes a character code
+  * and returns a boolean. If the next character in the stream 'matches'
+  * the given argument, it is consumed and returned.
+  * Otherwise, `false` is returned.
+  * @param {Number|Function} match
+  * @returns {Boolean}
+  */
+	eat(match) {
+		const ch = this.peek();
+		const ok = typeof match === 'function' ? match(ch) : ch === match;
+
+		if (ok) {
+			this.next();
+		}
+
+		return ok;
+	}
+
+	/**
+  * Repeatedly calls <code>eat</code> with the given argument, until it
+  * fails. Returns <code>true</code> if any characters were eaten.
+  * @param {Object} match
+  * @returns {Boolean}
+  */
+	eatWhile(match) {
+		const start = this.pos;
+		while (!this.eof() && this.eat(match)) {}
+		return this.pos !== start;
+	}
+
+	/**
+  * Backs up the stream n characters. Backing it up further than the
+  * start of the current token will cause things to break, so be careful.
+  * @param {Number} n
+  */
+	backUp(n) {
+		this.pos -= n || 1;
+	}
+
+	/**
+  * Get the string between the start of the current token and the
+  * current stream position.
+  * @returns {String}
+  */
+	current() {
+		return this.substring(this.start, this.pos);
+	}
+
+	/**
+  * Returns substring for given range
+  * @param  {Number} start
+  * @param  {Number} [end]
+  * @return {String}
+  */
+	substring(start, end) {
+		return this.string.slice(start, end);
+	}
+
+	/**
+  * Creates error object with current stream state
+  * @param {String} message
+  * @return {Error}
+  */
+	error(message) {
+		const err = new Error(`${message} at char ${this.pos + 1}`);
+		err.originalMessage = message;
+		err.pos = this.pos;
+		err.string = this.string;
+		return err;
+	}
+}
+
+exports.default = StreamReader;
+module.exports = exports['default'];
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+/**
+ * Methods for consuming quoted values
+ */
+
+const SINGLE_QUOTE = 39; // '
+const DOUBLE_QUOTE = 34; // "
+
+const defaultOptions = {
+	escape: 92, // \ character
+	throws: false
+};
+
+/**
+ * Consumes 'single' or "double"-quoted string from given string, if possible
+ * @param  {StreamReader} stream
+ * @param  {Number}  options.escape A character code of quote-escape symbol
+ * @param  {Boolean} options.throws Throw error if quotes string can’t be properly consumed
+ * @return {Boolean} `true` if quoted string was consumed. The contents
+ *                   of quoted string will be availabe as `stream.current()`
+ */
+var eatQuoted = function (stream, options) {
+	options = options ? Object.assign({}, defaultOptions, options) : defaultOptions;
+	const start = stream.pos;
+	const quote = stream.peek();
+
+	if (stream.eat(isQuote)) {
+		while (!stream.eof()) {
+			switch (stream.next()) {
+				case quote:
+					stream.start = start;
+					return true;
+
+				case options.escape:
+					stream.next();
+					break;
+			}
+		}
+
+		// If we’re here then stream wasn’t properly consumed.
+		// Revert stream and decide what to do
+		stream.pos = start;
+
+		if (options.throws) {
+			throw stream.error('Unable to consume quoted string');
+		}
+	}
+
+	return false;
+};
+
+function isQuote(code) {
+	return code === SINGLE_QUOTE || code === DOUBLE_QUOTE;
+}
+
+/**
+ * Check if given code is a number
+ * @param  {Number}  code
+ * @return {Boolean}
+ */
+function isNumber(code) {
+	return code > 47 && code < 58;
+}
+
+/**
+ * Check if given character code is alpha code (letter through A to Z)
+ * @param  {Number}  code
+ * @param  {Number}  [from]
+ * @param  {Number}  [to]
+ * @return {Boolean}
+ */
+function isAlpha(code, from, to) {
+	from = from || 65; // A
+	to = to || 90; // Z
+	code &= ~32; // quick hack to convert any char code to uppercase char code
+
+	return code >= from && code <= to;
+}
+
+/**
+ * Check if given character code is alpha-numeric (letter through A to Z or number)
+ * @param  {Number}  code
+ * @return {Boolean}
+ */
+function isAlphaNumeric(code) {
+	return isNumber(code) || isAlpha(code);
+}
+
+function isWhiteSpace(code) {
+	return code === 32 /* space */
+	|| code === 9 /* tab */
+	|| code === 160; /* non-breaking space */
+}
+
+/**
+ * Check if given character code is a space
+ * @param  {Number}  code
+ * @return {Boolean}
+ */
+function isSpace(code) {
+	return isWhiteSpace(code) || code === 10 /* LF */
+	|| code === 13; /* CR */
+}
+
+const defaultOptions$1 = {
+	escape: 92, // \ character
+	throws: false
+};
+
+/**
+ * Eats paired characters substring, for example `(foo)` or `[bar]`
+ * @param  {StreamReader} stream
+ * @param  {Number} open      Character code of pair openinig
+ * @param  {Number} close     Character code of pair closing
+ * @param  {Object} [options]
+ * @return {Boolean}       Returns `true` if chacarter pair was successfully
+ *                         consumed, it’s content will be available as `stream.current()`
+ */
+function eatPair(stream, open, close, options) {
+	options = options ? Object.assign({}, defaultOptions$1, options) : defaultOptions$1;
+	const start = stream.pos;
+
+	if (stream.eat(open)) {
+		let stack = 1,
+		    ch;
+
+		while (!stream.eof()) {
+			if (eatQuoted(stream, options)) {
+				continue;
+			}
+
+			ch = stream.next();
+			if (ch === open) {
+				stack++;
+			} else if (ch === close) {
+				stack--;
+				if (!stack) {
+					stream.start = start;
+					return true;
+				}
+			} else if (ch === options.escape) {
+				stream.next();
+			}
+		}
+
+		// If we’re here then paired character can’t be consumed
+		stream.pos = start;
+
+		if (options.throws) {
+			throw stream.error(`Unable to find matching pair for ${String.fromCharCode(open)}`);
+		}
+	}
+
+	return false;
+}
+
+exports.eatQuoted = eatQuoted;
+exports.isQuote = isQuote;
+exports.isAlpha = isAlpha;
+exports.isNumber = isNumber;
+exports.isAlphaNumeric = isAlphaNumeric;
+exports.isSpace = isSpace;
+exports.isWhiteSpace = isWhiteSpace;
+exports.eatPair = eatPair;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 exports.createAtRule = exports.createRule = exports.createProperty = exports.parseSelector = exports.parsePropertyValue = exports.parsePropertyName = exports.parseMediaExpression = exports.backtick = exports.interpolation = exports.url = exports.string = exports.ident = exports.whitespace = exports.comment = exports.formatting = exports.variable = exports.keyword = exports.value = exports.selector = exports.any = exports.Token = exports.lexer = undefined;
 
-var _streamReader = __webpack_require__(24);
+var _streamReader = __webpack_require__(5);
 
 var _streamReader2 = _interopRequireDefault(_streamReader);
 
-var _streamReaderUtils = __webpack_require__(25);
+var _streamReaderUtils = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2201,13 +2515,13 @@ exports.createAtRule = createAtRule;
 exports.default = parseStylesheet;
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports) {
 
 module.exports = require("fs");
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2493,320 +2807,6 @@ function getSyntaxFromArgs(args) {
     return syntax;
 }
 //# sourceMappingURL=abbreviationActions.js.map
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-/**
- * A streaming, character code-based string reader
- */
-class StreamReader {
-	constructor(string, start, end) {
-		if (end == null && typeof string === 'string') {
-			end = string.length;
-		}
-
-		this.string = string;
-		this.pos = this.start = start || 0;
-		this.end = end;
-	}
-
-	/**
-  * Returns true only if the stream is at the end of the file.
-  * @returns {Boolean}
-  */
-	eof() {
-		return this.pos >= this.end;
-	}
-
-	/**
-  * Creates a new stream instance which is limited to given `start` and `end`
-  * range. E.g. its `eof()` method will look at `end` property, not actual
-  * stream end
-  * @param  {Point} start
-  * @param  {Point} end
-  * @return {StreamReader}
-  */
-	limit(start, end) {
-		return new this.constructor(this.string, start, end);
-	}
-
-	/**
-  * Returns the next character code in the stream without advancing it.
-  * Will return NaN at the end of the file.
-  * @returns {Number}
-  */
-	peek() {
-		return this.string.charCodeAt(this.pos);
-	}
-
-	/**
-  * Returns the next character in the stream and advances it.
-  * Also returns <code>undefined</code> when no more characters are available.
-  * @returns {Number}
-  */
-	next() {
-		if (this.pos < this.string.length) {
-			return this.string.charCodeAt(this.pos++);
-		}
-	}
-
-	/**
-  * `match` can be a character code or a function that takes a character code
-  * and returns a boolean. If the next character in the stream 'matches'
-  * the given argument, it is consumed and returned.
-  * Otherwise, `false` is returned.
-  * @param {Number|Function} match
-  * @returns {Boolean}
-  */
-	eat(match) {
-		const ch = this.peek();
-		const ok = typeof match === 'function' ? match(ch) : ch === match;
-
-		if (ok) {
-			this.next();
-		}
-
-		return ok;
-	}
-
-	/**
-  * Repeatedly calls <code>eat</code> with the given argument, until it
-  * fails. Returns <code>true</code> if any characters were eaten.
-  * @param {Object} match
-  * @returns {Boolean}
-  */
-	eatWhile(match) {
-		const start = this.pos;
-		while (!this.eof() && this.eat(match)) {}
-		return this.pos !== start;
-	}
-
-	/**
-  * Backs up the stream n characters. Backing it up further than the
-  * start of the current token will cause things to break, so be careful.
-  * @param {Number} n
-  */
-	backUp(n) {
-		this.pos -= n || 1;
-	}
-
-	/**
-  * Get the string between the start of the current token and the
-  * current stream position.
-  * @returns {String}
-  */
-	current() {
-		return this.substring(this.start, this.pos);
-	}
-
-	/**
-  * Returns substring for given range
-  * @param  {Number} start
-  * @param  {Number} [end]
-  * @return {String}
-  */
-	substring(start, end) {
-		return this.string.slice(start, end);
-	}
-
-	/**
-  * Creates error object with current stream state
-  * @param {String} message
-  * @return {Error}
-  */
-	error(message) {
-		const err = new Error(`${message} at char ${this.pos + 1}`);
-		err.originalMessage = message;
-		err.pos = this.pos;
-		err.string = this.string;
-		return err;
-	}
-}
-
-exports.default = StreamReader;
-module.exports = exports['default'];
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-/**
- * Methods for consuming quoted values
- */
-
-const SINGLE_QUOTE = 39; // '
-const DOUBLE_QUOTE = 34; // "
-
-const defaultOptions = {
-	escape: 92, // \ character
-	throws: false
-};
-
-/**
- * Consumes 'single' or "double"-quoted string from given string, if possible
- * @param  {StreamReader} stream
- * @param  {Number}  options.escape A character code of quote-escape symbol
- * @param  {Boolean} options.throws Throw error if quotes string can’t be properly consumed
- * @return {Boolean} `true` if quoted string was consumed. The contents
- *                   of quoted string will be availabe as `stream.current()`
- */
-var eatQuoted = function (stream, options) {
-	options = options ? Object.assign({}, defaultOptions, options) : defaultOptions;
-	const start = stream.pos;
-	const quote = stream.peek();
-
-	if (stream.eat(isQuote)) {
-		while (!stream.eof()) {
-			switch (stream.next()) {
-				case quote:
-					stream.start = start;
-					return true;
-
-				case options.escape:
-					stream.next();
-					break;
-			}
-		}
-
-		// If we’re here then stream wasn’t properly consumed.
-		// Revert stream and decide what to do
-		stream.pos = start;
-
-		if (options.throws) {
-			throw stream.error('Unable to consume quoted string');
-		}
-	}
-
-	return false;
-};
-
-function isQuote(code) {
-	return code === SINGLE_QUOTE || code === DOUBLE_QUOTE;
-}
-
-/**
- * Check if given code is a number
- * @param  {Number}  code
- * @return {Boolean}
- */
-function isNumber(code) {
-	return code > 47 && code < 58;
-}
-
-/**
- * Check if given character code is alpha code (letter through A to Z)
- * @param  {Number}  code
- * @param  {Number}  [from]
- * @param  {Number}  [to]
- * @return {Boolean}
- */
-function isAlpha(code, from, to) {
-	from = from || 65; // A
-	to = to || 90; // Z
-	code &= ~32; // quick hack to convert any char code to uppercase char code
-
-	return code >= from && code <= to;
-}
-
-/**
- * Check if given character code is alpha-numeric (letter through A to Z or number)
- * @param  {Number}  code
- * @return {Boolean}
- */
-function isAlphaNumeric(code) {
-	return isNumber(code) || isAlpha(code);
-}
-
-function isWhiteSpace(code) {
-	return code === 32 /* space */
-	|| code === 9 /* tab */
-	|| code === 160; /* non-breaking space */
-}
-
-/**
- * Check if given character code is a space
- * @param  {Number}  code
- * @return {Boolean}
- */
-function isSpace(code) {
-	return isWhiteSpace(code) || code === 10 /* LF */
-	|| code === 13; /* CR */
-}
-
-const defaultOptions$1 = {
-	escape: 92, // \ character
-	throws: false
-};
-
-/**
- * Eats paired characters substring, for example `(foo)` or `[bar]`
- * @param  {StreamReader} stream
- * @param  {Number} open      Character code of pair openinig
- * @param  {Number} close     Character code of pair closing
- * @param  {Object} [options]
- * @return {Boolean}       Returns `true` if chacarter pair was successfully
- *                         consumed, it’s content will be available as `stream.current()`
- */
-function eatPair(stream, open, close, options) {
-	options = options ? Object.assign({}, defaultOptions$1, options) : defaultOptions$1;
-	const start = stream.pos;
-
-	if (stream.eat(open)) {
-		let stack = 1,
-		    ch;
-
-		while (!stream.eof()) {
-			if (eatQuoted(stream, options)) {
-				continue;
-			}
-
-			ch = stream.next();
-			if (ch === open) {
-				stack++;
-			} else if (ch === close) {
-				stack--;
-				if (!stack) {
-					stream.start = start;
-					return true;
-				}
-			} else if (ch === options.escape) {
-				stream.next();
-			}
-		}
-
-		// If we’re here then paired character can’t be consumed
-		stream.pos = start;
-
-		if (options.throws) {
-			throw stream.error(`Unable to find matching pair for ${String.fromCharCode(open)}`);
-		}
-	}
-
-	return false;
-}
-
-exports.eatQuoted = eatQuoted;
-exports.isQuote = isQuote;
-exports.isAlpha = isAlpha;
-exports.isNumber = isNumber;
-exports.isAlphaNumeric = isAlphaNumeric;
-exports.isSpace = isSpace;
-exports.isWhiteSpace = isWhiteSpace;
-exports.eatPair = eatPair;
 
 /***/ }),
 /* 10 */
@@ -3157,8 +3157,8 @@ module.exports = {
 // based on http://www.compix.com/fileformattif.htm
 // TO-DO: support big-endian as well
 
-var fs = __webpack_require__(6);
-var readUInt = __webpack_require__(47);
+var fs = __webpack_require__(8);
+var readUInt = __webpack_require__(45);
 
 function isTIFF(buffer) {
   var hex4 = buffer.toString('hex', 0, 4);
@@ -3359,22 +3359,22 @@ module.exports = {
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode = __webpack_require__(0);
 const defaultCompletionProvider_1 = __webpack_require__(22);
-const abbreviationActions_1 = __webpack_require__(7);
-const removeTag_1 = __webpack_require__(26);
-const updateTag_1 = __webpack_require__(27);
-const matchTag_1 = __webpack_require__(28);
-const balance_1 = __webpack_require__(29);
-const splitJoinTag_1 = __webpack_require__(30);
-const mergeLines_1 = __webpack_require__(31);
-const toggleComment_1 = __webpack_require__(32);
-const editPoint_1 = __webpack_require__(33);
-const selectItem_1 = __webpack_require__(34);
-const evaluateMathExpression_1 = __webpack_require__(37);
-const incrementDecrement_1 = __webpack_require__(39);
+const abbreviationActions_1 = __webpack_require__(9);
+const removeTag_1 = __webpack_require__(24);
+const updateTag_1 = __webpack_require__(25);
+const matchTag_1 = __webpack_require__(26);
+const balance_1 = __webpack_require__(27);
+const splitJoinTag_1 = __webpack_require__(28);
+const mergeLines_1 = __webpack_require__(29);
+const toggleComment_1 = __webpack_require__(30);
+const editPoint_1 = __webpack_require__(31);
+const selectItem_1 = __webpack_require__(32);
+const evaluateMathExpression_1 = __webpack_require__(35);
+const incrementDecrement_1 = __webpack_require__(37);
 const util_1 = __webpack_require__(1);
 const vscode_emmet_helper_1 = __webpack_require__(2);
-const updateImageSize_1 = __webpack_require__(40);
-const reflectCssValue_1 = __webpack_require__(49);
+const updateImageSize_1 = __webpack_require__(38);
+const reflectCssValue_1 = __webpack_require__(47);
 const path = __webpack_require__(3);
 function activate(context) {
     registerCompletionProviders(context);
@@ -3522,7 +3522,7 @@ exports.deactivate = deactivate;
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode = __webpack_require__(0);
 const vscode_emmet_helper_1 = __webpack_require__(2);
-const abbreviationActions_1 = __webpack_require__(7);
+const abbreviationActions_1 = __webpack_require__(9);
 const util_1 = __webpack_require__(1);
 const allowedMimeTypesInScriptTag = ['text/html', 'text/plain', 'text/x-template'];
 class DefaultCompletionItemProvider {
@@ -3638,11 +3638,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.match = exports.defaultOptions = undefined;
 
-var _streamReader = __webpack_require__(8);
+var _streamReader = __webpack_require__(5);
 
 var _streamReader2 = _interopRequireDefault(_streamReader);
 
-var _streamReaderUtils = __webpack_require__(9);
+var _streamReaderUtils = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4248,320 +4248,6 @@ exports.default = parse;
 
 "use strict";
 
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-/**
- * A streaming, character code-based string reader
- */
-class StreamReader {
-	constructor(string, start, end) {
-		if (end == null && typeof string === 'string') {
-			end = string.length;
-		}
-
-		this.string = string;
-		this.pos = this.start = start || 0;
-		this.end = end;
-	}
-
-	/**
-  * Returns true only if the stream is at the end of the file.
-  * @returns {Boolean}
-  */
-	eof() {
-		return this.pos >= this.end;
-	}
-
-	/**
-  * Creates a new stream instance which is limited to given `start` and `end`
-  * range. E.g. its `eof()` method will look at `end` property, not actual
-  * stream end
-  * @param  {Point} start
-  * @param  {Point} end
-  * @return {StreamReader}
-  */
-	limit(start, end) {
-		return new this.constructor(this.string, start, end);
-	}
-
-	/**
-  * Returns the next character code in the stream without advancing it.
-  * Will return NaN at the end of the file.
-  * @returns {Number}
-  */
-	peek() {
-		return this.string.charCodeAt(this.pos);
-	}
-
-	/**
-  * Returns the next character in the stream and advances it.
-  * Also returns <code>undefined</code> when no more characters are available.
-  * @returns {Number}
-  */
-	next() {
-		if (this.pos < this.string.length) {
-			return this.string.charCodeAt(this.pos++);
-		}
-	}
-
-	/**
-  * `match` can be a character code or a function that takes a character code
-  * and returns a boolean. If the next character in the stream 'matches'
-  * the given argument, it is consumed and returned.
-  * Otherwise, `false` is returned.
-  * @param {Number|Function} match
-  * @returns {Boolean}
-  */
-	eat(match) {
-		const ch = this.peek();
-		const ok = typeof match === 'function' ? match(ch) : ch === match;
-
-		if (ok) {
-			this.next();
-		}
-
-		return ok;
-	}
-
-	/**
-  * Repeatedly calls <code>eat</code> with the given argument, until it
-  * fails. Returns <code>true</code> if any characters were eaten.
-  * @param {Object} match
-  * @returns {Boolean}
-  */
-	eatWhile(match) {
-		const start = this.pos;
-		while (!this.eof() && this.eat(match)) {}
-		return this.pos !== start;
-	}
-
-	/**
-  * Backs up the stream n characters. Backing it up further than the
-  * start of the current token will cause things to break, so be careful.
-  * @param {Number} n
-  */
-	backUp(n) {
-		this.pos -= n || 1;
-	}
-
-	/**
-  * Get the string between the start of the current token and the
-  * current stream position.
-  * @returns {String}
-  */
-	current() {
-		return this.substring(this.start, this.pos);
-	}
-
-	/**
-  * Returns substring for given range
-  * @param  {Number} start
-  * @param  {Number} [end]
-  * @return {String}
-  */
-	substring(start, end) {
-		return this.string.slice(start, end);
-	}
-
-	/**
-  * Creates error object with current stream state
-  * @param {String} message
-  * @return {Error}
-  */
-	error(message) {
-		const err = new Error(`${message} at char ${this.pos + 1}`);
-		err.originalMessage = message;
-		err.pos = this.pos;
-		err.string = this.string;
-		return err;
-	}
-}
-
-exports.default = StreamReader;
-module.exports = exports['default'];
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-/**
- * Methods for consuming quoted values
- */
-
-const SINGLE_QUOTE = 39; // '
-const DOUBLE_QUOTE = 34; // "
-
-const defaultOptions = {
-	escape: 92, // \ character
-	throws: false
-};
-
-/**
- * Consumes 'single' or "double"-quoted string from given string, if possible
- * @param  {StreamReader} stream
- * @param  {Number}  options.escape A character code of quote-escape symbol
- * @param  {Boolean} options.throws Throw error if quotes string can’t be properly consumed
- * @return {Boolean} `true` if quoted string was consumed. The contents
- *                   of quoted string will be availabe as `stream.current()`
- */
-var eatQuoted = function (stream, options) {
-	options = options ? Object.assign({}, defaultOptions, options) : defaultOptions;
-	const start = stream.pos;
-	const quote = stream.peek();
-
-	if (stream.eat(isQuote)) {
-		while (!stream.eof()) {
-			switch (stream.next()) {
-				case quote:
-					stream.start = start;
-					return true;
-
-				case options.escape:
-					stream.next();
-					break;
-			}
-		}
-
-		// If we’re here then stream wasn’t properly consumed.
-		// Revert stream and decide what to do
-		stream.pos = start;
-
-		if (options.throws) {
-			throw stream.error('Unable to consume quoted string');
-		}
-	}
-
-	return false;
-};
-
-function isQuote(code) {
-	return code === SINGLE_QUOTE || code === DOUBLE_QUOTE;
-}
-
-/**
- * Check if given code is a number
- * @param  {Number}  code
- * @return {Boolean}
- */
-function isNumber(code) {
-	return code > 47 && code < 58;
-}
-
-/**
- * Check if given character code is alpha code (letter through A to Z)
- * @param  {Number}  code
- * @param  {Number}  [from]
- * @param  {Number}  [to]
- * @return {Boolean}
- */
-function isAlpha(code, from, to) {
-	from = from || 65; // A
-	to = to || 90; // Z
-	code &= ~32; // quick hack to convert any char code to uppercase char code
-
-	return code >= from && code <= to;
-}
-
-/**
- * Check if given character code is alpha-numeric (letter through A to Z or number)
- * @param  {Number}  code
- * @return {Boolean}
- */
-function isAlphaNumeric(code) {
-	return isNumber(code) || isAlpha(code);
-}
-
-function isWhiteSpace(code) {
-	return code === 32 /* space */
-	|| code === 9 /* tab */
-	|| code === 160; /* non-breaking space */
-}
-
-/**
- * Check if given character code is a space
- * @param  {Number}  code
- * @return {Boolean}
- */
-function isSpace(code) {
-	return isWhiteSpace(code) || code === 10 /* LF */
-	|| code === 13; /* CR */
-}
-
-const defaultOptions$1 = {
-	escape: 92, // \ character
-	throws: false
-};
-
-/**
- * Eats paired characters substring, for example `(foo)` or `[bar]`
- * @param  {StreamReader} stream
- * @param  {Number} open      Character code of pair openinig
- * @param  {Number} close     Character code of pair closing
- * @param  {Object} [options]
- * @return {Boolean}       Returns `true` if chacarter pair was successfully
- *                         consumed, it’s content will be available as `stream.current()`
- */
-function eatPair(stream, open, close, options) {
-	options = options ? Object.assign({}, defaultOptions$1, options) : defaultOptions$1;
-	const start = stream.pos;
-
-	if (stream.eat(open)) {
-		let stack = 1,
-		    ch;
-
-		while (!stream.eof()) {
-			if (eatQuoted(stream, options)) {
-				continue;
-			}
-
-			ch = stream.next();
-			if (ch === open) {
-				stack++;
-			} else if (ch === close) {
-				stack--;
-				if (!stack) {
-					stream.start = start;
-					return true;
-				}
-			} else if (ch === options.escape) {
-				stream.next();
-			}
-		}
-
-		// If we’re here then paired character can’t be consumed
-		stream.pos = start;
-
-		if (options.throws) {
-			throw stream.error(`Unable to find matching pair for ${String.fromCharCode(open)}`);
-		}
-	}
-
-	return false;
-}
-
-exports.eatQuoted = eatQuoted;
-exports.isQuote = isQuote;
-exports.isAlpha = isAlpha;
-exports.isNumber = isNumber;
-exports.isAlphaNumeric = isAlphaNumeric;
-exports.isSpace = isSpace;
-exports.isWhiteSpace = isWhiteSpace;
-exports.eatPair = eatPair;
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -4621,7 +4307,7 @@ function getRangeToRemove(editor, rootNode, selection, indentInSpaces) {
 //# sourceMappingURL=removeTag.js.map
 
 /***/ }),
-/* 27 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4672,7 +4358,7 @@ function getRangesToUpdate(editor, selection, rootNode) {
 //# sourceMappingURL=updateTag.js.map
 
 /***/ }),
-/* 28 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4723,7 +4409,7 @@ function getUpdatedSelections(editor, position, rootNode) {
 //# sourceMappingURL=matchTag.js.map
 
 /***/ }),
-/* 29 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4799,7 +4485,7 @@ function getRangeToBalanceIn(document, selection, rootNode) {
 //# sourceMappingURL=balance.js.map
 
 /***/ }),
-/* 30 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4858,7 +4544,7 @@ function getRangesToReplace(document, selection, rootNode) {
 //# sourceMappingURL=splitJoinTag.js.map
 
 /***/ }),
-/* 31 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4912,7 +4598,7 @@ function getRangesToReplace(document, selection, rootNode) {
 //# sourceMappingURL=mergeLines.js.map
 
 /***/ }),
-/* 32 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4926,7 +4612,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const vscode = __webpack_require__(0);
 const util_1 = __webpack_require__(1);
 const vscode_emmet_helper_1 = __webpack_require__(2);
-const css_parser_1 = __webpack_require__(5);
+const css_parser_1 = __webpack_require__(7);
 const bufferStream_1 = __webpack_require__(4);
 const startCommentStylesheet = '/*';
 const endCommentStylesheet = '*/';
@@ -5078,7 +4764,7 @@ function adjustEndNodeCss(node, pos, rootNode) {
 //# sourceMappingURL=toggleComment.js.map
 
 /***/ }),
-/* 33 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5147,7 +4833,7 @@ function findEditPoint(lineNum, editor, position, direction) {
 //# sourceMappingURL=editPoint.js.map
 
 /***/ }),
-/* 34 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5160,8 +4846,8 @@ function findEditPoint(lineNum, editor, position, direction) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode = __webpack_require__(0);
 const util_1 = __webpack_require__(1);
-const selectItemHTML_1 = __webpack_require__(35);
-const selectItemStylesheet_1 = __webpack_require__(36);
+const selectItemHTML_1 = __webpack_require__(33);
+const selectItemStylesheet_1 = __webpack_require__(34);
 const vscode_emmet_helper_1 = __webpack_require__(2);
 function fetchSelectItem(direction) {
     let editor = vscode.window.activeTextEditor;
@@ -5195,7 +4881,7 @@ exports.fetchSelectItem = fetchSelectItem;
 //# sourceMappingURL=selectItem.js.map
 
 /***/ }),
-/* 35 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5366,7 +5052,7 @@ function getPrevAttribute(selectionStart, selectionEnd, document, node) {
 //# sourceMappingURL=selectItemHTML.js.map
 
 /***/ }),
-/* 36 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5487,7 +5173,7 @@ function getSelectionFromProperty(node, document, selectionStart, selectionEnd, 
 //# sourceMappingURL=selectItemStylesheet.js.map
 
 /***/ }),
-/* 37 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5500,7 +5186,7 @@ function getSelectionFromProperty(node, document, selectionStart, selectionEnd, 
 Object.defineProperty(exports, "__esModule", { value: true });
 /* Based on @sergeche's work in his emmet plugin */
 const vscode = __webpack_require__(0);
-const math_expression_1 = __webpack_require__(38);
+const math_expression_1 = __webpack_require__(36);
 const bufferStream_1 = __webpack_require__(4);
 function evaluateMathExpression() {
     let editor = vscode.window.activeTextEditor;
@@ -5528,7 +5214,7 @@ exports.evaluateMathExpression = evaluateMathExpression;
 //# sourceMappingURL=evaluateMathExpression.js.map
 
 /***/ }),
-/* 38 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5539,11 +5225,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.parse = undefined;
 
-var _streamReader = __webpack_require__(8);
+var _streamReader = __webpack_require__(5);
 
 var _streamReader2 = _interopRequireDefault(_streamReader);
 
-var _streamReaderUtils = __webpack_require__(9);
+var _streamReaderUtils = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6015,7 +5701,7 @@ exports.parse = parse;
 exports.default = index;
 
 /***/ }),
-/* 39 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6130,7 +5816,7 @@ function isValidNumber(str) {
 //# sourceMappingURL=incrementDecrement.js.map
 
 /***/ }),
-/* 40 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6144,11 +5830,11 @@ function isValidNumber(str) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = __webpack_require__(0);
 const path = __webpack_require__(3);
-const imageSizeHelper_1 = __webpack_require__(41);
+const imageSizeHelper_1 = __webpack_require__(39);
 const vscode_emmet_helper_1 = __webpack_require__(2);
 const util_1 = __webpack_require__(1);
-const locateFile_1 = __webpack_require__(48);
-const css_parser_1 = __webpack_require__(5);
+const locateFile_1 = __webpack_require__(46);
+const css_parser_1 = __webpack_require__(7);
 const bufferStream_1 = __webpack_require__(4);
 /**
  * Updates size of context image in given editor
@@ -6409,7 +6095,7 @@ function getPropertyDelimitor(editor, node) {
 //# sourceMappingURL=updateImageSize.js.map
 
 /***/ }),
-/* 41 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6423,10 +6109,10 @@ function getPropertyDelimitor(editor, node) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __webpack_require__(3);
-const http = __webpack_require__(42);
-const https = __webpack_require__(43);
-const url_1 = __webpack_require__(44);
-const sizeOf = __webpack_require__(45);
+const http = __webpack_require__(40);
+const https = __webpack_require__(41);
+const url_1 = __webpack_require__(42);
+const sizeOf = __webpack_require__(43);
 const reUrl = /^https?:/;
 /**
  * Get size of given image file. Supports files from local filesystem,
@@ -6519,34 +6205,34 @@ function sizeForFileName(fileName, size) {
 //# sourceMappingURL=imageSizeHelper.js.map
 
 /***/ }),
-/* 42 */
+/* 40 */
 /***/ (function(module, exports) {
 
 module.exports = require("http");
 
 /***/ }),
-/* 43 */
+/* 41 */
 /***/ (function(module, exports) {
 
 module.exports = require("https");
 
 /***/ }),
-/* 44 */
+/* 42 */
 /***/ (function(module, exports) {
 
 module.exports = require("url");
 
 /***/ }),
-/* 45 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var fs = __webpack_require__(6);
+var fs = __webpack_require__(8);
 var path = __webpack_require__(3);
 
-var detector = __webpack_require__(46);
+var detector = __webpack_require__(44);
 
 var handlers = {};
 var types = __webpack_require__(10);
@@ -6656,7 +6342,7 @@ module.exports = function (input, callback) {
 module.exports.types = types;
 
 /***/ }),
-/* 46 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6681,7 +6367,7 @@ module.exports = function (buffer, filepath) {
 };
 
 /***/ }),
-/* 47 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6699,7 +6385,7 @@ function readUInt(buffer, bits, offset, isBigEndian) {
 module.exports = readUInt;
 
 /***/ }),
-/* 48 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6713,7 +6399,7 @@ module.exports = readUInt;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __webpack_require__(3);
-const fs = __webpack_require__(6);
+const fs = __webpack_require__(8);
 const reAbsolute = /^\/+/;
 /**
  * Locates given `filePath` on user’s file system and returns absolute path to it.
@@ -6783,7 +6469,7 @@ function tryFile(file) {
 //# sourceMappingURL=locateFile.js.map
 
 /***/ }),
-/* 49 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
