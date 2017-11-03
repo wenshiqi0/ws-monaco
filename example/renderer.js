@@ -1,5 +1,5 @@
 const { readFile } = require('fs');
-const { join, dirname } = require('path');
+const { join, dirname, resolve } = require('path');
 const container = document.getElementById('editor')
 
 const { start, openProject, editorOptions, GrammarRegistry, updateConfiguration } = require('../lib/editor');
@@ -162,7 +162,8 @@ loader.require(['./vs/editor/editor.main'], async function () {
   // registry.setCurrentEditor(editor);
   // 启动语法插件
   start();
-  openProject('/Users/munong/Documents/github/ant-monaco/example/test/');
+  const testPath = resolve('./example/test');  
+  openProject(testPath);
 
   // monaco 根据 token rules 解析出来的 css rules 和 vscode-textmate 有差异
   // 所以这个地方直接复写掉这一部分的 css 样式，用 vscode-textmate 的解析结果来代替
@@ -174,7 +175,7 @@ loader.require(['./vs/editor/editor.main'], async function () {
     // .then((res) => { if (language) return GrammarRegistry.loadGrammar(res); })
     // .then((res) => { if (language) return GrammarRegistry.registerLanguage(res); })
     .then(() => {
-      return window.monaco.editor.createModel(textMap[language], language, `/Users/munong/Documents/github/ant-monaco/example/test/test.${language === 'javascript' ? 'js' : language}`);
+      return window.monaco.editor.createModel(textMap[language], language, join(testPath, `/test.${language === 'javascript' ? 'js' : language}`));
     })
     .then((model) => editor.setModel(model))
 });

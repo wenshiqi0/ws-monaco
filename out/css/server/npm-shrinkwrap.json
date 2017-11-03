@@ -1,0 +1,61 @@
+{
+  "name": "vscode-css-languageserver",
+  "version": "1.0.0",
+  "lockfileVersion": 1,
+  "requires": true,
+  "dependencies": {
+    "@types/node": {
+      "version": "6.0.90",
+      "resolved": "http://registry.npm.alibaba-inc.com/@types/node/download/@types/node-6.0.90.tgz",
+      "integrity": "sha1-DtdIM/obc9zblAncscl+wKixOwI=",
+      "dev": true
+    },
+    "vscode-css-languageservice": {
+      "version": "2.1.7",
+      "resolved": "https://registry.npmjs.org/vscode-css-languageservice/-/vscode-css-languageservice-2.1.7.tgz",
+      "integrity": "sha1-PaMOAUKoMDadoa62RGgVUYH+E8Y=",
+      "requires": {
+        "vscode-languageserver-types": "3.4.0",
+        "vscode-nls": "2.0.2"
+      }
+    },
+    "vscode-jsonrpc": {
+      "version": "3.4.0",
+      "resolved": "https://registry.npmjs.org/vscode-jsonrpc/-/vscode-jsonrpc-3.4.0.tgz",
+      "integrity": "sha1-qpWsWDvzHYD3JdV8J8CfTCz+n6k="
+    },
+    "vscode-languageserver": {
+      "version": "3.4.2",
+      "resolved": "https://registry.npmjs.org/vscode-languageserver/-/vscode-languageserver-3.4.2.tgz",
+      "integrity": "sha1-CMvlDuJpAdN91LXcUsJbkJNjwfE=",
+      "requires": {
+        "vscode-languageserver-protocol": "3.4.2",
+        "vscode-uri": "1.0.1"
+      }
+    },
+    "vscode-languageserver-protocol": {
+      "version": "3.4.2",
+      "resolved": "https://registry.npmjs.org/vscode-languageserver-protocol/-/vscode-languageserver-protocol-3.4.2.tgz",
+      "integrity": "sha512-2VA7kaBbqd92qbxPr0GhuIE4DpFf/rDN0z+s4OkI7D5KgxPr5Vm5pCHLX7MIoktvUiDtm2etfF2+YTzA2xBUdw==",
+      "requires": {
+        "vscode-jsonrpc": "3.4.0",
+        "vscode-languageserver-types": "3.4.0"
+      }
+    },
+    "vscode-languageserver-types": {
+      "version": "3.4.0",
+      "resolved": "https://registry.npmjs.org/vscode-languageserver-types/-/vscode-languageserver-types-3.4.0.tgz",
+      "integrity": "sha1-UEOuR+5KwWrwe7PQylYSNeDA0vo="
+    },
+    "vscode-nls": {
+      "version": "2.0.2",
+      "resolved": "https://registry.npmjs.org/vscode-nls/-/vscode-nls-2.0.2.tgz",
+      "integrity": "sha1-gIUiOAhEuK0VNJmvXDsDkhrqAto="
+    },
+    "vscode-uri": {
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/vscode-uri/-/vscode-uri-1.0.1.tgz",
+      "integrity": "sha1-Eahr7+rDxKo+wIYjZRo8gabQu8g="
+    }
+  }
+}
