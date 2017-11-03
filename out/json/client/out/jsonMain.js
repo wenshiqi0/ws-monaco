@@ -321,7 +321,7 @@ function getSchemaId(schema, rootPath) {
     return url;
 }
 function getPackageInfo(context) {
-    var extensionPackage = !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+    var extensionPackage = JSON.parse(__webpack_require__(9).readFileSync(context.asAbsolutePath('./package.json'), 'utf-8'));
     if (extensionPackage) {
         return {
             name: extensionPackage.name,
@@ -447,13 +447,7 @@ function objectHash(obj, initialHashVal) {
 /* 9 */
 /***/ (function(module, exports) {
 
-function webpackEmptyContext(req) {
-	throw new Error("Cannot find module '" + req + "'.");
-}
-webpackEmptyContext.keys = function() { return []; };
-webpackEmptyContext.resolve = webpackEmptyContext;
-module.exports = webpackEmptyContext;
-webpackEmptyContext.id = 9;
+module.exports = require("fs");
 
 /***/ })
 /******/ ]);
